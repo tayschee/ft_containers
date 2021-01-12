@@ -26,7 +26,7 @@ namespace   ft
                 public :
                     //ITERATOR CONSTRUCTOR
                     iterator(){ array_pointer = NULL; } //peut etre pas NULL
-                    iterator(T *array_pointer) : array_pointer(array_pointer){}
+                    iterator(pointer array_pointer) : array_pointer(array_pointer){}
                     iterator(const iterator &x){ array_pointer = x.array_pointer; }
                     //ITERATOR DESTRUCTOR
                     ~iterator(){}
@@ -46,10 +46,26 @@ namespace   ft
 
                     iterator &operator+=(int n){ array_pointer += n; return (*this); }
                     iterator &operator-=(int n){ array_pointer -= n; return (*this); }
-                    iterator &operator++(int n){ (void)n; ++array_pointer; return (*this); }
-                    iterator &operator--(int n){ (void)n; --array_pointer; return (*this); }
                     iterator &operator++(){ array_pointer++; return (*this); }
                     iterator &operator--(){ array_pointer--; return (*this); }
+
+                    iterator operator++(int n)
+                    {
+                        iterator    copy(*this);
+
+                        (void)n;
+                        ++array_pointer;
+                        return (copy);
+                    }
+                    iterator operator--(int n)
+                    {
+                        iterator    copy(*this);
+                        
+                        (void)n; 
+                        --array_pointer;
+                        return (*this);
+                    }
+
                     iterator operator+(int n)
                     {
                         iterator x(*this);
@@ -68,18 +84,18 @@ namespace   ft
             typedef typename allocator_type::const_reference const_reference;
             typedef typename allocator_type::pointer pointer;
             typedef typename allocator_type::const_pointer const_pointer;
-            //typedef pointer iterator;
-            typedef const_pointer const_iterator;
-            //typedef ??? reverse_iterator;
+            //typedef vector::iterator iterator;
+            //typedef const_pointer const_iterator;
+            typedef typename ft::reverse_iterator<iterator> reverse_iterator;
             //typedef ??? const_reverse_iterator;
-            typedef ptrdiff_t difference_type; // a verifier
+            typedef typename iterator::difference_type diference_type; // a verifier
             typedef size_t size_type; // a verifier
 
         private : //PRIVATE VALUE
-                allocator_type alloc;
-                value_type  *array;
-                size_t      array_capacity;
-                size_t      array_size;
+                allocator_type  alloc;
+                value_type      *array;
+                size_type       array_capacity;
+                size_type       array_size;
 
         public : //FUNCTION
             //CONSTRUCTOR
@@ -91,7 +107,7 @@ namespace   ft
             }
             vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : alloc(alloc)
             {
-                array = (this->alloc).allocate(static_cast<size_t>(n));
+                array = (this->alloc).allocate(static_cast<size_type>(n));
                 for (array_capacity = 0; array_capacity < n; array_capacity++)
                     (this->alloc).construct(&array[array_capacity], val);
                 array_size = array_capacity;
@@ -119,36 +135,51 @@ namespace   ft
                 this->array_capacity = x.array_capacity;
                 this->alloc = x.alloc;
                 this->array_size = x.array_size;
-                this->array = (this->alloc).allocate(static_cast<size_t>(array_capacity));
+                this->array = (this->alloc).allocate(static_cast<size_type>(array_capacity));
                 for (i = 0; i < array_capacity; i++)
                     this->array[i] = x.array[i];
             }
             //DESTRUCTOR
             ~vector(void)
             {
-                size_t  i;
+                /*size_t  i;
 
                 for (i = 0; i < array_size; i++)
                     (this->alloc).destroy(&array[i]);
-                (this->alloc).deallocate(array, array_capacity);
+                (this->alloc).deallocate(array, array_capacity);*/
+                clear();
             }
             //OPERATOR
             vector &operator=(const vector &x) // SUREMENT PAS BON MUST PRESERVE ALLOCATION
             {
                 size_type i;
 
-                this->~vector();
+                //this->~vector();
+                clear();
                 this->array_capacity = x.array_capacity;
                 this->alloc = x.alloc;
-                this->array = (this->alloc).allocate(static_cast<size_t>(array_capacity));
+                this->array = (this->alloc).allocate(static_cast<size_type>(array_capacity));
                 for (i = 0; i < array_capacity; i++)
                     this->array[i] = x.array[i];
                 this->array_size = x.array_size;
                 return (*this);
             } 
-            reference   operator[](size_type n) //ADJUSTMENT
+            //ARRAY ITERATOR
+            iterator    begin() //une version const
             {
-                return(array[n]);
+                return (iterator(array));
+            }
+            iterator    end() //une version const
+            {
+                return (iterator(array + array_size));
+            }
+            reverse_iterator    rbegin() //une version const et a verifier
+            {
+                return (reverse_iterator(begin()));
+            }
+            reverse_iterator    rend() //une version const et a verifier
+            {
+                return (reverse_iterator(end()));
             }
             //ARRAY CAPACITY
             size_type  size() const
@@ -159,17 +190,17 @@ namespace   ft
             {
                 return (alloc.max_size());
             }
-            void    resize(size_type n, value_type val = value_type()) //ADJUSTMENT
+            void    resize(size_type n, value_type val = value_type()) //VERIFY ABSOLUTLY
             {
                 int i;
 
                 if (n > array_capacity)
                 {
-                    this->resize(n);
+                    this->reserve(n);
                 }
                 if (n > array_size)
                 {
-                    for (i = 0; i < array_capacity(); i++)
+                    for (i = 0; i < n; i++)
                         push_back(val);
                 }
                 else if (n < array_size)
@@ -190,14 +221,15 @@ namespace   ft
             }
             void reserve(size_type n) //EXCEPTION ALLOC
             {
+                value_type  *new_array;
+                size_type      i;
+
                 if (n > max_size())
                 {
                     //probale throw
                 }
 
-                value_type  *new_array = alloc.allocate(static_cast<size_t>(n));
-                size_t      i;
-
+                new_array = alloc.allocate(static_cast<size_t>(n));
                 if (n > array_capacity)
                 {
                     for (i = 0; i < array_size; i++)
@@ -210,7 +242,28 @@ namespace   ft
                 }
                     
             }
-            //MODIFIER
+            //ELEMENT ACCESS
+            reference   operator[](size_type n) //ADJUSTMENT
+            {
+                return(array[n]);
+            }
+            reference at(size_type n) //const version
+            {
+                if (n >= array_size)
+                {
+                    //exception out_of_range
+                }
+                return (array_size[n]);
+            }
+            reference front()
+            {
+                return(*array);
+            }
+            reference back()
+            {
+                return(array[array_size - 1]);
+            }
+            //ARRAY MODIFIERS
             void    push_back(const value_type &val) //that seems ok
             {
                 size_type i = 0; 
@@ -239,6 +292,58 @@ namespace   ft
             {
                 if (array_capacity > 0)
                     alloc.destroy(&array[--array_size]);
+            }
+            iterator   erase(iterator position) //possible segfault
+            {
+                iterator beg(begin());
+                iterator end(end());
+
+                while (beg != position)
+                    beg++;
+                alloc.destruct(&*beg);
+                while (beg != end)
+                    *beg = *++beg;
+                --array_size;
+                return (position);
+            }
+            iterator   erase(iterator first, iterator last) //potential segfault
+            {
+                iterator beg(begin());
+                iterator end(end());
+
+                while (beg != first)
+                    beg++;
+                while (beg != last)
+                {
+                    alloc.destruct(&*beg++);
+                    array_size--;
+                }
+                while (beg != end)
+                    *first++ = *beg++;
+                return (last);
+            }
+            /*iterator insert(iterator position, const value_type &val)
+            {
+                iterator    beg(begin());
+                iterator    end(end());
+
+
+            }*/
+            /*void swap(vector &x) //LOADING
+            {
+                pointer     pointer_save = x.front();
+                size_type   capacity_save = x.capacity();
+                size_type   size_save = x.size();
+            }*/
+            void    clear()
+            {
+                size_type   n;
+
+                for(n = 0; n < array_size; n++)
+                    alloc.destroy(&array[n]);
+                alloc.deallocate(array, array_capacity);
+                array_size = 0;
+                array_capacity = 0; 
             }
     };
 

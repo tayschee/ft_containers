@@ -55,6 +55,38 @@ namespace ft
             typedef const T* pointer;
             typedef const T& reference;
     };
+
+    template <class Iterator> class reverse_iterator
+    {
+        public : //REVERSE_ITERATOR TYPEDEF
+            typedef typename iterator_traits<Iterator>::iterator_category iterator_category;
+            typedef typename iterator_traits<Iterator>::value_type value_type;
+            typedef typename iterator_traits<Iterator>::difference_type difference_type;
+            typedef typename iterator_traits<Iterator>::pointer pointer;
+            typedef typename iterator_traits<Iterator>::reference reference;
+
+        private :
+            pointer array_pointer;
+
+        public :
+            //REVERSE_ITERATOR CONSTRUCTOR
+            reverse_iterator(){ array_pointer = NULL; } //peut etre pas NULL
+            reverse_iterator(Iterator &it_to_reverse) : array_pointer(&*(it_to_reverse - 1)){}
+            reverse_iterator(const reverse_iterator &x){ array_pointer = x.array_pointer; }
+            //REVERSE_ITERATOR DESTRUCTOR
+            ~reverse_iterator(){}
+            //REVERSE_ITERATOR OPERATOR
+            reverse_iterator &operator=(const reverse_iterator &x){ array_pointer = x.array_pointer; return (*this); }
+            reverse_iterator &operator+=(int n){ array_pointer.Iterator::operator-=(n); return (*this); }
+            reverse_iterator &operator-=(int n){ array_pointer.Iterator::operator+=(n); return (*this); }
+            reverse_iterator &operator++(int n){ array_pointer.Iterator::operator--(n); return (*this); }
+            reverse_iterator &operator--(int n){ array_pointer.Iterator::operator++(n); return (*this); }
+            reverse_iterator &operator++(){ array_pointer.Iterator::operator--(); return (*this); }
+            reverse_iterator &operator--(){ array_pointer.Iterator::operator++(); return (*this); }
+            reverse_iterator operator+(int n){ return(array_pointer.Iterator::operator-(n)); }
+            reverse_iterator operator-(int n){ return(array_pointer.Iterator::operator+(n)); }
+    };
+
 };
 
 

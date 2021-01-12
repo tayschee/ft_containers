@@ -15,6 +15,8 @@ int main()
     ft::vector<int>::iterator iteratorb = iterator;
     ft::vector<int>::iterator iterator1;
     ft::vector<a>::iterator iteratora = b;
+    int             tab2[] = {3, 4, 5};
+    ft::vector<int>::iterator iteratortest(tab2);
 
     std::cout << (iterator < iterator1) << std::endl;
     std::cout << (iterator > iterator1) << std::endl;
@@ -124,6 +126,9 @@ int main()
     {
         std::cout << (iteratora + i)->m << "\n";
     }
+    std::cout << *iteratortest << "\n";
+    std::cout << *iteratortest++ << "\n";
+    std::cout << *iteratortest << "\n";
     std::cout << "\n";
     return (0);
 }

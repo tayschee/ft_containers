@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <stdio.h>
 
 struct a
 {
@@ -15,6 +16,8 @@ int main()
     std::vector<int>::iterator iteratorb = iterator;
     std::vector<int>::iterator iterator1;
     std::vector<a>::iterator iteratora(b);
+    int             tab2[] = {3, 4, 5};
+    std::vector<int>::iterator iteratortest(tab2);
 
     std::cout << (iterator < iterator1) << std::endl;
     std::cout << (iterator > iterator1) << std::endl;
@@ -118,11 +121,13 @@ int main()
     {
         std::cout << *(iteratorb - i) << " ";
     }
-
     for (i = 0; i < 3; i++)
     {
         std::cout << (iteratora + i)->m << "\n";
     }
+    std::cout << *iteratortest << "\n";
+    std::cout << *iteratortest++ << "\n";
+    std::cout << *iteratortest << "\n";
     std::cout << "\n";
     return (0);
 }
