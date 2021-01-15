@@ -2,7 +2,6 @@
 # define VECTOR_HPP
 
 # include <memory> //std::allocator<T>
-# include <cstddef> //ptrdiff_t to difference_type
 # include <stdexcept> //exception
 # include "iterator.hpp"
 # include <iostream> 
@@ -13,7 +12,7 @@ namespace   ft
     class   vector
     {
         public : //ITERATOR
-            class iterator : public iterator_traits<T *>
+            class iterator
             {
                 public : //ITERATOR TYPEDEF
                     typedef typename iterator_traits<T *>::iterator_category iterator_category;
@@ -25,24 +24,24 @@ namespace   ft
                     pointer array_pointer;
                 public :
                     //ITERATOR CONSTRUCTOR
-                    iterator(){ array_pointer = NULL; } //peut etre pas NULL
-                    iterator(pointer array_pointer) : array_pointer(array_pointer){}
+                    explicit iterator(){ array_pointer = NULL; } //peut etre pas NULL
+                    explicit iterator(pointer array_pointer) : array_pointer(array_pointer){}
                     iterator(const iterator &x){ array_pointer = x.array_pointer; }
                     //ITERATOR DESTRUCTOR
                     ~iterator(){}
                     //ITERATOR OPERATOR
                     iterator &operator=(const iterator &x){ array_pointer = x.array_pointer; return (*this); }
 
-                    reference   operator[](unsigned int n){ return (array_pointer[n]); }
-                    reference   &operator*(){ return (*array_pointer); }
-                    pointer     operator->(){ return (array_pointer); }
+                    reference   operator[](unsigned int n) const { return (array_pointer[n]); }
+                    reference   operator*() const { return (*array_pointer); }
+                    pointer     operator->() const { return (array_pointer); }
                     
-                    bool operator==(const iterator &x){ return (array_pointer == x.array_pointer ? 1 : 0); }
-                    bool operator!=(const iterator &x){ return (array_pointer != x.array_pointer ? 1 : 0); }
-                    bool operator<(const iterator &x){ return (array_pointer < x.array_pointer ? 1 : 0); }
-                    bool operator>(const iterator &x){ return (array_pointer > x.array_pointer ? 1 : 0); }
-                    bool operator>=(const iterator &x){ return (array_pointer >= x.array_pointer ? 1 : 0); }
-                    bool operator<=(const iterator &x){ return (array_pointer <= x.array_pointer ? 1 : 0); }
+                    bool operator==(const iterator &x) const { return (array_pointer == x.array_pointer ? 1 : 0); }
+                    bool operator!=(const iterator &x) const { return (array_pointer != x.array_pointer ? 1 : 0); }
+                    bool operator<(const iterator &x) const { return (array_pointer < x.array_pointer ? 1 : 0); }
+                    bool operator>(const iterator &x) const { return (array_pointer > x.array_pointer ? 1 : 0); }
+                    bool operator>=(const iterator &x) const { return (array_pointer >= x.array_pointer ? 1 : 0); }
+                    bool operator<=(const iterator &x) const { return (array_pointer <= x.array_pointer ? 1 : 0); }
 
                     iterator &operator+=(int n){ array_pointer += n; return (*this); }
                     iterator &operator-=(int n){ array_pointer -= n; return (*this); }
@@ -63,18 +62,34 @@ namespace   ft
                         
                         (void)n; 
                         --array_pointer;
-                        return (*this);
+                        return (copy);
                     }
 
-                    iterator operator+(int n)
+                    iterator operator+(int n) const
                     {
                         iterator x(*this);
 
                         x.array_pointer += n;
                         return (x);
                     }
-                    iterator operator-(int n){ return (*this + (-n)); }
+                    iterator operator-(int n) const
+                    {
+                        iterator x(*this);
 
+                        x.array_pointer -= n;
+                        return (x);
+                    }
+
+            };
+
+            class const_iterator : public ft::vector<const T>::iterator
+            {
+                public :
+                    typedef typename iterator_traits<const T *>::iterator_category iterator_category;
+                    typedef typename iterator_traits<const T *>::value_type value_type;
+                    typedef typename iterator_traits<const T *>::difference_type difference_type;
+                    typedef typename iterator_traits<const T *>::pointer pointer;
+                    typedef typename iterator_traits<const T *>::reference reference;
             };
 
         public : //TYPEDEF
@@ -84,12 +99,12 @@ namespace   ft
             typedef typename allocator_type::const_reference const_reference;
             typedef typename allocator_type::pointer pointer;
             typedef typename allocator_type::const_pointer const_pointer;
-            //typedef vector::iterator iterator;
-            //typedef const_pointer const_iterator;
-            typedef typename ft::reverse_iterator<iterator> reverse_iterator;
-            //typedef ??? const_reverse_iterator;
-            typedef typename iterator::difference_type diference_type; // a verifier
-            typedef size_t size_type; // a verifier
+            //typedef typename ft::vector<value_type, allocator_type>::iterator iterator;
+            //typedef  const_iterator;
+            typedef ft::reverse_iterator<iterator> reverse_iterator;
+            typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+            typedef typename iterator::difference_type difference_type;
+            typedef size_t size_type;
 
         private : //PRIVATE VALUE
                 allocator_type  alloc;
@@ -105,7 +120,7 @@ namespace   ft
                 array_capacity = 0;
                 array_size = 0;
             }
-            vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : alloc(alloc)
+            explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : alloc(alloc)
             {
                 array = (this->alloc).allocate(static_cast<size_type>(n));
                 for (array_capacity = 0; array_capacity < n; array_capacity++)
@@ -115,29 +130,29 @@ namespace   ft
             /*template <class InputIterator>
             vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
             {
-                InputIterator &first_copy = first;
-                int            i;
+                InputIterator<T>::reference = copy_first;
+                size_t            i;
 
                 this->alloc = alloc;
-                for(array_capacity = 0; first != last; first++)
+                for(array_capacity = 0; copy_first != last; copy_first++)
                     array_capacity++;
                 array = (this->alloc).allocate(static_cast<size_t>(array_capacity));
 
-                first = first_copy;
                 for(i = 0; first != last; i++)
-                    (this->alloc).construct(&array[i], first++); //non verifier
+                    (this->alloc).construct(&array[i], first++);
                 array_size = array_capacity;
             }*/
             vector(const vector &x)
             {
                 size_type i;
 
+                (void)i;
                 this->array_capacity = x.array_capacity;
-                this->alloc = x.alloc;
+                this->alloc = allocator_type();
                 this->array_size = x.array_size;
                 this->array = (this->alloc).allocate(static_cast<size_type>(array_capacity));
-                for (i = 0; i < array_capacity; i++)
-                    this->array[i] = x.array[i];
+                for (i = 0; i < array_size; i++)
+                    (this->alloc).construct(&array[i], x.array[i]);
             }
             //DESTRUCTOR
             ~vector(void)
@@ -165,7 +180,7 @@ namespace   ft
                 return (*this);
             } 
             //ARRAY ITERATOR
-            iterator    begin() //une version const
+            iterator    begin()//une version const
             {
                 return (iterator(array));
             }
