@@ -3,9 +3,13 @@
 #VECTOR TEST without extension.cpp
 VECTOR_DIR = vector/
 VECTOR_EXEC = $(addprefix $(VECTOR_DIR), \
-				char_construct int_construct string_construct double_construct pointer_construct \
-				myclass_construct \
-				char_iterator) #int_iterator double_iterator string_iterator myclass_iterator)
+				swap_clear)\
+				#reserve resize at push_pop assign erase
+				#char_construct int_construct string_construct double_construct pointer_construct \
+				char_iterator struct_iterator string_iterator double_iterator \
+				char_construct2 int_construct2 float_construct2 struct_construct2 string_construct2)
+
+#resize or reserve verif with x1 place of x2
 VECTOR_SRCS = $(addsuffix .cpp, $(VECTOR_EXEC))
 
 FT_DIR = test_ft/
@@ -29,7 +33,7 @@ EXEC  = $(addprefix $(EXEC_DIR), $(FT_EXEC) $(STD_EXEC))
 #POUR LA COMPILATION IMPLICITE DES .CPP
 CXX = clang++
 INCLUDE = -I ../include -I srcs/class/
-CPPFLAGS = -Wall -Wextra -Werror $(INCLUDE)
+CPPFLAGS = $(INCLUDE) #-Wall -Wextra -Werror
 
 all : $(EXEC)
 

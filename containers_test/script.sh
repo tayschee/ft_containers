@@ -11,6 +11,7 @@ VEC='vector/'
 
 echo -e "TEST VECTOR\n"
 
+<<C
 echo -e "DEFAULT CONSTRUCTOR and COPY CONSTRUCTOR AND CONSTRUCTOR(SIZE_TYPE) :"
 
 diff <(${FT_BIN}${VEC}char_construct 1) <(${STD_BIN}${VEC}char_construct 1)
@@ -53,17 +54,6 @@ else
     echo -e "${R}CONSTRUCTOR <VOID *>: KO${W}"
 fi
 
-diff <(${FT_BIN}${VEC}myclass_construct 1) <(${STD_BIN}${VEC}myclass_construct 1)
-if [ ! $? -ne 0 ];
-then
-    echo -e "${G}CONSTRUCTOR <MY_CLASS>: OK${W}"
-else
-    echo -e "${R}CONSTRUCTOR <MY_CLASS>: KO${W}"
-fi
-
-echo -e "${B}CONSTRUCTOR <BOOL>: KO${W}"
-
-
 
 echo -e "\nITERATOR :"
 
@@ -75,12 +65,12 @@ else
     echo -e "${R}ITERATOR <CHAR>: KO${W}"
 fi
 
-diff <(${FT_BIN}${VEC}int_iterator) <(${STD_BIN}${VEC}int_iterator)
+diff <(${FT_BIN}${VEC}struct_iterator) <(${STD_BIN}${VEC}struct_iterator)
 if [ ! $? -ne 0 ];
 then
-    echo -e "${G}ITERATOR <INT>: OK${W}"
+    echo -e "${G}ITERATOR <STRUCT>: OK${W}"
 else
-    echo -e "${R}ITERATOR <INT>: KO${W}"
+    echo -e "${R}ITERATOR <STRUCT>: KO${W}"
 fi
 
 diff <(${FT_BIN}${VEC}double_iterator) <(${STD_BIN}${VEC}double_iterator)
@@ -99,28 +89,110 @@ else
     echo -e "${R}ITERATOR <STRING>: KO${W}"
 fi
 
-diff <(${FT_BIN}${VEC}myclass_iterator) <(${STD_BIN}${VEC}myclass_iterator)
+echo -e "\nCONSTRUCTOR WITH ITERATOR :"
+
+diff <(${FT_BIN}${VEC}char_construct2) <(${STD_BIN}${VEC}char_construct2)
 if [ ! $? -ne 0 ];
 then
-    echo -e "${G}ITERATOR <MYCLASS>: OK${W}"
+    echo -e "${G}CONSTRUCTOR(2) <CHAR>: OK${W}"
 else
-    echo -e "${R}ITERATOR <MYCLASS>: KO${W}"
+    echo -e "${R}CONSTRUCTOR(2) <CHAR>: KO${W}"
+fi
+
+diff <(${FT_BIN}${VEC}int_construct2) <(${STD_BIN}${VEC}int_construct2)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}CONSTRUCTOR(2) <INT>: OK${W}"
+else
+    echo -e "${R}CONSTRUCTOR(2) <INT>: KO${W}"
+fi
+
+diff <(${FT_BIN}${VEC}float_construct2) <(${STD_BIN}${VEC}float_construct2)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}CONSTRUCTOR(2) <FLOAT>: OK${W}"
+else
+    echo -e "${R}CONSTRUCTOR(2) <FLOAT>: KO${W}"
+fi
+
+diff <(${FT_BIN}${VEC}struct_construct2) <(${STD_BIN}${VEC}struct_construct2)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}CONSTRUCTOR(2) <STRUCT>: OK${W}"
+else
+    echo -e "${R}CONSTRUCTOR(2) <STRUCT>: KO${W}"
+fi
+
+diff <(${FT_BIN}${VEC}string_construct2) <(${STD_BIN}${VEC}string_construct2)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}CONSTRUCTOR(2) <STRING>: OK${W}"
+else
+    echo -e "${R}CONSTRUCTOR(2) <STRING>: KO${W}"
+fi
+
+echo -e "\nCAPACITY FUNCTION:"
+
+diff <(${FT_BIN}${VEC}reserve) <(${STD_BIN}${VEC}reserve)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}RESERVE : OK${W}"
+else
+    echo -e "${R}RESERVE : KO${W}"
+fi
+
+diff <(${FT_BIN}${VEC}resize) <(${STD_BIN}${VEC}resize)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}RESIZE : OK${W}"
+else
+    echo -e "${R}RESIZE : KO${W}"
+fi
+
+echo -e "\nELEMENT ACCESS FUNCTION\n"
+
+diff <(${FT_BIN}${VEC}at) <(${STD_BIN}${VEC}at)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}AT : OK${W}"
+else
+    echo -e "${R}AT : KO${W}"
 fi
 
 
+echo -e "\nMODIFIERS FUNCTION\n"
 
-#diff <(${MBIN}my_construct_bool_vector 1) <(${BIN}construct_bool_vector 1)
-#if [ ! $? -ne 0 ];
-#then
-#    echo -e "${G}CONSTRUCTOR <BOOLEAN> : OK${W}\n"
-#else
-#    echo -e "${R}CONSTRUCTOR <BOOLEAN> : KO${W}\n"
-#fi
+diff <(${FT_BIN}${VEC}assign) <(${STD_BIN}${VEC}assign)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}ASSIGN : OK${W}"
+else
+    echo -e "${R}ASSIGN : KO${W}"
+fi
 
-#diff <(${MBIN}my_iterator_test) <(${BIN}iterator_test)
-#if [ ! $? -ne 0 ];
-#then
-#    echo -e "${G}VECTOR::ITERATOR : OK${W}\n"
-#else
-#    echo -e "${R}VECTOR::ITERATOR : KO${W}\n"
-#fi
+diff <(${FT_BIN}${VEC}push_pop) <(${STD_BIN}${VEC}push_pop)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}PUSH_POP : OK${W}"
+else
+    echo -e "${R}PUSH_POP : KO${W}"
+fi
+
+diff <(${FT_BIN}${VEC}erase) <(${STD_BIN}${VEC}erase)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}ERASE : OK${W}"
+else
+    echo -e "${R}ERASE : KO${W}"
+fi
+
+C
+
+diff <(${FT_BIN}${VEC}swap_clear) <(${STD_BIN}${VEC}swap_clear)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}SWAP AND CLEAR : OK${W}"
+else
+    echo -e "${R}SWAP AND CLEAR : KO${W}"
+fi
+

@@ -1,47 +1,31 @@
 #include <iterator>
 #include <iostream>
 #include <vector>
+#include <list>
+#include <typeinfo>
+#include "./include/vector.hpp"
 
 int main()
 {
-    size_t i;
-    std::vector<int> test(5, 9);
-    std::vector<int> test1(9, 18);
-    std::vector<int>::iterator it;
-    std::vector<int>::iterator it1;
-    std::vector<int>::reference a = test.front();
-    std::vector<int>::reference a1 = test1.front();
+    int i;
+    char    tab[] = {'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'};
+    std::vector<int> vec(2, 6);
+    vec.push_back(12);
+    vec.push_back(36);
+    vec.push_back(94);
+    std::vector<int>::iterator a(vec.begin());
+    std::vector<int>::iterator b(vec.begin());
 
-
-    it = test.begin();
-    it1 = test1.begin();
-    a = test.front();
-    a1 = test1.front();
-    test.swap(test1);
-    for (i = 0; i < test.size(); i++)
-    {
-        std::cout << test[i] << "\n";
-    }
-    for (i = 0; i < test1.size(); i++)
-    {
-        std::cout << test1[i] << "\n";
-    }
-    std::cout << *it << " " << *it1 << "\n\n";
-    a = 5;
-    a1 = 8;
-    for (i = 0; i < test.size(); i++)
-    {
-        std::cout << test[i] << "\n";
-    }
-    for (i = 0; i < test1.size(); i++)
-    {
-        std::cout << test1[i] << "\n";
-    }
-    std::cout << a << " " << a1 << "\n";
-    std::cout << *it << "\n";
-    std::cout << *++it << "\n";
-    //std::cout << *it << "\n";
-
-
-    return (0);
+    for (i = 0; a + i < vec.end() ; i++)
+        std::cout << *(a + i) << " ";
+    std::cout << "\n";
+    b = vec.erase(a + 2);
+    for (i = 0; a + i < vec.end() ; i++)
+        std::cout << *(a + i) << " ";
+    std::cout << "\n";
+    for (i = 0; b + i < vec.end() ; i++)
+        std::cout << *(b + i) << " ";
+    std::cout << *(a + 2) << " ";
+    std::cout << "\n";
+    return 0;
 }

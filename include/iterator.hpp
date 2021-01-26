@@ -72,23 +72,35 @@ namespace ft
         public :
             //REVERSE_ITERATOR CONSTRUCTOR DESTRUCTOR
             explicit reverse_iterator(){ it = iterator_type(); }
-            explicit reverse_iterator(const Iterator &it_to_reverse){ it = it_to_reverse - 1; }
-            reverse_iterator(const reverse_iterator &x){ it = x.it; } 
+            explicit reverse_iterator(const iterator_type &it_to_reverse){ it = it_to_reverse - 1; }
+
+            template<class It>
+            reverse_iterator(const reverse_iterator<It> &x){ it = x.base() - 1; }
+
             ~reverse_iterator(){}
 
+            iterator_type base() const { return (it + 1); }
+
             //REVERSE_ITERATOR OPERATOR
-            reverse_iterator &operator=(const reverse_iterator &x){ it = x.it; return (*this); }
+            template<class It>
+            reverse_iterator &operator=(const reverse_iterator<It> &x){ it = x.base() - 1; return (*this); }
 
             reference   operator[](difference_type n) const { return ( it[-n]); }
             reference   operator*() const { return (*it); }
             pointer     operator->() const { return (&*it); }
 
-            bool operator==(const reverse_iterator &x) const { return (it == x.it ? 1 : 0); } //why ???
-            bool operator!=(const reverse_iterator &x) const { return (it != x.it ? 1 : 0); } //why ???
-            bool operator<(const reverse_iterator &x) const { return (it < x.it ? 0 : 1); }
-            bool operator>(const reverse_iterator &x) const { return (it > x.it ? 0 : 1); }
-            bool operator>=(const reverse_iterator &x) const { return (it >= x.it ? 0 : 1); }
-            bool operator<=(const reverse_iterator &x) const { return (it <= x.it ? 0 : 1); }
+            template<class It>
+            bool operator==(const reverse_iterator<It> &x) const { return (it == x.base() - 1 ? 1 : 0); } //why ???
+            template<class It>
+            bool operator!=(const reverse_iterator<It> &x) const { return (it != x.base() - 1 ? 1 : 0); } //why ???
+            template<class It>
+            bool operator<(const reverse_iterator<It> &x) const { return (it < x.base() - 1 ? 0 : 1); }
+            template<class It>
+            bool operator>(const reverse_iterator<It> &x) const { return (it > x.base() - 1 ? 0 : 1); }
+            template<class It>
+            bool operator>=(const reverse_iterator<It> &x) const { return (it >= x.base() - 1 ? 0 : 1); }
+            template<class It>
+            bool operator<=(const reverse_iterator<It> &x) const { return (it <= x.base() - 1 ? 0 : 1); }
 
             reverse_iterator &operator+=(int n){ it -= n; return (*this); }
             reverse_iterator &operator-=(int n){ it += n; return (*this); }
