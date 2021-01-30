@@ -53,13 +53,15 @@ int main()
     int x5 = 18;
     char    tab[6]= "test";
     std::vector<int> vec1(x1, -47);
-    std::vector<char> vec2(x2, 'c');
+    std::vector<int> vec2(3, 3);
+    /*std::vector<char> vec2(x2, 'c');
     std::vector<std::string> vec3(x3, "yup");
     std::vector<double> vec4(x4, 12.25);
-    std::vector<char *> vec5(x5, tab);
+    std::vector<char *> vec5(x5, tab);*/
 
     //int
     print(vec1, 6, 18);
+    print(vec1, 1, 9);
 
    
     

@@ -460,20 +460,25 @@ namespace   ft
             {
                 iterator    it;
                 size_t      new_capacity;
-                size_t      pos_nb = position - begin();
+                size_t      pos_nb = &*position - &*begin();
                 size_t      i;
-                T           *new_array;
+                value_type  *new_array;
 
                 if (array_size >= array_capacity)
                 {
+                    std::cout << "oh \n";
                     it = begin();
                     new_capacity = more_capacity();
                     new_array = alloc.allocate(static_cast<size_type>(new_capacity));
                     for(i = 0; i < array_size + 1; i++)
                     {
                         if (it == position)
-                            alloc.construct(&new_array[i++], val); //verifier si c'est pas la fin
-                        alloc.construct(&new_array[i], it++);
+                        {
+                            alloc.construct(&new_array[i], val); //verifier si c'est pas la fin
+                            ++it;
+                        }
+                        else
+                            alloc.construct(&new_array[i], *it++); //int x(5);
                     }
                     clear();
                     array = new_array;
@@ -481,20 +486,21 @@ namespace   ft
                     array_capacity = new_capacity;
                     return (this->begin() + pos_nb );
                 }
-                alloc.construct(&array[array_size], val)
+                alloc.construct(&array[array_size], val);
                 array_size++;
-                it  = this->end() - 1;
-                while (pos > it)
-                    *--it = *(it - 1); 
+                it  = this->end();
+                while (position < --it)
+                    *it = *(it - 1); //*it ; --it;
                 *it = val;
-                return (position); //a verifier; 
+                return (position); //a verifier;   
             }
             void    insert(iterator position, size_type n, const value_type &val) //verif = to replace alloc.construct
             {
                 size_type new_capacity;
                 size_type i;
                 iterator beg(array);
-                iterator end(this->end()))
+                iterator end(this->end());
+                value_type  *new_array;
 
                 if (array_size + n >= array_capacity)
                 {
@@ -532,6 +538,7 @@ namespace   ft
                 size_type it_diff = last - first;
                 iterator beg(array);
                 iterator end(this->end);
+                value_type  *new_array;
                 
                 if (array_size + it_diff >= array_capacity)
                 {
@@ -554,13 +561,13 @@ namespace   ft
                 else
                 {
                     for (i = 0; i < it_diff ; i++)
-                       alloc.construct(&array[array_size + i], *(position + i);
+                       alloc.construct(&array[array_size + i], *(position + i));
 
                     for(i = 0; i < it_diff; i++)
                     {
-                        *(position + i) = val;
+                        *(position + i) = first++;
                     }
-                    array_size += size_inter;
+                    array_size += it_diff;
                 }
             }
 
@@ -592,7 +599,7 @@ namespace   ft
                 }
                 return (return_it);
             }
-            void swap(vector &x) //LOADING
+            void swap(vector &x)
             {
                 T   *save;
                 size_type save_size;
@@ -620,18 +627,6 @@ namespace   ft
                 array_size = 0;
             }
     };
-
-    /*template <Alloc>
-    vector<bool>::vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : alloc(alloc)
-        {
-            n = n % 64 != 0 ? n / 64 + 64 : n / 64;
-            array = (this->alloc).allocate(static_cast<size_t>(n));
-            for (array_capacity = 0; array_capacity < n; array_capacity++)
-                (this->alloc).construct(&array[array_capacity], val);
-            array_size = array_capacity;
-        }
-
-    };*/
     template <class T, class Alloc>
     void swap(vector<T, Alloc> &x, vector<T, Alloc> &y)
     {

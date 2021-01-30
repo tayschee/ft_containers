@@ -53,13 +53,15 @@ int main()
     int x5 = 18;
     char    tab[6]= "test";
     ft::vector<int> vec1(x1, -47);
-    ft::vector<char> vec2(x2, 'c');
+    ft::vector<int> vec2(3, 3);
+    /*ft::vector<char> vec2(x2, 'c');
     ft::vector<std::string> vec3(x3, "yup");
     ft::vector<double> vec4(x4, 12.25);
-    ft::vector<char *> vec5(x5, tab);
+    ft::vector<char *> vec5(x5, tab);*/
 
     //int
     print(vec1, 6, 18);
+    print(vec1, 1, 9);
 
    
     
