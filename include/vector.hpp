@@ -458,20 +458,36 @@ namespace   ft
 
             iterator    insert(iterator position, const value_type &val) //verif = to replace alloc.construct
             {
-                pointer it_position;
+                iterator    it;
+                size_t      new_capacity;
+                size_t      pos_nb = position - begin();
+                size_t      i;
+                T           *new_array;
+
                 if (array_size >= array_capacity)
                 {
-                    capacity = more_capacity();
+                    it = begin();
+                    new_capacity = more_capacity();
                     new_array = alloc.allocate(static_cast<size_type>(new_capacity));
-                    for(i = 0; i < array_size; i++)
+                    for(i = 0; i < array_size + 1; i++)
                     {
-                        if (&*position == &array[i])
-                            it_position = &new_array[i];
-                        new_array[i] = array[i];
+                        if (it == position)
+                            alloc.construct(&new_array[i++], val); //verifier si c'est pas la fin
+                        alloc.construct(&new_array[i], it++);
                     }
+                    clear();
+                    array = new_array;
+                    array_size = i;
+                    array_capacity = new_capacity;
+                    return (this->begin() + pos_nb );
                 }
-                insert(position, 1, val);
-                return (iterator(it_position)); //a verifier; 
+                alloc.construct(&array[array_size], val)
+                array_size++;
+                it  = this->end() - 1;
+                while (pos > it)
+                    *--it = *(it - 1); 
+                *it = val;
+                return (position); //a verifier; 
             }
             void    insert(iterator position, size_type n, const value_type &val) //verif = to replace alloc.construct
             {

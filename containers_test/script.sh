@@ -186,7 +186,6 @@ else
     echo -e "${R}ERASE : KO${W}"
 fi
 
-C
 
 diff <(${FT_BIN}${VEC}swap_clear) <(${STD_BIN}${VEC}swap_clear)
 if [ ! $? -ne 0 ];
@@ -194,5 +193,15 @@ then
     echo -e "${G}SWAP AND CLEAR : OK${W}"
 else
     echo -e "${R}SWAP AND CLEAR : KO${W}"
+fi
+
+C
+
+diff <(${FT_BIN}${VEC}insert) <(${STD_BIN}${VEC}insert)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}INSERT : OK${W}"
+else
+    echo -e "${R}INSERT : KO${W}"
 fi
 

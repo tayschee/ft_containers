@@ -3,8 +3,8 @@
 #VECTOR TEST without extension.cpp
 VECTOR_DIR = vector/
 VECTOR_EXEC = $(addprefix $(VECTOR_DIR), \
-				swap_clear)\
-				#reserve resize at push_pop assign erase
+				insert)\
+				#reserve resize at push_pop assign erase swap_clear
 				#char_construct int_construct string_construct double_construct pointer_construct \
 				char_iterator struct_iterator string_iterator double_iterator \
 				char_construct2 int_construct2 float_construct2 struct_construct2 string_construct2)
