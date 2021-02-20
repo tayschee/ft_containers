@@ -38,7 +38,7 @@ STD_EXEC = $(addprefix $(STD_EXEC_DIR), $(VECTOR_EXEC) $(LIST_EXEC))
 EXEC  = $(addprefix $(EXEC_DIR), $(FT_EXEC) $(STD_EXEC))
 
 #POUR LA COMPILATION IMPLICITE DES .CPP
-CXX = clang++
+CXX = clang++ --std=c++11
 INCLUDE = -I ../include
 CPPFLAGS = $(INCLUDE) #-Wall -Wextra -Werror
 

@@ -440,12 +440,214 @@ namespace   ft
                 dummy_node->next = dummy_node;
                 dummy_node->prev = dummy_node;
             }
+
+            void splice(iterator position, list &x)
+            {
+                this->insert(position, x.begin(), x.last());
+                x.clear();
+            }
+            void splice(iterator position, list &x, iterator i)
+            {
+                this->insert(position, *i);
+                x.erase(i);
+            }
+            void splice(iterator position, list &x, iterator first, iterator last)
+            {
+                this->insert(position, first, last);
+                x.erase(first,last);
+            }
+
+            void remove(const value_type &val)
+            {
+                iterator    it(begin());
+                iterator    last(end());
+
+                while (it < last)
+                {
+                    if (*it++ == val)
+                        erase(it);
+                }
+                ++it;
+            }
+
+            template <class Predicate>
+            void remove_if (Predicate pred)
+            {
+                iterator    it(begin());
+                iterator    last(end());
+
+                while (it < last)
+                {
+                    if (pred(*it) == 0)
+                        erase(it);
+                    ++it;
+                }
+            }
+
+            void unique()
+            {
+                iterator    it(begin());
+                iterator    itp1(begin());
+                iterator    last(end());
+
+                --last;
+                while (it < last)
+                {
+                    ++itp1;
+                    if (pred(*it) == pred(*itp1))
+                        erase(itp1);
+                    ++it;
+                }
+            }
+            template <class BinaryPredicate>
+            void unique((BinaryPredicate binary_pred))
+            {
+                iterator    it(begin());
+                iterator    itp1(begin());
+                iterator    last(end());
+
+                --last;
+                while (it < last)
+                {
+                    ++itp1;
+                    if (binary_pred(*itp1, *it) == 0)
+                        erase(it);
+                    ++it;
+                }
+            }
+
+            void merge (list& x)
+            {
+                if (*this == x)
+                    return ;
+                insert(end(), x.begin(), x.last());
+                erase(x.begin(), x.end());
+            }
+            template <class Compare>
+            void merge (list& x, Compare comp)//je comprend pas
+            {
+                if (*this == x)
+                    return ;
+                insert(end(), x.begin(), x.last());
+            }
+
+
+            void sort()
+            {
+                iterator    first(begin());
+                iterator    it(begin());
+                iterator    itp1(++begin());
+                iterator    last(--end());
+
+                while (it < last)
+                {
+                    if (*it > *itp1)
+                    {
+                        it->prev->next = itp1;
+                        itp1->prev = it->prev;
+
+                        itp1->next->prev = it;
+                        it->next = itp1->next;
+
+                        itp1->next = it;
+                        it->prev = itp1; 
+
+                        itp1 = first;
+                        it = itp1++;
+                    }
+                    else
+                    {
+                        ++it;
+                        ++itp1;
+                    }
+                }
+            }
     };
+
+    template <class Compare>
+    void sort (Compare comp)
+    {
+         iterator    first(begin());
+                iterator    it(begin());
+                iterator    itp1(++begin());
+                iterator    last(--end());
+
+                while (it < last)
+                {
+                    if (comp(*it, *itp1))
+                    {
+                        it->prev->next = itp1;
+                        itp1->prev = it->prev;
+
+                        itp1->next->prev = it;
+                        it->next = itp1->next;
+
+                        itp1->next = it;
+                        it->prev = itp1; 
+
+                        itp1 = first;
+                        it = itp1++;
+                    }
+                    else
+                    {
+                        ++it;
+                        ++itp1;
+                    }
+                }
+            }
+    }
+
+    void reverse()
+    {
+        size_type   i;
+        node        *elem = reinterpret_cast<node *>(&*begin());
+        node        *tmp;
+
+        while (i <= node_size)
+        {
+            tmp = elem->prev;
+            elem->prev = elem->next;
+            elem->next = tmp;
+
+            elem = elem->next;
+        }
+
+    }
 
     template <class T, class Alloc>
     void        swap(list<T, Alloc> &x, list<T, Alloc> &y)
     {
         x.swap(y);
+    }
+
+    //RELATIONAL OPERATOR
+    bool operator==(const list& rhs) const
+    {
+        iterator it_this(this->begin());
+        iterator last(end());
+        iterator it_rhs(rhs.begin());
+        if (this->node_size != rhs.node_size)
+            return (1);
+        while(it_this != end)
+        {
+            if (*it_this++ != *it_rhs++)
+                return (1);
+        }
+        return (0);
+    }
+    bool operator!=(const list& rhs) const
+    {
+        iterator it_this(this->begin());
+        iterator last(end());
+        iterator it_rhs(rhs.begin());
+        if (this->node_size != rhs.node_size)
+            return (0);
+        while(it_this != end)
+        {
+            if (*it_this++ != *it_rhs++)
+                return (0);
+        }
+        return (1);
     }
 };
 
