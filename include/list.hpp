@@ -5,8 +5,6 @@
 # include <stdexcept> //exception
 # include "iterator.hpp"
 # include <iostream> 
-# include <algorithm> //pas sur
-# include <sstream> //conversion int to string (for exception)
 
 namespace   ft
 {   
@@ -562,12 +560,11 @@ namespace   ft
                     }
                 }
             }
-    };
 
-    template <class Compare>
-    void sort (Compare comp)
-    {
-         iterator    first(begin());
+            template <class Compare>
+            void sort (Compare comp)
+            {
+                iterator    first(begin());
                 iterator    it(begin());
                 iterator    itp1(++begin());
                 iterator    last(--end());
@@ -595,60 +592,60 @@ namespace   ft
                     }
                 }
             }
-    }
 
-    void reverse()
-    {
-        size_type   i;
-        node        *elem = reinterpret_cast<node *>(&*begin());
-        node        *tmp;
+            void reverse()
+            {
+                size_type   i;
+                node        *elem = reinterpret_cast<node *>(&*begin());
+                node        *tmp;
 
-        while (i <= node_size)
+                while (i <= node_size)
+                {
+                    tmp = elem->prev;
+                    elem->prev = elem->next;
+                    elem->next = tmp;
+
+                    elem = elem->next;
+                }
+
+            }
+
+        template <class T, class Alloc>
+        void        swap(list<T, Alloc> &x, list<T, Alloc> &y)
         {
-            tmp = elem->prev;
-            elem->prev = elem->next;
-            elem->next = tmp;
-
-            elem = elem->next;
+            x.swap(y);
         }
 
-    }
-
-    template <class T, class Alloc>
-    void        swap(list<T, Alloc> &x, list<T, Alloc> &y)
-    {
-        x.swap(y);
-    }
-
-    //RELATIONAL OPERATOR
-    bool operator==(const list& rhs) const
-    {
-        iterator it_this(this->begin());
-        iterator last(end());
-        iterator it_rhs(rhs.begin());
-        if (this->node_size != rhs.node_size)
-            return (1);
-        while(it_this != end)
+        //RELATIONAL OPERATOR
+        bool operator==(const list& rhs) const
         {
-            if (*it_this++ != *it_rhs++)
+            iterator it_this(this->begin());
+            iterator last(end());
+            iterator it_rhs(rhs.begin());
+            if (this->node_size != rhs.node_size)
                 return (1);
-        }
-        return (0);
-    }
-    bool operator!=(const list& rhs) const
-    {
-        iterator it_this(this->begin());
-        iterator last(end());
-        iterator it_rhs(rhs.begin());
-        if (this->node_size != rhs.node_size)
+            while(it_this != end)
+            {
+                if (*it_this++ != *it_rhs++)
+                    return (1);
+            }
             return (0);
-        while(it_this != end)
-        {
-            if (*it_this++ != *it_rhs++)
-                return (0);
         }
-        return (1);
-    }
+        bool operator!=(const list& rhs) const
+        {
+            iterator it_this(this->begin());
+            iterator last(end());
+            iterator it_rhs(rhs.begin());
+            if (this->node_size != rhs.node_size)
+                return (0);
+            while(it_this != end)
+            {
+                if (*it_this++ != *it_rhs++)
+                    return (0);
+            }
+            return (1);
+        }
+    };
 };
 
 #endif

@@ -5,6 +5,16 @@
 
 namespace ft
 {
+
+    template <bool Cond, typename Result=void>
+    struct enable_if { };
+
+    template <typename Result>
+    struct enable_if<true, Result>
+    {
+        type = Result;
+    };
+
     struct input_iterator_tag{};
     struct output_iterator_tag{};
     struct forward_iterator_tag{};

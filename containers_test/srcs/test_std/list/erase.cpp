@@ -176,7 +176,7 @@ void            test_func(std::list<T> &lst, int beg, int end)
 template <typename T>
 std::list<T>        create(T *tab, int size)
 {
-    typename std::vector<T>::iterator beg(tab);
+    typename std::vector<T>::iterator beg = typename std::vector<T>::iterator(tab);
     typename std::vector<T>::iterator end(&tab[size]);
     std::list<T>     lst(beg, end);
 
