@@ -6,7 +6,9 @@ W='\u001b[0m'
 STD_BIN='bin/test_std/'
 FT_BIN='bin/test_ft/'
 
+
 VEC='vector/'
+LIST='list/'
 
 
 echo -e "TEST VECTOR\n"
@@ -195,7 +197,7 @@ else
     echo -e "${R}SWAP AND CLEAR : KO${W}"
 fi
 
-C
+
 
 diff <(${FT_BIN}${VEC}insert) <(${STD_BIN}${VEC}insert)
 if [ ! $? -ne 0 ];
@@ -205,3 +207,103 @@ else
     echo -e "${R}INSERT : KO${W}"
 fi
 
+C
+
+echo -e "TEST LIST\n"
+
+<<C
+diff <(${FT_BIN}${LIST}default_constructor) <(${STD_BIN}${LIST}default_constructor)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}DEFAULT CONSTRUCTOR : OK${W}"
+else
+    echo -e "${R}DEFAULT CONSTRUCTOR : KO${W}"
+fi
+
+diff <(${FT_BIN}${LIST}constructor2) <(${STD_BIN}${LIST}constructor2)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}CONSTRUCTOR 2 : OK${W}"
+else
+    echo -e "${R}CONSTRUCTOR 2 : KO${W}"
+fi
+
+
+diff <(${FT_BIN}${LIST}push_pop_front) <(${STD_BIN}${LIST}push_pop_front)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}PUSH POP FRONT : OK${W}"
+else
+    echo -e "${R}PUSH POP FRONT : KO${W}"
+fi
+
+
+diff <(${FT_BIN}${LIST}push_pop_back) <(${STD_BIN}${LIST}push_pop_back)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}PUSH POP BACK : OK${W}"
+else
+    echo -e "${R}PUSH POP BACK : KO${W}"
+fi
+
+
+diff <(${FT_BIN}${LIST}iterator) <(${STD_BIN}${LIST}iterator)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}ITERATOR : OK${W}"
+else
+    echo -e "${R}ITERATOR : KO${W}"
+fi
+
+
+diff <(${FT_BIN}${LIST}constructor3) <(${STD_BIN}${LIST}constructor3)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}CONSTRUCTOR 3 : OK${W}"
+else
+    echo -e "${R}CONSTRUCTOR 3 : KO${W}"
+fi
+
+diff <(${FT_BIN}${LIST}assign) <(${STD_BIN}${LIST}assign)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}ASSIGN : OK${W}"
+else
+    echo -e "${R}ASSIGN : KO${W}"
+fi
+
+diff <(${FT_BIN}${LIST}resize) <(${STD_BIN}${LIST}resize)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}RESIZE : OK${W}"
+else
+    echo -e "${R}RESIZE : KO${W}"
+fi
+
+
+diff <(${FT_BIN}${LIST}clear) <(${STD_BIN}${LIST}clear)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}CLEAR : OK${W}"
+else
+    echo -e "${R}CLEAR : KO${W}"
+fi
+
+
+diff <(${FT_BIN}${LIST}swap) <(${STD_BIN}${LIST}swap)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}SWAP : OK${W}"
+else
+    echo -e "${R}SWAP : KO${W}"
+fi
+
+C
+
+diff <(${FT_BIN}${LIST}erase) <(${STD_BIN}${LIST}erase)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}ERASE : OK${W}"
+else
+    echo -e "${R}ERASE : KO${W}"
+fi

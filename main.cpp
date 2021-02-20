@@ -1,31 +1,52 @@
-#include <iterator>
 #include <iostream>
-#include <vector>
 #include <list>
+#include "list.hpp"
+#include "vector.hpp"
 #include <typeinfo>
-#include "./include/vector.hpp"
+#include <memory>
+#include <string>
+#include <stdio.h>
+#include <vector>
+
+struct a
+{
+    int value;
+    void    *next;
+};
+
+struct b
+{
+    std::string val;
+    void *next;
+};
 
 int main()
 {
     int i;
-    char    tab[] = {'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'};
-    std::vector<int> vec(2, 6);
-    vec.push_back(12);
-    vec.push_back(36);
-    vec.push_back(94);
-    std::vector<int>::iterator a(vec.begin());
-    std::vector<int>::iterator b(vec.begin());
+    int             tab[] = {12, 24, 32, 64};
+    std::list<int>   a(1, 12);
+    a.push_back(24);
+    a.push_back(32);
+    a.push_back(64);
+    std::vector<int>::iterator vit1(tab);
+    std::vector<int>::iterator vit2(&tab[4]);
+    std::list<int> b(a.begin(), a.end());
+    std::list<int>::iterator it1(b.begin());
+    std::list<int>::iterator it2(b.end());
 
-    for (i = 0; a + i < vec.end() ; i++)
-        std::cout << *(a + i) << " ";
-    std::cout << "\n";
-    b = vec.erase(a + 2);
-    for (i = 0; a + i < vec.end() ; i++)
-        std::cout << *(a + i) << " ";
-    std::cout << "\n";
-    for (i = 0; b + i < vec.end() ; i++)
-        std::cout << *(b + i) << " ";
-    std::cout << *(a + 2) << " ";
-    std::cout << "\n";
-    return 0;
+
+    std::list<int> c(vit2, vit1);
+
+    it1 = c.begin();
+
+    std::cout << "size : " << c.size() << "\n";
+    while (i < c.size())
+    {
+        std::cout << *it1++ << "\n";
+        i++;
+    }
+   
+    return (0);
+
 }
+

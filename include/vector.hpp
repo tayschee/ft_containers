@@ -189,13 +189,11 @@ namespace   ft
                 size_type       array_size;
 
         private : //PRIVATE FUNCTION
-            size_t  more_capacity()
+            size_t  more_capacity(size_t new_cap1 = 0)
             {
-                return(array_capacity < 1 ? array_capacity + 1 : array_capacity * 2);
-            }
-            size_t  more_capacity(size_t n)
-            {
-                return(n);
+                size_type new_cap2 = array_capacity > 0 ? array_capacity * 2 : 1;
+
+                return(new_cap1 > new_cap2 ? new_cap1 : new_cap2);
             }
 
         public : //FUNCTION
@@ -313,7 +311,7 @@ namespace   ft
             {
                 if (n > array_capacity) //exception check_inside reserve
                 {
-                    this->reserve(n);
+                    reserve(n);
                 }
                 if (n > array_size)
                 {
@@ -456,7 +454,7 @@ namespace   ft
                     alloc.destroy(&array[--array_size]);
             }
 
-            iterator    insert(iterator position, const value_type &val) //verif = to replace alloc.construct
+            iterator    insert(iterator position, const value_type &val)
             {
                 iterator    it;
                 size_t      new_capacity;
@@ -464,21 +462,22 @@ namespace   ft
                 size_t      i;
                 value_type  *new_array;
 
-                if (array_size >= array_capacity)
+                if (array_size == array_capacity)
                 {
-                    std::cout << "oh \n";
                     it = begin();
                     new_capacity = more_capacity();
                     new_array = alloc.allocate(static_cast<size_type>(new_capacity));
-                    for(i = 0; i < array_size + 1; i++)
+                    array_size = array_size + 1;
+                    for(i = 0; i < array_size; i++)
                     {
                         if (it == position)
                         {
                             alloc.construct(&new_array[i], val); //verifier si c'est pas la fin
-                            ++it;
+                            if (i + 1 < array_size)
+                                alloc.construct(&new_array[++i], *it++);
                         }
                         else
-                            alloc.construct(&new_array[i], *it++); //int x(5);
+                            alloc.construct(&new_array[i], *it++);
                     }
                     clear();
                     array = new_array;
@@ -502,9 +501,9 @@ namespace   ft
                 iterator end(this->end());
                 value_type  *new_array;
 
-                if (array_size + n >= array_capacity)
+                if (array_size + n > array_capacity)
                 {
-                    new_capacity = more_capacity(n + array_size);
+                    new_capacity = more_capacity(array_size + n);
                     new_array = alloc.allocate(static_cast<size_type>(new_capacity));
                     
                     for(i = 0; beg != position; i++) //verif i < array_size
@@ -517,17 +516,22 @@ namespace   ft
                         alloc.construct(&new_array[i++], *beg++);
                     clear();
                     array_capacity = new_capacity;
-                    array_size = n;
+                    array_size = i;
                     array = new_array;
                 }
                 else
                 {
                     for (i = 0; i < n; i++)
+                        alloc.construct(&array[array_size++], val);
+                    if (i > 0)
                     {
-                       alloc.construct(&*(position + i + n), *(position + i));
-                       *(position + i) = val;
-                       array_size++; 
+                        end = this->end();
+                        position += n;
+                        while (position < end)
+                            *--end = *(end - n - 1);
                     }
+                    for (i = 0; i < n; i++)
+                        *--end = val;
                 }
             }
             template <class InputIterator, class = typename InputIterator::value_type>
