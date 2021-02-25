@@ -234,16 +234,12 @@ int main()
 {
     std::string     str1("abcdef");
     std::string     str2("ghijkl");
-    std::string     str3("test3");
     double          db1(881.8);
     double          db2(129.61);
-    double          db3(1008.7);
     int             tab_int1[] = {12, 27, 9, 255, 447, 828, 0};
     int             tab_int2[] = {-12, -27, -9, -255, -447, -828, 0};
-    int             tab_int3[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 1100, 0};
     char            tab_char1[] = "poule";
     char            tab_char2[] = "entourloupe";
-    char            tab_char3[] = "sixteen";
 
     //std::cout << "a\n";
     test_all(725, 441, 221);

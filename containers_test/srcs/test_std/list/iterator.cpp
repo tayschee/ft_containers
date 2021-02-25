@@ -315,7 +315,6 @@ void test_list(T v1, int nb1, T v2, int nb2, T v3, int nb3)
 
 int main()
 {
-    size_t i;
     std::string str1("abc");
     std::string str2("edf");
     std::string str3("jkl");

@@ -53,7 +53,7 @@ void    test(ft::list<T>  &list, typename ft::list<T>::iterator it_beg, typename
     std::cout << "\n";
 }
 
-void    test(ft::list<struct a>  &list, typename ft::list<struct a>::iterator it_beg, typename ft::list<struct a>::iterator it_end)
+void    test(ft::list<struct a>  &list, ft::list<struct a>::iterator it_beg, ft::list<struct a>::iterator it_end)
 {
     size_t i;
     try
@@ -222,16 +222,12 @@ int main()
 {
     std::string     str1("test1");
     std::string     str2("test2");
-    std::string     str3("test3");
     double          db1(-88.8);
     double          db2(8099.61);
-    double          db3(1008.7);
     int             tab_int1[] = {12, 27, 9, 255, 447, 828, 0};
     int             tab_int2[] = {-12, -27, -9, -255, -447, -828, 0};
-    int             tab_int3[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 1100, 0};
     char            tab_char1[] = "poule";
     char            tab_char2[] = "entourloupe";
-    char            tab_char3[] = "sixteen";
 
     //std::cout << "a\n";
     test_all(900, 9001, 1, 450, 470, 449, 471);

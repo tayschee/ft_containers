@@ -212,6 +212,7 @@ C
 echo -e "TEST LIST\n"
 
 <<C
+C
 diff <(${FT_BIN}${LIST}default_constructor) <(${STD_BIN}${LIST}default_constructor)
 if [ ! $? -ne 0 ];
 then
@@ -298,7 +299,6 @@ else
     echo -e "${R}SWAP : KO${W}"
 fi
 
-C
 
 diff <(${FT_BIN}${LIST}erase) <(${STD_BIN}${LIST}erase)
 if [ ! $? -ne 0 ];
@@ -306,4 +306,93 @@ then
     echo -e "${G}ERASE : OK${W}"
 else
     echo -e "${R}ERASE : KO${W}"
+fi
+
+
+diff <(${FT_BIN}${LIST}insert) <(${STD_BIN}${LIST}insert)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}INSERT : OK${W}"
+else
+    echo -e "${R}INSERT : KO${W}"
+fi
+
+
+diff <(${FT_BIN}${LIST}splice) <(${STD_BIN}${LIST}splice)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}SPLICE : OK${W}"
+else
+    echo -e "${R}SPLICE : KO${W}"
+fi
+
+
+
+diff <(${FT_BIN}${LIST}remove) <(${STD_BIN}${LIST}remove)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}REMOVE : OK${W}"
+else
+    echo -e "${R}REMOVE : KO${W}"
+fi
+
+
+diff <(${FT_BIN}${LIST}remove_if) <(${STD_BIN}${LIST}remove_if)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}REMOVE_IF : OK${W}"
+else
+    echo -e "${R}REMOVE_IF : KO${W}"
+fi
+
+diff <(${FT_BIN}${LIST}unique) <(${STD_BIN}${LIST}unique)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}UNIQUE : OK${W}"
+else
+    echo -e "${R}UNIQUE : KO${W}"
+fi
+
+diff <(${FT_BIN}${LIST}merge) <(${STD_BIN}${LIST}merge)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}MERGE : OK${W}"
+else
+    echo -e "${R}MERGE : KO${W}"
+fi
+
+
+diff <(${FT_BIN}${LIST}sort) <(${STD_BIN}${LIST}sort)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}SORT : OK${W}"
+else
+    echo -e "${R}SORT : KO${W}"
+fi
+
+diff <(${FT_BIN}${LIST}sort) <(${STD_BIN}${LIST}sort)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}SORT : OK${W}"
+else
+    echo -e "${R}SORT : KO${W}"
+fi
+
+
+diff <(${FT_BIN}${LIST}reverse) <(${STD_BIN}${LIST}reverse)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}REVERSE : OK${W}"
+else
+    echo -e "${R}REVERSE : KO${W}"
+fi
+
+
+
+diff <(${FT_BIN}${LIST}operator) <(${STD_BIN}${LIST}operator)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}OPERATOR : OK${W}"
+else
+    echo -e "${R}OPERATOR : KO${W}"
 fi

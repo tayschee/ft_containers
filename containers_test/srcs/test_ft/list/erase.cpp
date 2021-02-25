@@ -9,17 +9,17 @@ struct a
 };
 
 template <typename T>
-void    test(ft::list<T>  &list, typename ft::list<T>::iterator old_it)
+void    test(ft::list<T>  &list, typename ft::list<T>::iterator old_it, size_t n)
 {
     size_t i;
     try
     {
-        for (i = 0; i < list.size(); i++)
+        for (i = 0; i < n; i++)
         {
             std::cout << *old_it++ << " ";
         }
         std::cout << "\n";
-        for (i = 0; i < list.size(); i++)
+        for (i = 0; i < n; i++)
         {
             std::cout << *++old_it << " ";
         }
@@ -64,13 +64,13 @@ void    test(ft::list<T>  &list, typename ft::list<T>::iterator old_it)
 }
 
 template <typename T>
-void    test(ft::list<T *>  &list, typename ft::list<T>::iterator old_it)
+void    test(ft::list<T *>  &list, typename ft::list<T>::iterator old_it, size_t n)
 {
     size_t i;
     size_t j;
     try
     {
-        for (i = 0; i < list.size(); i++)
+        for (i = 0; i < n; i++)
         {
             for (j = 0; (*old_it)[j] != 0; j++)
                 std::cout << (*old_it)[j];
@@ -78,7 +78,7 @@ void    test(ft::list<T *>  &list, typename ft::list<T>::iterator old_it)
             old_it++;
         }
         std::cout << "\n";
-        for (i = 0; i < list.size(); i++)
+        for (i = 0; i < n; i++)
         {
             ++old_it;
             for (j = 0; (*old_it)[j] != 0; j++)
@@ -134,7 +134,7 @@ void    test(ft::list<T *>  &list, typename ft::list<T>::iterator old_it)
 }
 
 template <typename T>
-void            test_func(ft::list<T> &lst, int pos)
+void            test_func(ft::list<T> &lst, size_t pos)
 {
     typename ft::list<T>::iterator it(lst.begin());
     typename ft::list<T>::iterator old_it(lst.begin());
@@ -146,17 +146,22 @@ void            test_func(ft::list<T> &lst, int pos)
     }
 
     if (pos == 0)
-        old_it = lst.erase(it);
+    {
+        std::cout << (lst.erase(it) == lst.begin()) << "\n";
+        old_it = lst.begin();
+    }
     else
         std::cout << *lst.erase(it) << "\n";
-    test(lst, old_it);
+    test(lst, old_it, lst.size());
 }
 
 template <typename T>
-void            test_func(ft::list<T> &lst, int beg, int end)
+void            test_func(ft::list<T> &lst, size_t beg, size_t end)
 {
     typename ft::list<T>::iterator it_beg(lst.begin());
-    typename ft::list<T>::iterator it_end(lst.end());
+    typename ft::list<T>::iterator it_end(lst.begin());
+    typename ft::list<T>::iterator old_it(lst.begin());
+
     while (beg)
     {
         --beg;
@@ -167,46 +172,71 @@ void            test_func(ft::list<T> &lst, int beg, int end)
         --end;
         ++it_end;
     }
-    lst.erase(beg, end);
+    if (beg == 0)
+    {
+        old_it = lst.erase(it_beg, it_end);
+        std::cout << (old_it  == lst.begin()) << "\n";
+        old_it = lst.begin();
+    }
+    else
+        std::cout << *lst.erase(it_beg, it_end) << "\n";
 
-
-    test(lst);
+    test(lst, old_it, lst.size());
 }
 
 template <typename T>
-ft::list<T>        create(T *tab, int size)
+ft::list<T>        create(T *tab, size_t size)
 {
     typename ft::vector<T>::iterator beg(tab);
-    typename ft::vector<T>::iterator end(&tab[size]);
+    typename ft::vector<T>::iterator end(tab + size);
+
     ft::list<T>     lst(beg, end);
 
     return (lst);
 }
 
-/*template <typename T>
-ft::list<T>        create(int size, const T &val, const T &val2)
-{
-    ft::list<T>     lst(size, val);
-
-    lst.push_back(val2);
-    return (lst);
-}*/
-
 template<typename T>
-void    test_all(T *tab, int size, int pos)
+void    test_all(T *tab, size_t size, size_t pos)
 {
-    int i = 0;
+    size_t i = 0;
     ft::list<T> lst(create(tab, size));
 
     while (i < lst.size())
     {
         if (pos < lst.size())
+        {
             test_func(lst, pos);
+        }
         else
         {
             test_func(lst, lst.size() - 1);
         }
     }
+}
+
+template<typename T>
+void    test_all(T *tab, size_t size, size_t pos, size_t end)
+{
+    size_t i = 0;
+    ft::list<T> lst(create(tab, size));
+
+    while (i < lst.size())
+    {
+        if (pos < lst.size())
+        {
+            if (end < lst.size())
+                test_func(lst, pos, end);
+            else
+            {
+                test_func(lst, pos, lst.size());
+            }
+        }
+        else
+        {
+            test_func(lst, 0, lst.size());
+        }
+    }
+    test_func(lst, 0, 0);
 }
 
 int main()
@@ -227,7 +257,6 @@ int main()
                                 441.12, 90, -5, -12, 244, -98.7, -99.2};
     char             tab_char[] = "abcedfghijklmnopqrstuvwxyzon omatopee yataa tatakae tatakae tourte";
 
-    //std::cout << "a\n";
     test_all(tab_int, 20 , 7);
     test_all(tab_char, 55, 42);
     test_all(tab_db, 23, 37);
@@ -235,6 +264,16 @@ int main()
 
     test_all(tab_int, 18 , 0);
     test_all(tab_str, 7, 0);
+
+
+    test_all(tab_int, 20 , 7, 18);
+    test_all(tab_char, 55, 3, 6);
+    test_all(tab_db, 23, 0, 15);
+    test_all(tab_str, 10, 3, 4);
+
+    test_all(tab_int, 18 , 17, 18);
+    test_all(tab_str, 7, 0, 1);
+    test_all(tab_db, 23, 22, 23);
 
 
 

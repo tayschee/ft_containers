@@ -43,7 +43,6 @@ void    test(T  list)
 void    test(std::list<struct a>  list)
 {
     size_t i;
-    size_t j;
     try
     {
         std::list<struct a>::iterator it(list.begin());

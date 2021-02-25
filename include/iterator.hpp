@@ -2,6 +2,7 @@
 # define ITERATOR_HPP
 
 # include <cstddef> //ptrdiff_t
+# include "list.hpp"
 
 namespace ft
 {
@@ -12,14 +13,94 @@ namespace ft
     template <typename Result>
     struct enable_if<true, Result>
     {
-        type = Result;
+        typedef Result type;
     };
+
 
     struct input_iterator_tag{};
     struct output_iterator_tag{};
     struct forward_iterator_tag{};
     struct bidirectional_iterator_tag{};
     struct random_access_iterator_tag{};
+
+    template<class Type>
+    struct is_integral
+    {
+        static const bool value = false;
+    };
+    template<>
+    struct is_integral<bool>
+    {
+        static const bool value = true;
+    };
+    template<>
+    struct is_integral<char>
+    {
+        static const bool value = true;
+    };
+    template<>
+    struct is_integral<signed char>
+    {
+        static const bool value = true;
+    };
+    template<>
+    struct is_integral<unsigned char>
+    {
+        static const bool value = true;
+    };
+    template<>
+    struct is_integral<wchar_t>
+    {
+        static const bool value = true;
+    };
+    template<>
+    struct is_integral<short>
+    {
+        static const bool value = true;
+    };
+    template<>
+    struct is_integral<unsigned short>
+    {
+        static const bool value = true;
+    };
+    template<>
+    struct is_integral<int>
+    {
+        static const bool value = true;
+    };
+    template<>
+    struct is_integral<unsigned int>
+    {
+        static const bool value = true;
+    };
+    template<>
+    struct is_integral<long>
+    {
+        static const bool value = true;
+    };
+    template<>
+    struct is_integral<unsigned long>
+    {
+        static const bool value = true;
+    };
+    
+    template<>
+    struct is_integral<float>
+    {
+        static const bool value = false;
+    };
+    template<>
+    struct is_integral<double>
+    {
+        static const bool value = false;
+    };
+    template<>
+    struct is_integral<long double>
+    {
+        static const bool value = false;
+    };
+
+    
 
     template    <class Category,
                 class T,

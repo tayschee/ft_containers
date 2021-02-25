@@ -1,52 +1,64 @@
 #include <iostream>
 #include <list>
 #include "list.hpp"
-#include "vector.hpp"
-#include <typeinfo>
-#include <memory>
-#include <string>
-#include <stdio.h>
-#include <vector>
+
+
+
+template <class T>
+struct is_iterator
+{
+    static const bool value = true;
+};
 
 struct a
 {
-    int value;
-    void    *next;
+    static const bool test = true;
+    int i = 0;
 };
 
-struct b
+void    x(size_t size, size_t size2)
 {
-    std::string val;
-    void *next;
-};
+    (void)size;
+    std::cout << "nb\n";
+}
 
-int main()
+template <class T>
+void x(T size, typename ft::enable_if<T::test, T>::type size2)
 {
-    int i;
-    int             tab[] = {12, 24, 32, 64};
-    std::list<int>   a(1, 12);
-    a.push_back(24);
-    a.push_back(32);
-    a.push_back(64);
-    std::vector<int>::iterator vit1(tab);
-    std::vector<int>::iterator vit2(&tab[4]);
-    std::list<int> b(a.begin(), a.end());
-    std::list<int>::iterator it1(b.begin());
-    std::list<int>::iterator it2(b.end());
-
-
-    std::list<int> c(vit2, vit1);
-
-    it1 = c.begin();
-
-    std::cout << "size : " << c.size() << "\n";
-    while (i < c.size())
-    {
-        std::cout << *it1++ << "\n";
-        i++;
-    }
-   
-    return (0);
+    (void)size;
+    std::cout << "other\n";
 
 }
 
+template <class T>
+int     func()
+{
+    return 1;
+}
+
+int main()
+{
+    ft::list<int>    lst(12, 13);
+    ft::list<int>    lst1(11, 14);
+    ft::list<int>::iterator    it(lst.begin());
+    ft::list<int>::iterator     it1(lst1.begin());
+
+    std::cout << *lst1.begin() << "\n";
+    std::cout << *lst.begin() << "\n";
+    std::cout << (it == lst1.begin()) << "\n";
+    std::cout << (it1 == lst.begin()) << "\n\n";
+
+    lst1.swap(lst);
+
+    std::cout << *lst1.begin() << "\n";
+    std::cout << *lst.begin() << "\n";
+
+    std::cout << (it == lst1.begin()) << "\n";
+    std::cout << (it1 == lst.begin()) << "\n";
+
+
+    std::cout << (lst < lst1) << "\n";
+    
+
+    return 0;
+}

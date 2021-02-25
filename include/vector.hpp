@@ -212,8 +212,9 @@ namespace   ft
                 array_size = array_capacity;
             }
 
-            template <class InputIterator, class = typename InputIterator::value_type>
-            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
+            template <class InputIterator>
+            vector(InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::value last,
+            const allocator_type& alloc = allocator_type())
             {
                 InputIterator copy_first = first;
                 size_t          i;
@@ -412,8 +413,8 @@ namespace   ft
                     ++array_size;
                 }
             }
-            template <class InputIterator, class = typename InputIterator::value_type>
-            void    assign(InputIterator first, InputIterator last) //a refaire
+            template <class InputIterator>
+            void    assign(InputIterator first,  typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::value last) //a refaire
             {
                 size_t          range_it = &*last - &*first;
 
@@ -534,8 +535,8 @@ namespace   ft
                         *--end = val;
                 }
             }
-            template <class InputIterator, class = typename InputIterator::value_type>
-            void    insert(iterator position, InputIterator first, InputIterator last)
+            template <class InputIterator>
+            void    insert(iterator position, InputIterator first,  typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::value last)
             {
                 size_type new_capacity;
                 size_type i;
@@ -590,7 +591,6 @@ namespace   ft
             {
                 iterator return_it(first);
                 iterator end(this->end());
-                size_t   it_diff = &*last - &*first;
 
                 while (last < end)
                 {

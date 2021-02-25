@@ -53,7 +53,7 @@ void    test(std::list<T>  &list, typename std::list<T>::iterator it_beg, typena
     std::cout << "\n";
 }
 
-void    test(std::list<struct a>  &list, typename std::list<struct a>::iterator it_beg, typename std::list<struct a>::iterator it_end)
+void    test(std::list<struct a>  &list, std::list<struct a>::iterator it_beg, std::list<struct a>::iterator it_end)
 {
     size_t i;
     try
@@ -210,8 +210,6 @@ std::list<T>        create_list(int size, const T &val, int inter, const T &val2
 template<typename T>
 void    test_all1(const std::list<T> &lst, const std::list<T> &lst1, const std::list<T> &lst2, const std::list<T> &lst3)
 {
-    int i = 0;
-    int j = 0;
     std::list<T> empty_list;
 
     test_assign(empty_list, empty_list);

@@ -43,7 +43,6 @@ void    test(T  list)
 void    test(ft::list<struct a>  list)
 {
     size_t i;
-    size_t j;
     try
     {
         ft::list<struct a>::iterator it(list.begin());

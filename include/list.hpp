@@ -140,6 +140,8 @@ namespace   ft
             node                    *dummy_node;
             size_type               node_size;
 
+        private :
+
         public: //FUNCTION
             //CONSTRUCTOR DESTRUCTOR
             explicit list(const allocator_type alloc = allocator_type()) : value_alloc(alloc)
@@ -152,17 +154,36 @@ namespace   ft
                 node_size = 0;
             }
             explicit list(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type())
-            : list(alloc)
+            : value_alloc(alloc)
             {
+                dummy_node = node_alloc.allocate(1);
+                value_alloc.construct(&dummy_node->value, value_type());
+                dummy_node->next = dummy_node;
+                dummy_node->prev = dummy_node;
+                node_size = 0;
+
                 assign(n, val);
             }
-            template <class InputIterator, class = typename InputIterator::value_type>
-            list(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type()) : list(alloc)
+            template <class InputIterator>/*, class = typename InputIterator::value_type*/
+            list(InputIterator first, typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last,
+            const allocator_type &alloc = allocator_type()) : value_alloc(alloc)
             {
+                dummy_node = node_alloc.allocate(1);
+                value_alloc.construct(&dummy_node->value, value_type());
+                dummy_node->next = dummy_node;
+                dummy_node->prev = dummy_node;
+                node_size = 0;
+
                 assign(first, last);
             }
-            list(const list &x) : list()
+            list(const list &x) : value_alloc(x.value_alloc)
             {
+                dummy_node = node_alloc.allocate(1);
+                value_alloc.construct(&dummy_node->value, value_type());
+                dummy_node->next = dummy_node;
+                dummy_node->prev = dummy_node;
+                node_size = 0;
+
                 assign(x.begin(), x.end());
             }
             list    &operator=(const list &x)
@@ -252,8 +273,8 @@ namespace   ft
             }
 
             //MODIFIER LIST
-            template <class InputIterator, class = typename InputIterator::value_type>
-            void        assign(InputIterator first, InputIterator last)
+            template <class InputIterator>
+            void        assign(InputIterator first,typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
             {
                 size_type   i = 0;
                 node        *change_node = dummy_node;
@@ -347,7 +368,7 @@ namespace   ft
                 node        *new_node;
                 node        *node_after_new = reinterpret_cast<node *>(&*position);
 
-                new_node = node_alloc.allocate(val);
+                new_node = node_alloc.allocate(1);
                 value_alloc.construct(&new_node->value, val);
                 new_node->next = node_after_new;
                 new_node->prev = node_after_new->prev;
@@ -360,9 +381,6 @@ namespace   ft
             }
             void    insert(iterator position, size_type n, const value_type &val)
             {
-                node        *new_node;
-                node        *node_after_new = reinterpret_cast<node *>(&*position);
-
                 while (n > 0)
                 {
                     --n;
@@ -370,12 +388,9 @@ namespace   ft
                 }
             }
             template <class InputIterator>
-            void    insert(iterator position, InputIterator first, InputIterator last)
+            void    insert(iterator position, InputIterator first, typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
             {
-                node        *new_node;
-                node        *node_after_new = reinterpret_cast<node *>(&*position);
-
-                while (first < last)
+                while (first != last)
                 {
                    insert(position, *first++);
                 }
@@ -398,8 +413,8 @@ namespace   ft
                 node        *elem_to_connect_1 = reinterpret_cast<node *>(&*(first));
                 node        *elem_to_connect_2 = reinterpret_cast<node *>(&*last);
 
-                elem_to_connect_1 = dummy_node->prev;
-                while (first < last)
+                elem_to_connect_1 = elem_to_connect_1->prev;
+                while (first != last)
                 {
                     node_alloc.deallocate(reinterpret_cast<node *>(&*first++), 1);
                     --node_size;
@@ -441,18 +456,43 @@ namespace   ft
 
             void splice(iterator position, list &x)
             {
-                this->insert(position, x.begin(), x.last());
-                x.clear();
+                node        *beg_x = reinterpret_cast<node *>(&*(x.begin()));
+                node        *beg_this = reinterpret_cast<node *>(&*(position));
+                node        *end_x = reinterpret_cast<node *>(&*x.end());
+
+                beg_this->prev->next = beg_x;
+                beg_x->prev = beg_this->prev;
+
+                beg_this->prev = end_x->prev;
+                end_x->prev->next = beg_this;
+
+                end_x->next = end_x;
+                end_x->prev = end_x;
+
+                this->node_size += x.node_size;
+                x.node_size = 0;
             }
             void splice(iterator position, list &x, iterator i)
             {
-                this->insert(position, *i);
-                x.erase(i);
+                node        *beg_x = reinterpret_cast<node *>(&*(i));
+                node        *beg_this = reinterpret_cast<node *>(&*(position));
+
+                beg_x->next->prev = beg_x->prev;
+                beg_x->prev->next = beg_x->next;
+
+                beg_x->next = beg_this;
+                beg_x->prev = beg_this->prev;
+
+                beg_this->prev->next = beg_x;
+                beg_this->prev = beg_x;
+
+                ++this->node_size;
+                --x.node_size;
             }
             void splice(iterator position, list &x, iterator first, iterator last)
             {
-                this->insert(position, first, last);
-                x.erase(first,last);
+                while (first != last)
+                    splice(position, x, first++);
             }
 
             void remove(const value_type &val)
@@ -460,12 +500,12 @@ namespace   ft
                 iterator    it(begin());
                 iterator    last(end());
 
-                while (it < last)
+                while (it != last)
                 {
-                    if (*it++ == val)
+                    if (*it == val)
                         erase(it);
+                    ++it;
                 }
-                ++it;
             }
 
             template <class Predicate>
@@ -474,9 +514,9 @@ namespace   ft
                 iterator    it(begin());
                 iterator    last(end());
 
-                while (it < last)
+                while (it != last)
                 {
-                    if (pred(*it) == 0)
+                    if (pred(*it))
                         erase(it);
                     ++it;
                 }
@@ -485,167 +525,246 @@ namespace   ft
             void unique()
             {
                 iterator    it(begin());
-                iterator    itp1(begin());
-                iterator    last(end());
-
-                --last;
-                while (it < last)
-                {
-                    ++itp1;
-                    if (pred(*it) == pred(*itp1))
-                        erase(itp1);
-                    ++it;
-                }
-            }
-            template <class BinaryPredicate>
-            void unique((BinaryPredicate binary_pred))
-            {
-                iterator    it(begin());
-                iterator    itp1(begin());
-                iterator    last(end());
-
-                --last;
-                while (it < last)
-                {
-                    ++itp1;
-                    if (binary_pred(*itp1, *it) == 0)
-                        erase(it);
-                    ++it;
-                }
-            }
-
-            void merge (list& x)
-            {
-                if (*this == x)
-                    return ;
-                insert(end(), x.begin(), x.last());
-                erase(x.begin(), x.end());
-            }
-            template <class Compare>
-            void merge (list& x, Compare comp)//je comprend pas
-            {
-                if (*this == x)
-                    return ;
-                insert(end(), x.begin(), x.last());
-            }
-
-
-            void sort()
-            {
-                iterator    first(begin());
-                iterator    it(begin());
                 iterator    itp1(++begin());
-                iterator    last(--end());
+                iterator    last(end());
 
-                while (it < last)
+                while (itp1 != last)
                 {
-                    if (*it > *itp1)
+                    if (*it == *itp1)
                     {
-                        it->prev->next = itp1;
-                        itp1->prev = it->prev;
-
-                        itp1->next->prev = it;
-                        it->next = itp1->next;
-
-                        itp1->next = it;
-                        it->prev = itp1; 
-
-                        itp1 = first;
-                        it = itp1++;
+                        erase(itp1);
+                        itp1++ = it;
                     }
                     else
                     {
                         ++it;
                         ++itp1;
                     }
+                }
+            }
+            template <class BinaryPredicate>
+            void unique(BinaryPredicate binary_pred)
+            {
+                iterator    it(begin());
+                iterator    itp1(++begin());
+                iterator    last(end());
+
+                while (itp1 != last)
+                {
+                    if (binary_pred(*itp1, *it))
+                    {
+                        erase(itp1);
+                        itp1++ = it;
+                    }
+                    else
+                    {
+                        ++it;
+                        ++itp1;
+                    }
+                }
+            }
+
+            void merge (list& x)
+            {
+                iterator    it(this->begin());
+                iterator    beg_x(x.begin());
+                iterator    last(this->end());
+
+                while (it != last)
+                {
+                    if (x.size() && *beg_x < *it)
+                    {
+                        this->splice(it, x, beg_x);
+                        beg_x = x.begin();
+                    }
+                    else
+                        ++it;
+                }
+                if (x.size())
+                    this->splice(it, x, beg_x, x.end());
+            }
+            template <class Compare>
+            void merge (list& x, Compare comp)//je comprend pas
+            {
+                iterator    it(begin());
+                iterator    beg_x(x.begin());
+                iterator    last(end());
+
+                while (it != last)
+                {
+                    if (x.size() && comp(*beg_x, *it))
+                    {
+                        this->splice(it, x, beg_x);
+                        beg_x = x.begin();
+                    }
+                    else
+                        ++it;
+                }
+                if (x.size())
+                    this->splice(it, x, beg_x, x.end());
+            }
+
+            void sort()
+            {
+                iterator    it(begin());
+                iterator    itp1(++begin());
+                iterator    last(end());
+
+                while (itp1 != last)
+                {
+                    if (*itp1 < *it)
+                    {
+                        splice(it, *this, itp1);
+                        itp1 = begin();
+                        it = itp1;
+                    }
+                    else
+                        ++it;
+                    ++itp1;
                 }
             }
 
             template <class Compare>
             void sort (Compare comp)
             {
-                iterator    first(begin());
                 iterator    it(begin());
                 iterator    itp1(++begin());
-                iterator    last(--end());
+                iterator    last(end());
 
-                while (it < last)
+                while (itp1 != last)
                 {
-                    if (comp(*it, *itp1))
+                    if (comp(*itp1, *it))
                     {
-                        it->prev->next = itp1;
-                        itp1->prev = it->prev;
-
-                        itp1->next->prev = it;
-                        it->next = itp1->next;
-
-                        itp1->next = it;
-                        it->prev = itp1; 
-
-                        itp1 = first;
-                        it = itp1++;
+                        splice(it, *this, itp1);
+                        itp1 = begin();
+                        it = itp1;
                     }
                     else
-                    {
                         ++it;
-                        ++itp1;
-                    }
+                    ++itp1;
                 }
             }
 
             void reverse()
             {
-                size_type   i;
-                node        *elem = reinterpret_cast<node *>(&*begin());
-                node        *tmp;
+                iterator it(end());
+                iterator last(end());
+                node *nd;
+                node *tmp;
 
-                while (i <= node_size)
+                do
                 {
-                    tmp = elem->prev;
-                    elem->prev = elem->next;
-                    elem->next = tmp;
-
-                    elem = elem->next;
+                    nd = reinterpret_cast<node *>(&*it);
+                    tmp = nd->prev;
+                    nd->prev = nd->next;
+                    nd->next = tmp;
+                    ++it;
                 }
-
+                while (it != last);
             }
 
-        template <class T, class Alloc>
-        void        swap(list<T, Alloc> &x, list<T, Alloc> &y)
-        {
-            x.swap(y);
-        }
+            //RELATIONAL OPERATOR
+            bool operator==(const list& rhs) const
+            {
+                const_iterator it_this(begin());
+                const_iterator last(end());
+                const_iterator it_rhs(rhs.begin());
 
-        //RELATIONAL OPERATOR
-        bool operator==(const list& rhs) const
-        {
-            iterator it_this(this->begin());
-            iterator last(end());
-            iterator it_rhs(rhs.begin());
-            if (this->node_size != rhs.node_size)
-                return (1);
-            while(it_this != end)
-            {
-                if (*it_this++ != *it_rhs++)
-                    return (1);
-            }
-            return (0);
-        }
-        bool operator!=(const list& rhs) const
-        {
-            iterator it_this(this->begin());
-            iterator last(end());
-            iterator it_rhs(rhs.begin());
-            if (this->node_size != rhs.node_size)
-                return (0);
-            while(it_this != end)
-            {
-                if (*it_this++ != *it_rhs++)
+                if (this->node_size != rhs.node_size)
                     return (0);
+                while(it_this != last)
+                {
+                    if (*it_this++ != *it_rhs++)
+                        return (0);
+                }
+                return (1);
             }
-            return (1);
-        }
+            bool operator!=(const list& rhs) const
+            {
+                const_iterator it_this(this->begin());
+                const_iterator last(end());
+                const_iterator it_rhs(rhs.begin());
+
+                if (this->node_size != rhs.node_size)
+                    return (1);
+                while(it_this != last)
+                {
+                    if (*it_this++ != *it_rhs++)
+                        return (1);
+                }
+                return (0);
+            }
+            bool operator<(const list& rhs) const
+            {
+                const_iterator it_this(this->begin());
+                const_iterator last(end());
+                const_iterator it_rhs(rhs.begin());
+                const_iterator last_rhs(rhs.end());
+
+                while(it_this != last && it_rhs != last_rhs)
+                {
+                    if (*it_this < *it_rhs)
+                        return (1);
+                    else if (*it_rhs++ < *it_this++)
+                        return (0);
+                }
+                return (this->size() < rhs.size());
+            }
+            bool operator>(const list& rhs) const
+            {
+                const_iterator it_this(this->begin());
+                const_iterator last(end());
+                const_iterator it_rhs(rhs.begin());
+                const_iterator last_rhs(rhs.end());
+
+                while(it_this != last && it_rhs != last_rhs)
+                {
+                    if (*it_this > *it_rhs)
+                        return (1);
+                    else if (*it_rhs++ > *it_this++)
+                        return (0);
+                }
+                return (this->size() > rhs.size());
+            }
+            bool operator>=(const list& rhs) const
+            {
+                const_iterator it_this(this->begin());
+                const_iterator last(end());
+                const_iterator it_rhs(rhs.begin());
+                const_iterator last_rhs(rhs.end());
+
+                while(it_this != last && it_rhs != last_rhs)
+                {
+                    if (*it_this > *it_rhs)
+                        return (1);
+                    else if (*it_rhs++ > *it_this++)
+                        return (0);
+                }
+                return (this->size() >= rhs.size());
+            }
+            bool operator<=(const list& rhs) const
+            {
+                const_iterator it_this(this->begin());
+                const_iterator last(end());
+                const_iterator it_rhs(rhs.begin());
+                const_iterator last_rhs(rhs.end());
+
+                while(it_this != last && it_rhs != last_rhs)
+                {
+                    if (*it_this < *it_rhs)
+                        return (1);
+                    else if (*it_rhs++ < *it_this++)
+                        return (0);
+                }
+                return (this->size() <= rhs.size());
+            }
     };
+    
+    template <class T, class Alloc>
+    void    swap(ft::list<T, Alloc> &x, ft::list<T, Alloc> &y)
+    {
+        x.swap(y);
+    }
 };
 
 #endif

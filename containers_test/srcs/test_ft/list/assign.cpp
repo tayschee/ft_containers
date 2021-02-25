@@ -53,7 +53,7 @@ void    test(ft::list<T>  &list, typename ft::list<T>::iterator it_beg, typename
     std::cout << "\n";
 }
 
-void    test(ft::list<struct a>  &list, typename ft::list<struct a>::iterator it_beg, typename ft::list<struct a>::iterator it_end)
+void    test(ft::list<struct a>  &list, ft::list<struct a>::iterator it_beg, ft::list<struct a>::iterator it_end)
 {
     size_t i;
     try
@@ -210,8 +210,6 @@ ft::list<T>        create_list(int size, const T &val, int inter, const T &val2,
 template<typename T>
 void    test_all1(const ft::list<T> &lst, const ft::list<T> &lst1, const ft::list<T> &lst2, const ft::list<T> &lst3)
 {
-    int i = 0;
-    int j = 0;
     ft::list<T> empty_list;
 
     test_assign(empty_list, empty_list);
