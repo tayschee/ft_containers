@@ -14,49 +14,69 @@ LIST='list/'
 echo -e "TEST VECTOR\n"
 
 <<C
-echo -e "DEFAULT CONSTRUCTOR and COPY CONSTRUCTOR AND CONSTRUCTOR(SIZE_TYPE) :"
-
-diff <(${FT_BIN}${VEC}char_construct 1) <(${STD_BIN}${VEC}char_construct 1)
+diff <(${FT_BIN}${VEC}constructor) <(${STD_BIN}${VEC}constructor)
 if [ ! $? -ne 0 ];
 then
-    echo -e "${G}CONSTRUCTOR <CHAR>: OK${W}"
+    echo -e "${G}CONSTRUCTOR : OK${W}"
 else
-    echo -e "${R}CONSTRUCTOR <CHAR>: KO${W}"
-fi
-
-diff <(${FT_BIN}${VEC}int_construct 1) <(${STD_BIN}${VEC}int_construct 1)
-if [ ! $? -ne 0 ];
-then
-    echo -e "${G}CONSTRUCTOR <INT>: OK${W}"
-else
-    echo -e "${R}CONSTRUCTOR <INT>: KO${W}"
-fi
-
-diff <(${FT_BIN}${VEC}string_construct 1) <(${STD_BIN}${VEC}string_construct 1)
-if [ ! $? -ne 0 ];
-then
-    echo -e "${G}CONSTRUCTOR <STRING>: OK${W}"
-else
-    echo -e "${R}CONSTRUCTOR <STRING>: KO${W}"
-fi
-
-diff <(${FT_BIN}${VEC}double_construct 1) <(${STD_BIN}${VEC}double_construct 1)
-if [ ! $? -ne 0 ];
-then
-    echo -e "${G}CONSTRUCTOR <DOUBLE>: OK${W}"
-else
-    echo -e "${R}CONSTRUCTOR <DOUBLE>: KO${W}"
-fi
-
-diff <(${FT_BIN}${VEC}pointer_construct 1) <(${STD_BIN}${VEC}pointer_construct 1)
-if [ ! $? -ne 0 ];
-then
-    echo -e "${G}CONSTRUCTOR <VOID *>: OK${W}"
-else
-    echo -e "${R}CONSTRUCTOR <VOID *>: KO${W}"
+    echo -e "${R}CONSTRUCTOR : KO${W}"
 fi
 
 
+diff <(${FT_BIN}${VEC}reserve) <(${STD_BIN}${VEC}reserve)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}RESERVE : OK${W}"
+else
+    echo -e "${R}RESERVE : KO${W}"
+fi
+
+
+diff <(${FT_BIN}${VEC}resize) <(${STD_BIN}${VEC}resize)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}RESIZE : OK${W}"
+else
+    echo -e "${R}RESIZE : KO${W}"
+fi
+
+diff <(${FT_BIN}${VEC}assign) <(${STD_BIN}${VEC}assign)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}ASSIGN : OK${W}"
+else
+    echo -e "${R}ASSIGN : KO${W}"
+fi
+
+
+diff <(${FT_BIN}${VEC}push_pop) <(${STD_BIN}${VEC}push_pop)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}PUSH POP : OK${W}"
+else
+    echo -e "${R}PUSH POP : KO${W}"
+fi
+
+
+diff <(${FT_BIN}${VEC}swap) <(${STD_BIN}${VEC}swap)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}SWAP : OK${W}"
+else
+    echo -e "${R}SWAP : KO${W}"
+fi
+
+C
+
+diff <(${FT_BIN}${VEC}clear) <(${STD_BIN}${VEC}clear)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}CLEAR : OK${W}"
+else
+    echo -e "${R}CLEAR : KO${W}"
+fi
+
+<<C
 echo -e "\nITERATOR :"
 
 diff <(${FT_BIN}${VEC}char_iterator) <(${STD_BIN}${VEC}char_iterator)
@@ -212,7 +232,7 @@ C
 echo -e "TEST LIST\n"
 
 <<C
-C
+
 diff <(${FT_BIN}${LIST}default_constructor) <(${STD_BIN}${LIST}default_constructor)
 if [ ! $? -ne 0 ];
 then
@@ -387,8 +407,6 @@ else
     echo -e "${R}REVERSE : KO${W}"
 fi
 
-
-
 diff <(${FT_BIN}${LIST}operator) <(${STD_BIN}${LIST}operator)
 if [ ! $? -ne 0 ];
 then
@@ -396,3 +414,5 @@ then
 else
     echo -e "${R}OPERATOR : KO${W}"
 fi
+
+C

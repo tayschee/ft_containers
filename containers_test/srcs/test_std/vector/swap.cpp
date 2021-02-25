@@ -1,9 +1,9 @@
-#include "vector.hpp"
+#include <vector>
 #include <iostream>
 #include <string>
 
 template <typename T>
-void    test(ft::vector<T> &vec)
+void    test(std::vector<T> &vec)
 {
     size_t i;
 
@@ -46,50 +46,50 @@ void    test(ft::vector<T> &vec)
 }
 
 template<typename T>
-ft::vector<T>     create(ft::vector<T> lst)
+std::vector<T>     create(std::vector<T> lst)
 {
-    return(ft::vector<T>(lst));
+    return(std::vector<T>(lst));
 }
 
 template<typename T>
-ft::vector<T>     create(size_t end_nb, T *tab)
+std::vector<T>     create(size_t end_nb, T *tab)
 {
-    typename ft::vector<T>::iterator beg(tab);
-    typename ft::vector<T>::iterator end(&tab[end_nb]);
+    typename std::vector<T>::iterator beg(tab);
+    typename std::vector<T>::iterator end(&tab[end_nb]);
 
-    return(ft::vector<T>(beg, end));
+    return(std::vector<T>(beg, end));
 }
 
 template<typename T>
-ft::vector<T>     create(size_t size, const T &val)
+std::vector<T>     create(size_t size, const T &val)
 {
-    return(ft::vector<T>(size, val));
+    return(std::vector<T>(size, val));
 }
 
 template<typename T>
-ft::vector<T>     create(size_t size)
+std::vector<T>     create(size_t size)
 {
-    return(ft::vector<T>(size));
+    return(std::vector<T>(size));
 }
 
 template<typename T>
-ft::vector<T>     create()
+std::vector<T>     create()
 {
-    return(ft::vector<T>());
+    return(std::vector<T>());
 }
 
 template <typename T>
-void    func(ft::vector<T> &lst, ft::vector<T> &lst2)
+void    func(std::vector<T> &lst, std::vector<T> &lst2)
 {
-    typename ft::vector<T>::iterator beg(lst.begin());
-    typename ft::vector<T>::iterator beg2(lst2.begin());
-    typename ft::vector<T>::iterator end(lst.end());
-    typename ft::vector<T>::iterator end2(lst2.end());
+    typename std::vector<T>::iterator beg(lst.begin());
+    typename std::vector<T>::iterator beg2(lst2.begin());
+    typename std::vector<T>::iterator end(lst.end());
+    typename std::vector<T>::iterator end2(lst2.end());
 
     try
     {
         lst.swap(lst2);
-        ft::swap(lst, lst2);
+        std::swap(lst, lst2);
         lst2.swap(lst);
         while(beg != end)
         {
@@ -116,16 +116,16 @@ void    test_all(T val, size_t size, T *tab, size_t size1, T val2, size_t size2)
 {
     size_t i = 0;
     size_t j = 0;
-    ft::vector<T>   lst;
-    ft::vector<T>   lst1(size, val);
-    ft::vector<T>   lst2(size2, val2);
-    ft::vector<T>   lst3(create(size1, tab));
-    ft::vector<T>   lst4;
+    std::vector<T>   lst;
+    std::vector<T>   lst1(size, val);
+    std::vector<T>   lst2(size2, val2);
+    std::vector<T>   lst3(create(size1, tab));
+    std::vector<T>   lst4;
 
     lst4 = lst2;
     lst4.push_back(val);
 
-    ft::vector<T>   tab_lst[] = {lst, lst1, lst2, lst3, lst4};
+    std::vector<T>   tab_lst[] = {lst, lst1, lst2, lst3, lst4};
 
     while(i < 5)
     {

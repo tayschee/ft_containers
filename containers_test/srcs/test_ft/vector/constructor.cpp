@@ -3,7 +3,7 @@
 #include <string>
 
 template <typename T>
-void    test(ft::vector<T> &vec)
+void    test(ft::vector<T> vec)
 {
     size_t i;
 
@@ -79,65 +79,29 @@ ft::vector<T>     create()
 }
 
 template <typename T>
-void    func(ft::vector<T> &lst, ft::vector<T> &lst2)
-{
-    typename ft::vector<T>::iterator beg(lst.begin());
-    typename ft::vector<T>::iterator beg2(lst2.begin());
-    typename ft::vector<T>::iterator end(lst.end());
-    typename ft::vector<T>::iterator end2(lst2.end());
-
-    try
-    {
-        lst.swap(lst2);
-        ft::swap(lst, lst2);
-        lst2.swap(lst);
-        while(beg != end)
-        {
-            std::cout << *beg++ << " ";
-        }
-        std::cout << "\n";
-        while(beg2 != end2)
-        {
-            std::cout << *beg2++ << " ";
-        }
-        std::cout << "\n";
-    }
-    catch(const std::exception& e)
-    {
-        std::cout << e.what() << '\n';
-    }
-
-    test(lst);
-
-}
-
-template <typename T>
-void    test_all(T val, size_t size, T *tab, size_t size1, T val2, size_t size2)
+void    test_all(T val, size_t size1, T val1, size_t size2, T val2, size_t size3, T *tab)
 {
     size_t i = 0;
-    size_t j = 0;
-    ft::vector<T>   lst;
-    ft::vector<T>   lst1(size, val);
-    ft::vector<T>   lst2(size2, val2);
-    ft::vector<T>   lst3(create(size1, tab));
-    ft::vector<T>   lst4;
 
-    lst4 = lst2;
-    lst4.push_back(val);
-
-    ft::vector<T>   tab_lst[] = {lst, lst1, lst2, lst3, lst4};
-
-    while(i < 5)
+    test(create<T>());
+    test(create(create<T>()));
+    while (i < 20)
     {
-        j = 0;
-        while(j < 5)
-        {
-            func(tab_lst[i], tab_lst[j]);
-            ++j;
-        }
+        test(create(i, val));
+        test(create<T>(i));
         ++i;
     }
-    
+    test(create(static_cast<int>(size1), val1));
+    test(create(create(size1, val1)));
+    test(create(size2, val2));
+    test(create(create(size2, val2)));
+    i = 0;
+    while (i <= size3)
+    {
+        test(create(i, tab));
+        ++i;
+    }
+    test(create(create(size3, tab)));
 }
 
 int main(int argc, char **argv)
@@ -174,9 +138,10 @@ int main(int argc, char **argv)
     std::string str11("c");
     std::string tab_str[] = {str, str1, str2, str3, str4, str5, str6, str7, str8, str8, str10, str11};
 
-    test_all(12, 431, tab_int, 28, 42, 801);
-    test_all('c', 231, tab_char, 1395, 'S', 98);
-    test_all(12.94, 40, tab_db, 6, 90.18, 1059);
-    test_all(str1, 20, tab_str, 12, str5, 912);
+    test_all(44, 810, -2, 1048, 90, 28, tab_int);
+    test_all('O', 2010, '{', 300, '4', 1395, tab_char);
+    test_all(44.17, 210, -2.14, 51, 901.8, 6, tab_db);
+    test_all(str1, 301, str2, 28, str3, 12, tab_str);
+
 }
    

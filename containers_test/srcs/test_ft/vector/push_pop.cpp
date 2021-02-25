@@ -1,236 +1,210 @@
 #include "vector.hpp"
 #include <iostream>
-#include <cstdlib>
 #include <string>
-#include <unistd.h> //sleep
 
-template<typename T>
-void print(ft::vector<T> &vec, T val, size_t x)
+template <typename T>
+void    test(ft::vector<T> &vec)
 {
     size_t i;
 
+    for(i = 0; i < vec.size(); i++)
+    {
+        std::cout << vec[i] << " ";
+    }
+    std::cout << "\n";
     try
     {
-        while(x--)
-            vec.push_back(val);
         for(i = 0; 1; i++)
             std::cout << vec.at(i) << " ";
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        std::cout << e.what() << '\n';
     }
-    std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-    if (i > 0)
+    std::cout << std::endl;
+    std::cout << vec.size() << std::endl;
+    std::cout << vec.max_size() << std::endl;
+    std::cout << vec.empty() << std::endl;
+    std::cout << vec.capacity() << std::endl;
+    if (vec.size() != 0)
     {
-        std::cout << vec.front() << "\n";
-        std::cout << vec.back() << "\n";
-        std::cout << *vec.begin() << "\n";
-        std::cout << *--vec.end() << "\n";
-        std::cout << *vec.rbegin() << "\n";
-        std::cout << *--vec.rend() << "\n";
+        std::cout << *vec.begin() << std::endl;
+        std::cout << *vec.rbegin() << std::endl;
+        std::cout << *--vec.end() << std::endl;
+        std::cout << *--vec.rend() << std::endl;
+        std::cout << vec.front() << std::endl;
+        std::cout << vec.back() << std::endl;
     }
-    std::cout << "\n";
+    else
+    {
+        vec.begin();
+        vec.rbegin();
+        --vec.end();
+        --vec.end();
+    }
+    std::cout << std::endl;
 }
 
 template<typename T>
-void print(ft::vector<T> &vec, size_t x)
+ft::vector<T>     create(ft::vector<T> lst)
 {
-    size_t i;
-
-    try
-    {
-        while (x--)
-            vec.pop_back();
-        for(i = 0; 1; i++)
-            std::cout << vec.at(i) << " ";
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-    std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-    if (i > 0)
-    {
-        std::cout << vec.front() << "\n";
-        std::cout << vec.back() << "\n";
-        std::cout << *vec.begin() << "\n";
-        std::cout << *--vec.end() << "\n";
-        std::cout << *vec.rbegin() << "\n";
-        std::cout << *--vec.rend() << "\n";
-    }
-    std::cout << "\n";
+    return(ft::vector<T>(lst));
 }
 
 template<typename T>
-void print(ft::vector<T *> &vec, T *val, size_t x)
+ft::vector<T>     create(size_t end_nb, T *tab)
 {
-    size_t i;
-    size_t j;
+    typename ft::vector<T>::iterator beg(tab);
+    typename ft::vector<T>::iterator end(&tab[end_nb]);
+
+    return(ft::vector<T>(beg, end));
+}
+
+template<typename T>
+ft::vector<T>     create(size_t size, const T &val)
+{
+    return(ft::vector<T>(size, val));
+}
+
+template<typename T>
+ft::vector<T>     create(size_t size)
+{
+    return(ft::vector<T>(size));
+}
+
+template<typename T>
+ft::vector<T>     create()
+{
+    return(ft::vector<T>());
+}
+
+template <typename T>
+void    push(ft::vector<T> &lst, T val)
+{
+    size_t  old_c = lst.capacity();
+    typename ft::vector<T>::iterator beg(lst.begin());
+    typename ft::vector<T>::iterator end(lst.end());
 
     try
     {
-        while (x--)
-            vec.push_back(val);
-        for(i = 0; 1; i++)
+        lst.push_back(val);
+        if(old_c == lst.capacity())
         {
-            for (j = 0; vec.at(i)[j] != 0; j++)
-                std::cout << vec.at(i)[j] << " ";
+            while (beg != end)
+            {
+                std::cout << *beg++ << " ";
+            }
+            std::cout << "\n";
         }
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        std::cout << e.what() << '\n';
     }
-    std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-    if (i > 0)
-    {
-        std::cout << *vec.front() << "\n";
-        std::cout << *vec.back() << "\n";
-        std::cout << **vec.begin() << "\n";
-        std::cout << **--vec.end() << "\n";
-        std::cout << **vec.rbegin() << "\n";
-        std::cout << **--vec.rend() << "\n";
-    }
-    std::cout << "\n";
+
+    test(lst);
+
 }
 
-template<typename T>
-void print(ft::vector<T *> &vec, size_t x)
+template <typename T>
+void    pop(ft::vector<T> &lst)
 {
-    size_t i;
-    size_t j;
+    size_t  old_c = lst.capacity();
+    typename ft::vector<T>::iterator beg(lst.begin());
+    typename ft::vector<T>::iterator end(--lst.end());
 
     try
     {
-        while (x--)
-            vec.pop_back();
-        for(i = 0; 1; i++)
+        lst.pop_back();
+        if(old_c == lst.capacity())
         {
-            for (j = 0; vec.at(i)[j] != 0; j++)
-                std::cout << vec.at(i)[j] << " ";
+            while (beg != end)
+            {
+                std::cout << *beg++ << " ";
+            }
+            std::cout << "\n";
         }
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        std::cout << e.what() << '\n';
     }
-    std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-    if (i > 0)
+
+    test(lst);
+
+}
+
+template <typename T>
+void    test_all(ft::vector<T> lst, size_t del, size_t add, size_t add2, T val)
+{
+    ft::vector<T> empty;
+
+    while(del)
     {
-        //std::cout << *vec.front() << "\n";
-        std::cout << *vec.back() << "\n";
-        std::cout << **vec.begin() << "\n";
-        std::cout << **--vec.end() << "\n";
-        std::cout << **vec.rbegin() << "\n";
-        std::cout << **--vec.rend() << "\n";
+        --del;
+        pop(lst);
     }
-    std::cout << "\n";
+    while(add)
+    {
+        --add;
+        push(lst, val);
+    }
+    while(lst.size() > 0)
+    {
+        pop(lst);
+    }
+    while(add2)
+    {
+        --add2;
+        push(empty, val);
+        push(lst, val);
+    }
+
+    
 }
 
 int main()
 {
-    int x1 = 101;
-    int x2 = 402; 
-    int x3 = 81;
-    int x4 = 457;
-    int x5 = 62;
-    std::string    tab[]= {"abcde", "des mots", "orange", "rouge", "fruits", "lozere", "entourloupe", "youpi", ""};
-    ft::vector<int> vec1(x1, 89);
-    ft::vector<char> vec2(x2, '$');
-    ft::vector<std::string> vec3(x3, "texte tres long de toute facon il y a peu d'affichage");
+    int tab_int[] = {12, 24, 96, -18, -124, 36, 152, -17, 99, 41, 27, 46, 96, 205, 211, -27, 4, 3, 6, 9, 98, 99,
+                    100, -266, 1052, -99, -206, -8};
+    char    tab_char[] = "enkqwj4u43'2[epwlfrn32[gfp24i3[jfrifq2p'[g2'q[34tjmfpk32][tfm5igmq][pwmgfqnirtq5jgioqr'q[23n"
+                        "nfjieqwhuiqp3r43p;]342][54]32']5][235p3]-0=0295=19534591`mkmnklrewnejrtpo4rkpwop[w3qjjfriw["
+                        "kfioqphir3o1il]p[ro098y21rt9yr79quwkeqmdflvmlr,2prejmcfoeqwjroi[432tfowor]gkro[wkgo[j2giow2"
+                        "huie2  bidiuoqghfiqehbnfiur3nipu2ty90324u85r9uifncieoqnhfguidenjqpfhhhgurejrnjwipnrgiwenijg"
+                        "jfiqrjfjhu9w4uy82378y458y23785y754hjkewndjkfnijnijewpfohnjinrghiuhriewpghruiewhgiuwhighuiwg"
+                        "jdfoqiprh3uiyr5u972958943265yhjkfdhfgdf'akq]rkfop[dksop[32krtop[jtopjgfijnijbqrporkgmoqjipg"
+                        "jifoeqhuhfiwhdiufhriqhefhjfdhiouuy89759205y7864't2k4[ppo3p[oopjfdkqhohj324hj5lrtjljdjaoighjro"
+                        "kdfweoqjrui3u45947986239hjkfdhjkgbfnihshduifh8734tyrhdjkahf94ythurheuty84uhryruiewhtu42h2uhtg"
+                        "io234ujt3uy934y28ryut;435[[][[fewg[ep[riopjifh3j21b4hjvhj4kq78g90a789gyanjkfnewnfijfngdhipah"
+                        "o*i192  bidi*oqgokiq19obnki*r3nip*2ty92324*85r9*iknci19oqnokg*id19njqpkooog*r19jrnjwipnrgiw19nijg"
+                        "jkiqrjkjo*9w4*y82378y458y23785y754ojk19wndjkknijnij19wpkoonjinrgoi*ori19wpgor*i19wogi*woigo*iwg"
+                        "jdkoqipro3*iyr5*972958943265yojkkdokgdk'akq]rkkop[dksop[32krtop[jtopjgkijnijbqrporkgmoqjipg"
+                        "jiko19qo*okiwodi*koriqo19kojkdoio**y89759225y7864't2k4[ppo3p[oopjkdkqoooj324oj5lrtjljdjaoigojro"
+                        "kdkw19oqjr*i3*45947986239ojkkdojkgbkniosod*iko8734tyrodjkaok94yto*ro19*ty84*oryr*i19wot*42o2*otg"
+                        "io234*jt3*y934y28ry*t;435[[][[k19wg[19p[riopjiko3j21b4ojvoj4kq78g92a789gyanjkkn19wnkijkngdoipao";
+    double  tab_db[] = {12.97, 42.92, 105.17, 18.150, -42.14, -51.10};
+    std::string str("string1");
+    std::string str1("string2");
+    std::string str2("abracadabra");
+    std::string str3("oulaoup");
+    std::string str4("yes challenge");
+    std::string str5("a toi de jouer");
+    std::string str6("c'est l'heure du du dud du duel");
+    std::string str7("oupqlinda");
+    std::string str8("-------X");
+    std::string str9("...");
+    std::string str10("");
+    std::string str11("c");
+    std::string tab_str[] = {str, str1, str2, str3, str4, str5, str6, str7, str8, str8, str10, str11};
 
-
-    double             tab4[] = {12.4, 13.2, 62.3, 18012.1, 63.90, 42.42, 808.17, 245.1, 92.1, 1.18, 2.37, 803.8, 235.9,
-    401.6, 442.17, 8992.21, -608.17, -200005.9, -708, -97.8, -998.21, 12.7, -9.8, 82.5, 5.55, -954.6};
-    ft::vector<double>::iterator beg4(tab4);
-    ft::vector<double>::iterator end4(&tab4[26]);
-    ft::vector<double> vec4(beg4, end4);
-
-    int                 *tab5 = new int[14];
-    int                 tab6[] = {12, 26, 87, 48, 12, 0};
-    int                 tab7[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 22, 84, -102, -98, 3, 0};
-    int                 tab8[] = {-2, -6, 0};
-    size_t           i;
-    for(i = 0; i < 14; i++)
-        tab5[i] = i * 2;
-    tab5[i - 1] = 0;
-    ft::vector<int *>::iterator beg5(&tab5);
-    ft::vector<int *>::iterator end5(&++tab5);
-    ft::vector<int *> vec5(beg5, end5);
-
-    //int
-    print(vec1, 18, 3);
-    print(vec1, 96, 1);
-    print(vec1, 109, 16);
-    print(vec1, 1, 12);
-    print(vec1, 2218, 3);
-    print(vec1, 2561, 14);
-    print(vec1, 1802, 90);
-    print(vec1, 128, 43);
-    print(vec1, 1, 2);
-    print(vec1, 16);
-    print(vec1, 95);
-    print(vec1, 18);
-    print(vec1, 42, 27);
-    print(vec1, 8);
-
-    //char
-    print(vec2, 402);
-    print(vec2, 'X', 21);
-    print(vec2, 'W', 341);
-    print(vec2, 80);
-    print(vec2, 'J', 8);
-    print(vec2, 'e', 16);
-    print(vec2, 'u', 1);
-
-    //std::string
-    print(vec3, static_cast<std::string>("rage"), 81);
-    print(vec3, static_cast<std::string>("mesopotamie"), 74);
-    print(vec3, 150);
-    print(vec3, 23);
-    print(vec3, 3);
-    print(vec3, static_cast<std::string>("delete"), 10);
-    print(vec3, 70); //si je me suis pas trompe dans mes compte
-    print(vec3, static_cast<std::string>("to be continued"), 1);
-
-    print(vec4, 0.0, 10000);
-    print(vec4, 8000);
-    print(vec4, 400);
-    print(vec4, 1.1, 800);
-    print(vec4, -1892.12, 811);
-    print(vec4, 1);
-    print(vec4, 2);
-    print(vec4, 3);
-
-
-    print(vec5, tab5, 2);
-    print(vec5, tab5, 2);
-    print(vec5, tab6, 12);
-    print(vec5, 14);
-    print(vec5, tab7, 6);
-    print(vec5, tab8, 9);
-    print(vec5, 12);
-
-    delete[] --tab5;
-   
-
+    ft::vector<int>     lst(tab_int, tab_int + 28);
+    ft::vector<double>     lst1(tab_db, tab_db + 6);
+    ft::vector<char>     lst2(tab_char, tab_char + 1395);
+    ft::vector<std::string>     lst3(tab_str, tab_str + 12);
     
-    return (0);
+    test_all(lst, 12, 25, 4, 51);
+    test_all(lst1, 0, 27, 15, 89.99);
+    test_all(lst2, 1000, 312, 3, 'K');
+    test_all(lst3, 12, 12, 12, str10);
 }
+   

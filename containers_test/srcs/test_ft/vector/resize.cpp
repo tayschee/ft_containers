@@ -1,244 +1,197 @@
 #include "vector.hpp"
 #include <iostream>
-#include <cstdlib>
 #include <string>
 
-template<typename T>
-void print(ft::vector<T> &vec, size_t j)
+template <typename T>
+void    test(ft::vector<T> &vec)
 {
     size_t i;
-
-    try
-    {
-        vec.resize(j);
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
 
     for(i = 0; i < vec.size(); i++)
     {
         std::cout << vec[i] << " ";
     }
     std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-    if (i > 0)
-    {
-        std::cout << vec.front() << "\n";
-        std::cout << vec.back() << "\n";
-        std::cout << *vec.begin() << "\n";
-        std::cout << *--vec.end() << "\n";
-        std::cout << *vec.rbegin() << "\n";
-        std::cout << *--vec.rend() << "\n";
-    }
-    std::cout << "\n";
-}
-
-template<typename T>
-void print(ft::vector<T> &vec, size_t j, T val)
-{
-    size_t i;
-
     try
     {
-        vec.resize(j, val);
+        for(i = 0; 1; i++)
+            std::cout << vec.at(i) << " ";
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        std::cout << e.what() << '\n';
     }
-
-    for(i = 0; i < vec.size(); i++)
+    std::cout << std::endl;
+    std::cout << vec.size() << std::endl;
+    std::cout << vec.max_size() << std::endl;
+    std::cout << vec.empty() << std::endl;
+    std::cout << vec.capacity() << std::endl;
+    if (vec.size() != 0)
     {
-        std::cout << vec[i] << " ";
+        std::cout << *vec.begin() << std::endl;
+        std::cout << *vec.rbegin() << std::endl;
+        std::cout << *--vec.end() << std::endl;
+        std::cout << *--vec.rend() << std::endl;
+        std::cout << vec.front() << std::endl;
+        std::cout << vec.back() << std::endl;
     }
-    std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-    if (i > 0)
+    else
     {
-        std::cout << vec.front() << "\n";
-        std::cout << vec.back() << "\n";
-        std::cout << *vec.begin() << "\n";
-        std::cout << *--vec.end() << "\n";
-        std::cout << *vec.rbegin() << "\n";
-        std::cout << *--vec.rend() << "\n";
+        vec.begin();
+        vec.rbegin();
+        --vec.end();
+        --vec.end();
     }
-    std::cout << "\n";
+    std::cout << std::endl;
 }
 
 template<typename T>
-void print(ft::vector<T *> &vec, size_t j, T *val)
+ft::vector<T>     create(ft::vector<T> lst)
 {
-    size_t i;
-    size_t i2;
+    return(ft::vector<T>(lst));
+}
+
+template<typename T>
+ft::vector<T>     create(size_t end_nb, T *tab)
+{
+    typename ft::vector<T>::iterator beg(tab);
+    typename ft::vector<T>::iterator end(&tab[end_nb]);
+
+    return(ft::vector<T>(beg, end));
+}
+
+template<typename T>
+ft::vector<T>     create(size_t size, const T &val)
+{
+    return(ft::vector<T>(size, val));
+}
+
+template<typename T>
+ft::vector<T>     create(size_t size)
+{
+    return(ft::vector<T>(size));
+}
+
+template<typename T>
+ft::vector<T>     create()
+{
+    return(ft::vector<T>());
+}
+
+template <typename T>
+void    func(ft::vector<T> lst, size_t i, T val)
+{
+    size_t  old_c = lst.capacity();
+    typename ft::vector<T>::iterator beg(lst.begin());
+    typename ft::vector<T>::iterator end(lst.end());
 
     try
     {
-        vec.resize(j, val);
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-
-    for(i = 0; i < vec.size(); i++)
-    {
-        for (i2 = 0; vec[i][i2] != 0; i2++)
+        lst.resize(i, val);
+        if (lst.capacity() <= old_c)
         {
-            std::cout << vec[i][i2];
+            while (beg != end)
+            {
+                std::cout << *beg++ << " ";
+            }
+            std::cout << "\n";
         }
-        std::cout << "-" << i << "-";
     }
-    std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-     if (i > 0)
+    catch(const std::exception& e)
     {
-        std::cout << vec.front() << "\n";
-        std::cout << vec.back() << "\n";
-        std::cout << *vec.begin() << "\n";
-        std::cout << *--vec.end() << "\n";
-        std::cout << *vec.rbegin() << "\n";
-        std::cout << *--vec.rend() << "\n";
+        std::cout << e.what() << '\n';
     }
-    std::cout << "\n";
+
+    test(lst);
+
 }
 
-int main()
+template <typename T>
+void    func(ft::vector<T> lst, size_t i)
 {
-    int x1 = 9;
-    int x2 = 112; 
-    int x3 = 19;
-    int x4 = 42;
-    int x5 = 52;
-    char    tabc[] = "une petit test de qualite";
-    ft::vector<char>::iterator begc(tabc);
-    ft::vector<char>::iterator endc(&tabc[26]);
-    char    tab[10] = "oupalinda";
-    ft::vector<int> vec1(x1, 22);
-    ft::vector<char> vec2(begc, endc);
-    ft::vector<std::string> vec3(x3, "mmmmm...");
-    ft::vector<double> vec4(x4, 9.254);
-    ft::vector<char *> vec5(x5, tab);
+    size_t  old_c = lst.capacity();
+    typename ft::vector<T>::iterator beg(lst.begin());
+    typename ft::vector<T>::iterator end(lst.end());
 
-    // > capacity > size 
-    print(vec1, x1 + 42, 32);
-    print(vec2, x2 + 31, ';');
-    print(vec3, x3 + 180, static_cast<std::string>("pfff..."));
-    print(vec4, x4 + 12343, 0.6);
-    print(vec5, x5 + 112, tab);
+    try
+    {
+        lst.resize(i);
+        if (lst.capacity() <= old_c)
+        {
+            while (beg != end)
+            {
+                std::cout << *beg++ << " ";
+            }
+            std::cout << "\n";
+        }
+    }
+    catch(const std::exception& e)
+    {
+        std::cout << e.what() << '\n';
+    }
 
-    // > capacity > size
-    print(vec1, x1 + 12);
-    print(vec2, x2 + 25);
-    print(vec3, x3 + 130);
-    print(vec4, x4 + 12000);
-    print(vec5, x5 + 3, tab);
+    test(lst);
 
-    // < capacity < size
-    print(vec1, x1 + 1, 22);
-    print(vec2, x2 + 1, '[');
-    print(vec3, x3 + 1, static_cast<std::string>("roooh..."));
-    print(vec4, x4 + 1, 18.8);
-    print(vec5, x5 + 1, tab);
-
-    // = capacity = sizes
-    print(vec1, x1 + 1, 31);
-    print(vec2, x2 + 1, '"');
-    print(vec3, x3 + 1, static_cast<std::string>("eeeeuh..."));
-    print(vec4, x4 + 1, 912.12);
-    print(vec5, x5 + 1, tab);
-
-    // > capacity > size
-    print(vec1, x1 + 98);
-    print(vec2, x2 + 16);
-    print(vec3, x3 + 30);
-    print(vec4, x4 + 1111);
-    print(vec5, x5 + 280, tab);
-
-    // = capacity = size
-    print(vec1, x1 + 98);
-    print(vec2, x2 + 16);
-    print(vec3, x3 + 30);
-    print(vec4, x4 + 1111);
-    print(vec5, x5 + 280, tab);
-
-    // < capacity < size
-    print(vec1, x1, 490);
-    print(vec2, x2, '|');
-    print(vec3, x3, static_cast<std::string>("zzz..."));
-    print(vec4, x4, 77.7);
-    print(vec5, x5, tab);
-    
-    // < capacity < size
-    print(vec1, x1 - 3);
-    print(vec1, x2 - 80);
-    print(vec3, x3 - 12);
-    print(vec4, x4 - 1231);
-    print(vec5, x5 - 508, tab);
-    
-    // 0 capacity 0 size
-    print(vec1, 0);
-    print(vec2, 0);
-    print(vec3, 0);
-    print(vec4, 0);
-    print(vec5, 0, tab);
-
-    //max value + 1
-    print(vec1, vec1.max_size() + 1);
-    print(vec2, vec2.max_size() + 1);
-    print(vec3, vec3.max_size() + 1);
-    print(vec4, vec4.max_size() + 1);
-    print(vec5, vec5.max_size() + 1, tab);
-
-    //max value
-    print(vec1, vec1.max_size(), 21);
-    print(vec2, vec2.max_size(), '{');
-    print(vec3, vec3.max_size(), static_cast<std::string>("chhh..."));
-    print(vec4, vec4.max_size(), 88.01);
-    print(vec5, vec5.max_size(), tab);
-
-    //0 cap 0 size
-    print(vec1, 0, 66);
-    print(vec2, 0, '@');
-    print(vec3, 0, static_cast<std::string>("..."));
-    print(vec4, 0, 88.9);
-    print(vec5, 0, tab);
-    
-    // > >
-    print(vec1, x1, 490);
-    print(vec2, x2, '|');
-    print(vec3, x3, static_cast<std::string>("zzz..."));
-    print(vec4, x4, 77.7);
-    print(vec5, x5, tab);
-
-    // < >
-    vec1.reserve(x1 + 32);
-    vec2.reserve(x2 + 58);
-    vec3.reserve(x3 + 3);
-    vec4.reserve(x4 + 147);
-    vec5.reserve(x5 + 2001);
-    print(vec1, x1 + 10, 4508);
-    print(vec2, x2 + 21, '%');
-    print(vec3, x3 + 1, static_cast<std::string>("!!!"));
-    print(vec4, x4 + 111, 901.2);
-    print(vec5, x5 + 4, tab);
-
-    // < >
-    print(vec1, x1 + 12, 3021);
-    print(vec2, x2 + 25, '^');
-    print(vec3, x3 + 1, static_cast<std::string>("???"));
-    print(vec4, x4 + 32, 67.43);
-    print(vec5, x5 + 1257, tab);
-    
-    return (0);
 }
+
+template <typename T>
+void    test_all(T val, size_t size, size_t x)
+{
+    size_t i = 0;
+    ft::vector<T> vec(size, val);
+
+    func(vec, x);
+    func(vec, vec.max_size() + 1, val);
+    func(vec, vec.max_size());
+    func(vec, vec.max_size() - 1, val);
+    while (i < x)
+    {
+        func(create<T>(), i);
+        func(create(0, val), i, val);
+        func(create(size, val), i);
+        func(vec, i, val);
+        ++i;
+    }
+}
+
+int main(int argc, char **argv)
+{
+    int tab_int[] = {12, 24, 96, -18, -124, 36, 152, -17, 99, 41, 27, 46, 96, 205, 211, -27, 4, 3, 6, 9, 98, 99,
+                    100, -266, 1052, -99, -206, -8};
+    char    tab_char[] = "enkqwj4u43'2[epwlfrn32[gfp24i3[jfrifq2p'[g2'q[34tjmfpk32][tfm5igmq][pwmgfqnirtq5jgioqr'q[23n"
+                        "nfjieqwhuiqp3r43p;]342][54]32']5][235p3]-0=0295=19534591`mkmnklrewnejrtpo4rkpwop[w3qjjfriw["
+                        "kfioqphir3o1il]p[ro098y21rt9yr79quwkeqmdflvmlr,2prejmcfoeqwjroi[432tfowor]gkro[wkgo[j2giow2"
+                        "huie2  bidiuoqghfiqehbnfiur3nipu2ty90324u85r9uifncieoqnhfguidenjqpfhhhgurejrnjwipnrgiwenijg"
+                        "jfiqrjfjhu9w4uy82378y458y23785y754hjkewndjkfnijnijewpfohnjinrghiuhriewpghruiewhgiuwhighuiwg"
+                        "jdfoqiprh3uiyr5u972958943265yhjkfdhfgdf'akq]rkfop[dksop[32krtop[jtopjgfijnijbqrporkgmoqjipg"
+                        "jifoeqhuhfiwhdiufhriqhefhjfdhiouuy89759205y7864't2k4[ppo3p[oopjfdkqhohj324hj5lrtjljdjaoighjro"
+                        "kdfweoqjrui3u45947986239hjkfdhjkgbfnihshduifh8734tyrhdjkahf94ythurheuty84uhryruiewhtu42h2uhtg"
+                        "io234ujt3uy934y28ryut;435[[][[fewg[ep[riopjifh3j21b4hjvhj4kq78g90a789gyanjkfnewnfijfngdhipah"
+                        "o*i192  bidi*oqgokiq19obnki*r3nip*2ty92324*85r9*iknci19oqnokg*id19njqpkooog*r19jrnjwipnrgiw19nijg"
+                        "jkiqrjkjo*9w4*y82378y458y23785y754ojk19wndjkknijnij19wpkoonjinrgoi*ori19wpgor*i19wogi*woigo*iwg"
+                        "jdkoqipro3*iyr5*972958943265yojkkdokgdk'akq]rkkop[dksop[32krtop[jtopjgkijnijbqrporkgmoqjipg"
+                        "jiko19qo*okiwodi*koriqo19kojkdoio**y89759225y7864't2k4[ppo3p[oopjkdkqoooj324oj5lrtjljdjaoigojro"
+                        "kdkw19oqjr*i3*45947986239ojkkdojkgbkniosod*iko8734tyrodjkaok94yto*ro19*ty84*oryr*i19wot*42o2*otg"
+                        "io234*jt3*y934y28ry*t;435[[][[k19wg[19p[riopjiko3j21b4ojvoj4kq78g92a789gyanjkkn19wnkijkngdoipao";
+    double  tab_db[] = {12.97, 42.92, 105.17, 18.150, -42.14, -51.10};
+    std::string str("string1");
+    std::string str1("string2");
+    std::string str2("abracadabra");
+    std::string str3("oulaoup");
+    std::string str4("yes challenge");
+    std::string str5("a toi de jouer");
+    std::string str6("c'est l'heure du du dud du duel");
+    std::string str7("oupqlinda");
+    std::string str8("-------X");
+    std::string str9("...");
+    std::string str10("");
+    std::string str11("c");
+    std::string tab_str[] = {str, str1, str2, str3, str4, str5, str6, str7, str8, str8, str10, str11};
+
+    test_all(12, 500, 750);
+    test_all('c', 250, 600);
+    test_all(12.94, 40, 60);
+    test_all(str1, 20, 51);
+
+}
+   
