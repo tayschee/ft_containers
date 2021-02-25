@@ -1,380 +1,242 @@
 #include <vector>
 #include <iostream>
-#include <cstdlib>
 #include <string>
-#include <unistd.h> //sleep
 
-struct a
-{
-    float j;
-};
-
-template<typename T>
-void print(std::vector<T> &vec, size_t x)
+template <typename T>
+void    test(std::vector<T> &vec)
 {
     size_t i;
 
-    try
+    for(i = 0; i < vec.size(); i++)
     {
-        typename std::vector<T>::iterator it(&vec[x]);
-        typename std::vector<T>::iterator ret;
-        ret = vec.erase(it);
-        while (ret != vec.end())
-            std::cout << *ret++ << " ";
-        std::cout << "\n";
-        for(i = 0; 1; i++)
-        {
-            std::cout << vec.at(i) << " ";
-        }
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
+        std::cout << vec[i] << " ";
     }
     std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-    if (i > 0)
-    {
-        std::cout << vec.front() << "\n";
-        std::cout << vec.back() << "\n";
-        std::cout << *vec.begin() << "\n";
-        std::cout << *--vec.end() << "\n";
-        std::cout << *vec.rbegin() << "\n";
-        std::cout << *--vec.rend() << "\n";
-    }
-    std::cout << "\n";
-}
-
-template<typename T>
-void print(std::vector<T> &vec, size_t x, size_t y)
-{
-    size_t i;
-
     try
     {
-        typename std::vector<T>::iterator beg(&vec[x]);
-        typename std::vector<T>::iterator end(&vec[y]);
-        typename std::vector<T>::iterator ret;
-        ret = vec.erase(beg, end);
-        while (ret != vec.end())
-            std::cout << *ret++ << " ";
-        std::cout << "\n";
         for(i = 0; 1; i++)
             std::cout << vec.at(i) << " ";
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        std::cout << e.what() << '\n';
     }
-    std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-    if (i > 0)
+    std::cout << std::endl;
+    std::cout << vec.size() << std::endl;
+    std::cout << vec.max_size() << std::endl;
+    std::cout << vec.empty() << std::endl;
+    std::cout << vec.capacity() << std::endl;
+    if (vec.size() != 0)
     {
-        std::cout << vec.front() << "\n";
-        std::cout << vec.back() << "\n";
-        std::cout << *vec.begin() << "\n";
-        std::cout << *--vec.end() << "\n";
-        std::cout << *vec.rbegin() << "\n";
-        std::cout << *--vec.rend() << "\n";
+        std::cout << *vec.begin() << std::endl;
+        std::cout << *vec.rbegin() << std::endl;
+        std::cout << *--vec.end() << std::endl;
+        std::cout << *--vec.rend() << std::endl;
+        std::cout << vec.front() << std::endl;
+        std::cout << vec.back() << std::endl;
     }
-    std::cout << "\n";
-}
-
-void print(std::vector<struct a> &vec, size_t x)
-{
-    size_t i;
-
-    try
+    else
     {
-        typename std::vector<struct a>::iterator it(&vec[x]);
-        typename std::vector<struct a>::iterator ret;
-        ret = vec.erase(it);
-        while (ret != vec.end())
-            std::cout << (*ret++).j << " ";
-        std::cout << "\n";
-        for(i = 0; 1; i++)
-        {
-            std::cout << vec.at(i).j << " ";
-        }
+        vec.begin();
+        vec.rbegin();
+        --vec.end();
+        --vec.end();
     }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-    std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-    if (i > 0)
-    {
-        std::cout << vec.front().j << "\n";
-        std::cout << vec.back().j << "\n";
-        std::cout << (*vec.begin()).j << "\n";
-        std::cout << (*--vec.end()).j << "\n";
-        std::cout << (*vec.rbegin()).j << "\n";
-        std::cout << (*--vec.rend()).j << "\n";
-    }
-    std::cout << "\n";
-}
-
-void print(std::vector<struct a> &vec, size_t x, size_t y)
-{
-    size_t i;
-
-    try
-    {
-        typename std::vector<struct a>::iterator beg(&vec[x]);
-        typename std::vector<struct a>::iterator end(&vec[y]);
-        typename std::vector<struct a>::iterator ret;
-        ret = vec.erase(beg, end);
-        while (ret != vec.end())
-            std::cout << (*ret++).j << " ";
-        std::cout << "\n";
-        for(i = 0; 1; i++)
-        {
-            std::cout << vec.at(i).j << " ";
-        }
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-    std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-    if (i > 0)
-    {
-        std::cout << vec.front().j << "\n";
-        std::cout << vec.back().j << "\n";
-        std::cout << (*vec.begin()).j << "\n";
-        std::cout << (*--vec.end()).j << "\n";
-        std::cout << (*vec.rbegin()).j << "\n";
-        std::cout << (*--vec.rend()).j << "\n";
-    }
-    std::cout << "\n";
+    std::cout << std::endl;
 }
 
 template<typename T>
-void print(std::vector<T *> &vec, size_t x, size_t y)
+std::vector<T>     create(std::vector<T> lst)
 {
-    size_t i;
-    size_t j;
-
-    try
-    {
-        typename std::vector<T>::iterator beg(&vec[x]);
-        typename std::vector<T>::iterator end(&vec[y]);
-        typename std::vector<T>::iterator ret;
-        ret = vec.erase(beg, end);
-        while (ret != vec.end())
-            std::cout << **ret++;
-        for(i = 0; 1; i++)
-        {
-            for (j = 0; vec.at(i)[j] != 0; j++)
-                std::cout << vec.at(i)[j] << " ";
-        }
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-    std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-    if (i > 0)
-    {
-        std::cout << *vec.front() << "\n";
-        std::cout << *vec.back() << "\n";
-        std::cout << **vec.begin() << "\n";
-        std::cout << **--vec.end() << "\n";
-        std::cout << **vec.rbegin() << "\n";
-        std::cout << **--vec.rend() << "\n";
-    }
-    std::cout << "\n";
+    return(std::vector<T>(lst));
 }
 
 template<typename T>
-void print(std::vector<T *> &vec, size_t x)
+std::vector<T>     create(size_t end_nb, T *tab)
 {
-    size_t i;
-    size_t j;
+    typename std::vector<T>::iterator beg(tab);
+    typename std::vector<T>::iterator end(&tab[end_nb]);
 
+    return(std::vector<T>(beg, end));
+}
+
+template<typename T>
+std::vector<T>     create(size_t size, const T &val)
+{
+    return(std::vector<T>(size, val));
+}
+
+template<typename T>
+std::vector<T>     create(size_t size)
+{
+    return(std::vector<T>(size));
+}
+
+template<typename T>
+std::vector<T>     create()
+{
+    return(std::vector<T>());
+}
+
+template <typename T>
+void    func(std::vector<T> &lst, size_t pos)
+{
+    typename std::vector<T>::iterator it(lst.begin());
+    typename std::vector<T>::iterator beg(lst.begin());
+    typename std::vector<T>::iterator ret;
+
+    while (pos)
+    {
+        --pos;
+        ++it;
+    }
     try
     {
-        typename std::vector<T>::iterator it(&vec[x]);
-        typename std::vector<T>::iterator ret;
-        ret = vec.erase(it);
-        while (ret != vec.end())
-            std::cout << **ret++;
-        for(i = 0; 1; i++)
+        ret = lst.erase(it);
+        if (ret != lst.end())
         {
-            for (j = 0; vec.at(i)[j] != 0; j++)
-                std::cout << vec.at(i)[j] << " ";
+            std::cout << *ret << "\n";
         }
+        while(beg < it)
+        {
+            std::cout << *beg++ << "\n";
+        }
+        std::cout << "\n";
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        std::cout << e.what() << '\n';
     }
-    std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-    if (i > 0)
+
+    test(lst);
+}
+
+template <typename T>
+void    func(std::vector<T> &lst, size_t pos, size_t end_nb)
+{
+    typename std::vector<T>::iterator beg(lst.begin());
+    typename std::vector<T>::iterator first(lst.begin());
+    typename std::vector<T>::iterator last(lst.begin());
+    typename std::vector<T>::iterator ret;
+
+    while (pos)
     {
-        std::cout << *vec.front() << "\n";
-        std::cout << *vec.back() << "\n";
-        std::cout << **vec.begin() << "\n";
-        std::cout << **--vec.end() << "\n";
-        std::cout << **vec.rbegin() << "\n";
-        std::cout << **--vec.rend() << "\n";
+        --pos;
+        ++first;
     }
-    std::cout << "\n";
+    while (end_nb)
+    {
+        --end_nb;
+        ++last;
+    }
+    try
+    {
+        ret = lst.erase(first, last);
+        if (ret != lst.end())
+        {
+            std::cout << *ret << "\n";
+        }
+        while(beg < first)
+        {
+            std::cout << *beg++ << "\n";
+        }
+        std::cout << "\n";
+    }
+    catch(const std::exception& e)
+    {
+        std::cout << e.what() << '\n';
+    }
+
+    test(lst);
+}
+
+template <typename T>
+void    test_all(T *tab, size_t size, size_t n)
+{
+    std::vector<T>   lst(create(size, tab));
+
+    while(lst.size() > 0)
+    {
+        if(n < lst.size())
+            func(lst, n);
+        else
+            func(lst, lst.size() - 1);
+    }
+    
+}
+
+template <typename T>
+void    test_all(T *tab, size_t size, size_t n, size_t n2)
+{
+    size_t i = 0;
+    std::vector<T>   lst(create(size, tab));
+    std::vector<T>   lst1(create(size, tab));
+
+    func(lst, lst.size() - 1, lst.size() - 1);
+    func(lst, 0, 0);
+    func(lst, n, n);
+    func(lst, n2, n2);
+    while(lst.size() > 0)
+    {
+        if (n2 > lst.size())
+            n2 = lst.size();
+        if (n > lst.size() || n == n2)
+            n = 0;
+        func(lst, n, n2);
+    }
+    while (i < lst1.size())
+    {
+        func(lst1, 0, i);
+        lst1 = create(size, tab);
+        ++i;
+    }
 }
 
 int main()
 {
-    int x1 = 241;
-    int x2 = 801; 
-    int x3 = 72;
-    int x4 = 112;
-    int x5 = 8;
-    int    tab1[]= {218, -92, 8081, 218, -29, 1097, 921, 823012, 932, -9212, 80, 88, 21, 38, -19, -1255, 48256, -37, 8923, -217}; //18
-    std::vector<int>::iterator beg1(tab1);
-    std::vector<int>::iterator end1(&tab1[20]);
-    std::vector<int> vec1(beg1, end1);
-    int    tab11[]= {9, 712, 821, 14, -291}; //5
-    std::vector<int>::iterator beg11(tab11);
-    std::vector<int>::iterator end11(&tab11[5]);
-    std::vector<int> vec11(beg11, end11);
-    std::vector<int> vec12(x1, 12);
+    int tab_int[] = {-12, -24, -96, 18, 124, -36, -152, 17, -99, -41, -27, -46, -96, -205, -211, 27, -4, -3, -6, -9,
+                    -98, -99, -100, 266, -1052, 99, 206, 8, -31, 44, -134, -227, -901, -19, 18, 91, 82, 81, 83};
+    char    tab_char[] = "enkqwj4u43'2[epwlfrn32[gfp24i3[jfrifq2p'[g2'q[34tjmfpk32][tfm5igmq][pwmgfqnirtq5jgioqr'q[23n"
+                        "nfjieqwhuiqp3r43p;]342][54]32']5][235p3]-0=0295=19534591`mkmnklrewnejrtpo4rkpwop[w3qjjfriw["
+                        "kfioqphir3o1il]p[ro098y21rt9yr79quwkeqmdflvmlr,2prejmcfoeqwjroi[432tfowor]gkro[wkgo[j2giow2"
+                        "huie2  bidiuoqghfiqehbnfiur3nipu2ty90324u85r9uifncieoqnhfguidenjqpfhhhgurejrnjwipnrgiwenijg"
+                        "jfiqrjfjhu9w4uy82378y458y23785y754hjkewndjkfnijnijewpfohnjinrghiuhriewpghruiewhgiuwhighuiwg"
+                        "jdfoqiprh3uiyr5u972958943265yhjkfdhfgdf'akq]rkfop[dksop[32krtop[jtopjgfijnijbqrporkgmoqjipg"
+                        "jifoeqhuhfiwhdiufhriqhefhjfdhiouuy89759205y7864't2k4[ppo3p[oopjfdkqhohj324hj5lrtjljdjaoighjro"
+                        "kdfweoqjrui3u45947986239hjkfdhjkgbfnihshduifh8734tyrhdjkahf94ythurheuty84uhryruiewhtu42h2uhtg"
+                        "io234ujt3uy934y28ryut;435[[][[fewg[ep[riopjifh3j21b4hjvhj4kq78g90a789gyanjkfnewnfijfngdhipah"
+                        "o*i192  bidi*oqgokiq19obnki*r3nip*2ty92324*85r9*iknci19oqnokg*id19njqpkooog*r19jrnjwipnrgiw19nijg"
+                        "jkiqrjkjo*9w4*y82378y458y23785y754ojk19wndjkknijnij19wpkoonjinrgoi*ori19wpgor*i19wogi*woigo*iwg"
+                        "jdkoqipro3*iyr5*972958943265yojkkdokgdk'akq]rkkop[dksop[32krtop[jtopjgkijnijbqrporkgmoqjipg"
+                        "jiko19qo*okiwodi*koriqo19kojkdoio**y89759225y7864't2k4[ppo3p[oopjkdkqoooj324oj5lrtjljdjaoigojro"
+                        "kdkw19oqjr*i3*45947986239ojkkdojkgbkniosod*iko8734tyrodjkaok94yto*ro19*ty84*oryr*i19wot*42o2*otg"
+                        "io234*jt3*y934y28ry*t;435[[][[k19wg[19p[riopjiko3j21b4ojvoj4kq78g92a789gyanjkkn19wnkijkngdoipao";
+    double  tab_db[] = {12.97, 42.92, 105.17, 18.150, -42.14, -51.10};
+    std::string str("string1");
+    std::string str1("string2");
+    std::string str2("abracadabra");
+    std::string str3("oulaoup");
+    std::string str4("yes challenge");
+    std::string str5("a toi de jouer");
+    std::string str6("c'est l'heure du du dud du duel");
+    std::string str7("oupqlinda");
+    std::string str8("-------X");
+    std::string str9("...");
+    std::string str10("");
+    std::string str11("YOP");
+    std::string tab_str[] = {str, str1, str2, str3, str4, str5, str6, str7, str8, str8, str10, str11};
 
-    char    tab2[] = "bouyachaka miyachaka oupalinda";
-    std::vector<char>::iterator beg2(tab2);
-    std::vector<char>::iterator end2(&tab2[31]);
-    std::vector<char> vec2(x2, 'W');
-    std::vector<char> vec21(beg2, end2);
+    test_all(tab_int, 39, 21);
+    test_all(tab_char, 1395, 561);
+    test_all(tab_db, 6, 0);
+    test_all(tab_str, 12, 2);
 
-    std::string         tab3[] = {"bebe", "ne", "revient", "pas", "prend", "tes", "affaires", "rentre", "chez", "toi" };
-    std::vector<std::string>::iterator beg3(tab3);
-    std::vector<std::string>::iterator end3(&tab3[10]);
-    std::vector<std::string> vec3(beg3, end3);
-    std::vector<std::string> vec31(x3, "OOOHHH!!!");
+    test_all(tab_int, 39, 3, 12);
+    test_all(tab_int, 39, 0, 1);
+    test_all(tab_char, 1395, 561, 671);
+    test_all(tab_char, 1395, 0, 1395);
+    test_all(tab_db, 6, 0, 6);
+    test_all(tab_str, 12, 2, 3);
 
-    struct a            tab4 = {4.2f};
-    struct a            tab41[] = {{4.2f}, {-8.12f}, {-93.7f}, {-105.19}, {112.4f}, {2202.5f}, {8404.9f}, {2008.6f}, {-14.6f}};
-    std::vector<struct a>::iterator beg41(tab41);
-    std::vector<struct a>::iterator end41(&tab41[9]);
-    std::vector<struct a> vec4(x4, tab4); 
-    std::vector<struct a> vec41(beg41, end41);
-
-    //int
-    print(vec1, 19);
-    print(vec1, 12);
-    print(vec1, 11);
-    print(vec1, 1);
-    print(vec1, 0);
-    print(vec1, 9);
-    print(vec1, 6);
-    //
-    print(vec1, 8, 10);
-    print(vec1, 0, 4);
-    print(vec1, 1, 2);
-    print(vec1, 2, 2);
-    //print(vec1, 26); seg
-    //print(vec1, 10, 2); ind
-
-    print(vec11, 0);
-    print(vec11, 1);
-    print(vec11, 2);
-    print(vec11, 1);
-    print(vec11, 0);
-    print(vec11, 0, 0);
-    vec11.push_back(5); vec11.push_back(5); vec11.push_back(2); vec11.push_back(1); vec11.push_back(3);
-    print(vec11, 2, 4);
-    print(vec11, 0, 3);
-
-    print(vec12, 200);
-    print(vec12, 210);
-    print(vec12, 231);
-    print(vec12, 0, 25);
-    print(vec12, 111, 132);
-    print(vec12, 41, 43);
-    print(vec12, 22, 22);
-    print(vec12, 70, 170);
-    //print(vec12, 0, 255); seg
-    //print(vec12, 255, 0); seg
-
-
-    //char
-    print(vec2, 412, 800);
-    print(vec2, 51, 72);
-    print(vec2, 49, 49);
-    print(vec2, 50, 51);
-    print(vec2, 22, 254);
-
-    print(vec21, 30);
-    print(vec21, 5, 15);
-    print(vec21, 7, 12);
-    print(vec21, 12);
-    print(vec21, 8);
-    print(vec21, 0, 13);
-
-    
-    //std::string
-    print(vec31, 42, 50);
-    print(vec31, 18, 31);
-    print(vec31, 10, 12);
-    print(vec31, 21, 21);;
-    print(vec31, 0, 1);
-    print(vec31, 0);
-    print(vec31, 26);
-    print(vec31, 21);
-    print(vec31, 0, vec3.size());
-
-    print(vec3, 4);
-    print(vec3, 6);
-    print(vec3, 4, 8);
-    print(vec3, 0, 4);
-    print(vec3, 0, 0);
-
-    //struct a
-    print(vec4, 111, 112);
-    print(vec4, 12);
-    print(vec4, 36);
-    print(vec4, 94);
-    print(vec4, 23, 46);
-    print(vec4, 57, 59);
-    print(vec4, 8, 31);
-
-    print(vec41, 0, 1);
-    print(vec41, 3);
-    print(vec41, 0, 5);
-    print(vec41, 0, 2);
-
-    /*//void *
-    print(vec5, 12, (tab52));//++
-    print(vec5, 3,  (tab5));//--
-    print(vec5, 0,  (tab51));//--
-    print(vec5, 4, (tab53));//++;
-    print(vec5, 4, (tab52));//++;
-    print(vec5, 0, 14, (tab54));//++
-    print(vec5, 6, 12, (tab54));//--
-    print(vec5, 50, (tab52));//++
-    print(vec5, 9, 12, (tab54));//--*/
-
-
-    return (0);
 }
+   

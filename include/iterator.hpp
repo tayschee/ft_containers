@@ -2,7 +2,6 @@
 # define ITERATOR_HPP
 
 # include <cstddef> //ptrdiff_t
-# include "list.hpp"
 
 namespace ft
 {

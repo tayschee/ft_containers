@@ -5,7 +5,6 @@
 # include <stdexcept> //exception
 # include "iterator.hpp"
 # include <iostream> 
-# include <algorithm> //pas sur
 # include <sstream> //conversion int to string (for exception)
 
 namespace   ft
@@ -18,11 +17,11 @@ namespace   ft
             class iterator
             {
                 public : //iterator TYPEDEF
-                    typedef typename iterator_traits<T *>::iterator_category iterator_category;
-                    typedef typename iterator_traits<T *>::value_type value_type;
-                    typedef typename iterator_traits<T *>::difference_type difference_type;
-                    typedef typename iterator_traits<T *>::pointer pointer;
-                    typedef typename iterator_traits<T *>::reference reference;
+                    typedef typename ft::iterator_traits<T *>::iterator_category iterator_category;
+                    typedef typename ft::iterator_traits<T *>::value_type value_type;
+                    typedef typename ft::iterator_traits<T *>::difference_type difference_type;
+                    typedef typename ft::iterator_traits<T *>::pointer pointer;
+                    typedef typename ft::iterator_traits<T *>::reference reference;
                 private :
                     pointer array_pointer;
                 public :
@@ -97,11 +96,11 @@ namespace   ft
             class const_iterator
             {
                 public : //const_iterator TYPEDEF
-                    typedef typename iterator_traits<const T *>::iterator_category iterator_category;
-                    typedef typename iterator_traits<const T *>::value_type value_type;
-                    typedef typename iterator_traits<const T *>::difference_type difference_type;
-                    typedef typename iterator_traits<const T *>::pointer pointer;
-                    typedef typename iterator_traits<const T *>::reference reference;
+                    typedef typename ft::iterator_traits<const T *>::iterator_category iterator_category;
+                    typedef typename ft::iterator_traits<const T *>::value_type value_type;
+                    typedef typename ft::iterator_traits<const T *>::difference_type difference_type;
+                    typedef typename ft::iterator_traits<const T *>::pointer pointer;
+                    typedef typename ft::iterator_traits<const T *>::reference reference;
 
                 private :
                     pointer array_pointer;
@@ -177,8 +176,8 @@ namespace   ft
             typedef typename allocator_type::const_pointer const_pointer;
             //typedef typename ft::vector<value_type, allocator_type>::iterator iterator;
             //typedef typename ft::vector<value_type, allocator_type>::const_iterator const_iterator;
-            typedef ft::reverse_iterator<iterator> reverse_iterator;
-            typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+            typedef typename ft::reverse_iterator<iterator> reverse_iterator;
+            typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
             typedef typename iterator::difference_type difference_type;
             typedef size_t size_type;
 
@@ -189,11 +188,25 @@ namespace   ft
                 size_type       array_size;
 
         private : //PRIVATE FUNCTION
-            size_t  more_capacity(size_t new_cap1 = 0)
+            size_t  more_capacity(size_t new_cap1)
             {
-                size_type new_cap2 = array_capacity > 0 ? array_capacity * 2 : 1;
+                size_type new_cap2 = array_size > 0 ? array_size * 2 : 1;
 
                 return(new_cap1 > new_cap2 ? new_cap1 : new_cap2);
+            }
+            void    reallocate(size_t n)
+            {
+                size_t i;
+                T       *new_array;
+
+                new_array = alloc.allocate(static_cast<size_type>(n));
+                for (i = 0; i < array_size; i++)
+                    alloc.construct(&new_array[i], array[i]); // = seem not good
+                for (i = 0; i < array_size; i++)
+                    alloc.destroy(&array[i]);
+                alloc.deallocate(array, array_capacity);
+                array_capacity = n;
+                array = new_array;
             }
 
         public : //FUNCTION
@@ -213,7 +226,7 @@ namespace   ft
             }
 
             template <class InputIterator>
-            vector(InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::value last,
+            vector(InputIterator first, typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last,
             const allocator_type& alloc = allocator_type())
             {
                 InputIterator copy_first = first;
@@ -233,8 +246,7 @@ namespace   ft
             {
                 size_type i;
 
-                (void)i;
-                this->array_capacity = x.array_capacity;
+                this->array_capacity = x.array_size;
                 this->alloc = allocator_type();
                 this->array_size = x.array_size;
                 this->array = (this->alloc).allocate(static_cast<size_type>(array_capacity));
@@ -252,15 +264,16 @@ namespace   ft
             {
                 size_type i;
 
-                //this->~vector();
-                clear(); //verif capacity
-                alloc.deallocate(array, array_capacity);
-                this->array_capacity = x.array_capacity;
-                this->alloc = x.alloc;
-                this->array = (this->alloc).allocate(static_cast<size_type>(array_capacity));
-                for (i = 0; i < array_capacity; i++)
-                    alloc.construct(&this->array[i], x.array[i]); //seems better than equal
+                clear();
+                if (x.array_size > this->array_capacity)
+                {
+                    array_capacity = x.array_size;
+                    this->array = (this->alloc).allocate(static_cast<size_type>(array_capacity));
+                }
+                this->alloc = allocator_type();
                 this->array_size = x.array_size;
+                for (i = 0; i < array_size; i++)
+                    (this->alloc).construct(&array[i], x.array[i]);
                 return (*this);
             } 
             //ARRAY ITERATOR
@@ -310,9 +323,9 @@ namespace   ft
             }
             void    resize(size_type n, value_type val = value_type()) //VERIFY ABSOLUTLY
             {
-                if (n > array_capacity) //exception check_inside reserve
+                if (n > array_capacity)
                 {
-                    reserve(n);
+                    reallocate(more_capacity(n));
                 }
                 if (n > array_size)
                 {
@@ -322,7 +335,7 @@ namespace   ft
                 else if (n < array_size)
                 {
                     while (array_size > n)
-                        alloc.destroy(&array[--array_size]);
+                        pop_back();
                 }
             }
             size_type   capacity() const
@@ -335,24 +348,13 @@ namespace   ft
             }
             void reserve(size_type n)
             {
-                value_type  *new_array;
-                size_type      i;
-
                 if (n > max_size())
                 {
-                    throw std::length_error("vector::reserve"); //je ne sais pas qu'elle txt mettre
+                    throw std::length_error("vector::reserve");
                 }
-
-                if (n > array_capacity)
+                if (n > array_capacity) //assign ?
                 {
-                    new_array = alloc.allocate(static_cast<size_type>(n));
-                    for (i = 0; i < array_size; i++)
-                        alloc.construct(&new_array[i], array[i]); // = seem not good
-                    for (i = 0; i < array_size; i++)
-                        alloc.destroy(&array[i]);
-                    alloc.deallocate(array, array_capacity);
-                    array_capacity = n;
-                    array = new_array;
+                    reallocate(n);
                 }
                     
             }
@@ -366,7 +368,7 @@ namespace   ft
                 if (n >= array_size)
                 {
                     std::stringstream ss;
-                    ss << "ft::vector::_M_range_check: __n (which is " << n << ") >= this->size() (which is "
+                    ss << "vector::_M_range_check: __n (which is " << n << ") >= this->size() (which is "
                     << array_size << ")";
                     throw std::out_of_range(ss.str());
                     //vector::_M_range_check: __n (which is 0) >= this->size() (which is 0)
@@ -404,27 +406,26 @@ namespace   ft
             //ARRAY MODIFIERS
             void    assign(size_type n, const value_type &val) //a refaire
             {
-                if (n > array_capacity) //exception ? 
-                    reserve(n);
+                if (n > array_capacity)
+                    reallocate(n);
                 clear();
-                while (array_size < n)
+                while (n)
                 {
-                    alloc.construct(&array[array_size], val);
-                    ++array_size;
+                    push_back(val);
+                    --n;
                 }
             }
             template <class InputIterator>
-            void    assign(InputIterator first,  typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::value last) //a refaire
+            void    assign(InputIterator first, typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last) //a refaire
             {
                 size_t          range_it = &*last - &*first;
 
-                if (range_it > array_capacity) //not good exception
-                    reserve(range_it);
                 clear();
-                while (array_size < range_it)
+                if (range_it > array_capacity)
+                    reallocate(range_it);
+                while (first < last)
                 {
-                    alloc.construct(&array[array_size], *first++);
-                    ++array_size;
+                    push_back(*first++);
                 }
             }
 
@@ -436,7 +437,7 @@ namespace   ft
 
                 if (array_size >= array_capacity)
                 {
-                    n = more_capacity();
+                    n = more_capacity(array_capacity + 1);
                     new_array = alloc.allocate(static_cast<size_type>(n));
                     for (i = 0; i < array_size; i++)
                         alloc.construct(&new_array[i], array[i]); //seems better than equal
@@ -457,122 +458,45 @@ namespace   ft
 
             iterator    insert(iterator position, const value_type &val)
             {
-                iterator    it;
-                size_t      new_capacity;
-                size_t      pos_nb = &*position - &*begin();
-                size_t      i;
-                value_type  *new_array;
+                size_t    pos = &*position - &*begin();
+                size_t    end = array_size;
 
                 if (array_size == array_capacity)
+                    reallocate(more_capacity(array_size + 1));
+                while(end > pos)
                 {
-                    it = begin();
-                    new_capacity = more_capacity();
-                    new_array = alloc.allocate(static_cast<size_type>(new_capacity));
-                    array_size = array_size + 1;
-                    for(i = 0; i < array_size; i++)
-                    {
-                        if (it == position)
-                        {
-                            alloc.construct(&new_array[i], val); //verifier si c'est pas la fin
-                            if (i + 1 < array_size)
-                                alloc.construct(&new_array[++i], *it++);
-                        }
-                        else
-                            alloc.construct(&new_array[i], *it++);
-                    }
-                    clear();
-                    array = new_array;
-                    array_size = i;
-                    array_capacity = new_capacity;
-                    return (this->begin() + pos_nb );
+                    alloc.construct(&array[end], array[end - 1]);
+                    --end;
                 }
-                alloc.construct(&array[array_size], val);
-                array_size++;
-                it  = this->end();
-                while (position < --it)
-                    *it = *(it - 1); //*it ; --it;
-                *it = val;
-                return (position); //a verifier;   
+                alloc.construct(&array[end], val);
+                ++array_size;
+                return (begin() + pos);  
             }
             void    insert(iterator position, size_type n, const value_type &val) //verif = to replace alloc.construct
             {
-                size_type new_capacity;
-                size_type i;
-                iterator beg(array);
-                iterator end(this->end());
-                value_type  *new_array;
+                size_t    pos = &*position - &*begin();
 
                 if (array_size + n > array_capacity)
+                    reallocate(more_capacity(array_size + n));
+                position = begin() + pos;
+                while(n)
                 {
-                    new_capacity = more_capacity(array_size + n);
-                    new_array = alloc.allocate(static_cast<size_type>(new_capacity));
-                    
-                    for(i = 0; beg != position; i++) //verif i < array_size
-                        alloc.construct(&new_array[i], *beg++);
-
-                    while (n-- > 0)
-                        alloc.construct(&new_array[i++], val);
-
-                    while (beg != end) //verif i < array_size
-                        alloc.construct(&new_array[i++], *beg++);
-                    clear();
-                    array_capacity = new_capacity;
-                    array_size = i;
-                    array = new_array;
-                }
-                else
-                {
-                    for (i = 0; i < n; i++)
-                        alloc.construct(&array[array_size++], val);
-                    if (i > 0)
-                    {
-                        end = this->end();
-                        position += n;
-                        while (position < end)
-                            *--end = *(end - n - 1);
-                    }
-                    for (i = 0; i < n; i++)
-                        *--end = val;
+                    --n;
+                    insert(position, val);
                 }
             }
             template <class InputIterator>
-            void    insert(iterator position, InputIterator first,  typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::value last)
+            void    insert(iterator position, InputIterator first, typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
             {
-                size_type new_capacity;
-                size_type i;
-                size_type it_diff = last - first;
-                iterator beg(array);
-                iterator end(this->end);
-                value_type  *new_array;
-                
-                if (array_size + it_diff >= array_capacity)
+                size_type       it_diff = &*last - &*first;
+                size_type       pos = &*position - &*begin();
+
+                if (array_size + it_diff > array_capacity)
+                    reallocate(more_capacity(array_size + it_diff));
+                position = begin() + pos;
+                while(first < last)
                 {
-                    new_capacity = more_capacity(array_size + it_diff);
-                    new_array = alloc.allocate(static_cast<size_type>(new_capacity));
-                    
-                    for(i = 0; beg != position; i++) //verif i < array_size
-                        alloc.construct(&new_array[i], *beg++);
-
-                    while (first != last)
-                        alloc.construct(&new_array[i++], *first++);
-
-                    while (beg != end)
-                        alloc.construct(&new_array[i++], *beg++);
-                    clear();
-                    array_capacity = new_capacity;
-                    array_size = array_capacity();
-                    array = new_array;
-                }
-                else
-                {
-                    for (i = 0; i < it_diff ; i++)
-                       alloc.construct(&array[array_size + i], *(position + i));
-
-                    for(i = 0; i < it_diff; i++)
-                    {
-                        *(position + i) = first++;
-                    }
-                    array_size += it_diff;
+                    insert(position, *first++);
                 }
             }
 
@@ -598,11 +522,12 @@ namespace   ft
                 }
                 while (first < end)
                 {
-                    alloc.destroy(&*(++first));
+                    alloc.destroy(&*(first++));
                     array_size--;
                 }
                 return (return_it);
             }
+
             void swap(vector &x)
             {
                 T   *save;

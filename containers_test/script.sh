@@ -66,7 +66,6 @@ else
     echo -e "${R}SWAP : KO${W}"
 fi
 
-C
 
 diff <(${FT_BIN}${VEC}clear) <(${STD_BIN}${VEC}clear)
 if [ ! $? -ne 0 ];
@@ -74,6 +73,25 @@ then
     echo -e "${G}CLEAR : OK${W}"
 else
     echo -e "${R}CLEAR : KO${W}"
+fi
+
+
+diff <(${FT_BIN}${VEC}insert) <(${STD_BIN}${VEC}insert)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}INSERT : OK${W}"
+else
+    echo -e "${R}INSERT : KO${W}"
+fi
+
+C
+
+diff <(${FT_BIN}${VEC}erase) <(${STD_BIN}${VEC}erase)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}ERASE : OK${W}"
+else
+    echo -e "${R}ERASE : KO${W}"
 fi
 
 <<C

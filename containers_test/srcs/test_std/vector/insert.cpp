@@ -1,349 +1,306 @@
 #include <vector>
 #include <iostream>
-#include <cstdlib>
 #include <string>
-#include <unistd.h> //sleep
 
-template<typename T>
-void print(std::vector<T> &vec, size_t pos, const T &val)
+template <typename T>
+void    test(std::vector<T> &vec)
 {
     size_t i;
-
-    try
-    {
-        typename std::vector<T>::iterator it_pos(vec.begin() + pos);
-        typename std::vector<T>::iterator verif_it;
-        verif_it = vec.insert(it_pos, val);
-        while (verif_it != vec.end())
-            std::cout << *verif_it++ << " ";
-        std::cout << std::endl;
-    }
-    catch(const std::exception& e)
-    {
-        std::cout << e.what() << '\n';
-    }
 
     for(i = 0; i < vec.size(); i++)
     {
         std::cout << vec[i] << " ";
     }
     std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-    if (i > 0)
+    try
     {
-        std::cout << vec.front() << "\n";
-        std::cout << vec.back() << "\n";
-        std::cout << *vec.begin() << "\n";
-        std::cout << *--vec.end() << "\n";
-        std::cout << *vec.rbegin() << "\n";
-        std::cout << *--vec.rend() << "\n";
+        for(i = 0; 1; i++)
+            std::cout << vec.at(i) << " ";
     }
-    std::cout << "\n";
+    catch(const std::exception& e)
+    {
+        std::cout << e.what() << '\n';
+    }
+    std::cout << std::endl;
+    std::cout << vec.size() << std::endl;
+    std::cout << vec.max_size() << std::endl;
+    std::cout << vec.empty() << std::endl;
+    std::cout << vec.capacity() << std::endl;
+    if (vec.size() != 0)
+    {
+        std::cout << *vec.begin() << std::endl;
+        std::cout << *vec.rbegin() << std::endl;
+        std::cout << *--vec.end() << std::endl;
+        std::cout << *--vec.rend() << std::endl;
+        std::cout << vec.front() << std::endl;
+        std::cout << vec.back() << std::endl;
+    }
+    else
+    {
+        vec.begin();
+        vec.rbegin();
+        --vec.end();
+        --vec.end();
+    }
+    std::cout << std::endl;
 }
 
 template<typename T>
-void print(std::vector<T> &vec, size_t pos, size_t n, const T &val)
+std::vector<T>     create(std::vector<T> lst)
 {
-    size_t i;
+    return(std::vector<T>(lst));
+}
 
+template<typename T>
+std::vector<T>     create(size_t end_nb, T *tab)
+{
+    typename std::vector<T>::iterator beg(tab);
+    typename std::vector<T>::iterator end(&tab[end_nb]);
+
+    return(std::vector<T>(beg, end));
+}
+
+template<typename T>
+std::vector<T>     create(size_t size, const T &val)
+{
+    return(std::vector<T>(size, val));
+}
+
+template<typename T>
+std::vector<T>     create(size_t size)
+{
+    return(std::vector<T>(size));
+}
+
+template<typename T>
+std::vector<T>     create()
+{
+    return(std::vector<T>());
+}
+
+template <typename T>
+void    func(std::vector<T> &lst, size_t pos, T val)
+{
+    typename std::vector<T>::iterator it(lst.begin());
+    typename std::vector<T>::iterator beg(lst.begin());
+    typename std::vector<T>::iterator end(lst.end());
+
+    while (pos)
+    {
+        --pos;
+        ++it;
+    }
     try
     {
-        typename std::vector<T>::iterator it_pos(vec.begin() + pos);
-        typename std::vector<T>::iterator verif_it;
-        vec.insert(it_pos, n, val);
+        std::cout << *lst.insert(it, val) << "\n";
+        if(beg == lst.begin())
+        {
+            while(beg < end)
+            {
+                std::cout << *beg++ << "\n";
+            }
+        }
+        std::cout << "\n";
     }
     catch(const std::exception& e)
     {
         std::cout << e.what() << '\n';
     }
 
-    for(i = 0; i < vec.size(); i++)
-    {
-        std::cout << vec[i] << " ";
-    }
-    std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-    if (i > 0)
-    {
-        std::cout << vec.front() << "\n";
-        std::cout << vec.back() << "\n";
-        std::cout << *vec.begin() << "\n";
-        std::cout << *--vec.end() << "\n";
-        std::cout << *vec.rbegin() << "\n";
-        std::cout << *--vec.rend() << "\n";
-    }
-    std::cout << "\n";
+    test(lst);
 }
 
-template<typename T>
-void print(std::vector<T *> &vec, size_t pos, size_t n, T *val)
+template <typename T>
+void    func(std::vector<T> &lst, size_t pos, size_t end_nb, T *tab)
 {
-    size_t i;
+    typename std::vector<T>::iterator first(tab);
+    typename std::vector<T>::iterator last(tab + end_nb);
 
+    typename std::vector<T>::iterator it(lst.begin());
+    typename std::vector<T>::iterator beg(lst.begin());
+    typename std::vector<T>::iterator end(lst.end());
+
+    while (pos)
+    {
+        --pos;
+        ++it;
+    }
     try
     {
-        typename std::vector<T *>::iterator it_pos(vec.begin() + pos);
-        typename std::vector<T *>::iterator verif_it;
-        vec.insert(it_pos, n, val);
+        lst.insert(it, first, last);
+        if(beg == lst.begin())
+        {
+            while(beg < end)
+            {
+                std::cout << *beg++ << "\n";
+            }
+        }
+        std::cout << "\n";
     }
     catch(const std::exception& e)
     {
         std::cout << e.what() << '\n';
     }
 
-    for(i = 0; i < vec.size(); i++)
-    {
-        std::cout << vec[i] << " ";
-    }
-    std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-    if (i > 0)
-    {
-        std::cout << vec.front() << "\n";
-        std::cout << vec.back() << "\n";
-        std::cout << *vec.begin() << "\n";
-        std::cout << *--vec.end() << "\n";
-        std::cout << *vec.rbegin() << "\n";
-        std::cout << *--vec.rend() << "\n";
-    }
-    std::cout << "\n";
+    test(lst);
 }
 
-template<typename T>
-void print(std::vector<T *> &vec, size_t pos, T *val)
+template <typename T>
+void    func(std::vector<T> &lst, size_t pos, size_t j, T val)
 {
-    size_t i;
+    typename std::vector<T>::iterator it(lst.begin());
+    typename std::vector<T>::iterator beg(lst.begin());
+    typename std::vector<T>::iterator end(lst.end());
 
+    while (pos)
+    {
+        --pos;
+        ++it;
+    }
     try
     {
-        typename std::vector<T *>::iterator it_pos(vec.begin() + pos);
-        typename std::vector<T *>::iterator verif_it;
-        verif_it = vec.insert(it_pos, val);
-        while (verif_it != vec.end())
-            std::cout << *verif_it++ << " ";
-        std::cout << std::endl;
+        lst.insert(it, j, val);
+        if(beg == lst.begin())
+        {
+            while(beg < end)
+            {
+                std::cout << *beg++ << "\n";
+            }
+        }
+        std::cout << "\n";
     }
     catch(const std::exception& e)
     {
         std::cout << e.what() << '\n';
     }
 
-    for(i = 0; i < vec.size(); i++)
-    {
-        std::cout << vec[i] << " ";
-    }
-    std::cout << "\n";
-    std::cout << vec.max_size() << "\n";
-    std::cout << vec.size() << "\n";
-    std::cout << vec.capacity() << "\n";
-    std::cout << vec.empty() << "\n";
-    if (i > 0)
-    {
-        std::cout << vec.front() << "\n";
-        std::cout << vec.back() << "\n";
-        std::cout << *vec.begin() << "\n";
-        std::cout << *--vec.end() << "\n";
-        std::cout << *vec.rbegin() << "\n";
-        std::cout << *--vec.rend() << "\n";
-    }
-    std::cout << "\n";
+    test(lst);
 }
 
+template <typename T>
+void    test_all(T *tab, size_t size, T val, size_t n)
+{
+    size_t i = n;
+    size_t j = 0;
+    std::vector<T>   lst(create(size, tab));
+    std::vector<T>   lst1;
+
+    func(lst1, 0, val);
+    func(lst1, 1, val);
+    func(lst1, 2, val);
+    func(lst1, 0, val);
+    while(i)
+    {
+        func(lst, i, val);
+        func(lst, n, val);
+        func(lst, 0, val);
+        func(lst, lst.size(), val);
+        --i;
+    }
+    
+}
+
+template <typename T>
+void    test_all(T *tab, size_t size, T val, size_t n, size_t n2)
+{
+    size_t i = 0;
+    std::vector<T>   lst(create(size, tab));
+    std::vector<T>   lst1;
+
+    func(lst1, 0, 0, val);
+    func(lst1, 0, 1,  val);
+    func(lst1, 1, n,  val);
+    func(lst1, 2, 0, val);
+    func(lst, 2, 0, val);
+    func(lst, lst.size(), 0, val);
+    func(lst, lst.size(), 1, val);
+    func(lst, lst.size(), n, val);
+    while(i < n2)
+    {
+        func(lst, n, i, val);
+        func(lst, 0, i, val);
+        func(lst, lst.size(), i, val);
+        ++i;
+    }
+}
+
+template <typename T>
+void    test_all(T *tab, size_t size, T* tab2, size_t size2, size_t n)
+{
+    size_t i = 0;
+    std::vector<T>   lst(create(size, tab));
+    std::vector<T>   lst1;
+
+    func(lst1, 0, 0, tab2);
+    func(lst1, 0, 1,  tab2);
+    func(lst1, 1, size2,  tab2);
+    func(lst1, 2, 0, tab2);
+    func(lst, 2, 0, tab2);
+    func(lst, lst.size(), 0, tab2);
+    func(lst, lst.size(), 1, tab2);
+    func(lst, lst.size(), size2, tab2);
+    while(i <= size2)
+    {
+        func(lst, n, i, tab2);
+        func(lst, 0, i, tab2);
+        func(lst, lst.size(), i, tab2);
+        ++i;
+    }
+}
 
 int main()
 {
-    int x1 = 48;
-    int x2 = 422; 
-    int x3 = 5006;
-    int x4 = 18;
-    char    tab1[] = "Aou";
-    char    tab2[] = "isothermique";
-    char    tab3[] = "excellent";
-    char    tab4[] = "ouiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiI";
-    char    tab5[] = "0123456789";
-    char    tab6[] = "mission";
-    char    tab7[] = "cleopatre";
-    char    *tab[] = {tab1, tab2, tab3, tab4};
-    std::vector<char *>::iterator beg4(tab);
-    std::vector<char *>::iterator end4(&tab[4]);
+    int tab_int[] = {12, 24, 96, -18, -124, 36, 152, -17, 99, 41, 27, 46, 96, 205, 211, -27, 4, 3, 6, 9, 98, 99,
+                    100, -266, 1052, -99, -206, -8};
+    int tab_int1[] = {-12, -24, -96, 18, 124, -36, -152, 17, -99, -41, -27, -46, -96, -205, -211, 27, -4, -3, -6, -9,
+                    -98, -99, -100, 266, -1052, 99, 206, 8, -31, 44, -134, -227, -901, -19, 18, 91, 82, 81, 83};
+    char    tab_char[] = "enkqwj4u43'2[epwlfrn32[gfp24i3[jfrifq2p'[g2'q[34tjmfpk32][tfm5igmq][pwmgfqnirtq5jgioqr'q[23n"
+                        "nfjieqwhuiqp3r43p;]342][54]32']5][235p3]-0=0295=19534591`mkmnklrewnejrtpo4rkpwop[w3qjjfriw["
+                        "kfioqphir3o1il]p[ro098y21rt9yr79quwkeqmdflvmlr,2prejmcfoeqwjroi[432tfowor]gkro[wkgo[j2giow2"
+                        "huie2  bidiuoqghfiqehbnfiur3nipu2ty90324u85r9uifncieoqnhfguidenjqpfhhhgurejrnjwipnrgiwenijg"
+                        "jfiqrjfjhu9w4uy82378y458y23785y754hjkewndjkfnijnijewpfohnjinrghiuhriewpghruiewhgiuwhighuiwg"
+                        "jdfoqiprh3uiyr5u972958943265yhjkfdhfgdf'akq]rkfop[dksop[32krtop[jtopjgfijnijbqrporkgmoqjipg"
+                        "jifoeqhuhfiwhdiufhriqhefhjfdhiouuy89759205y7864't2k4[ppo3p[oopjfdkqhohj324hj5lrtjljdjaoighjro"
+                        "kdfweoqjrui3u45947986239hjkfdhjkgbfnihshduifh8734tyrhdjkahf94ythurheuty84uhryruiewhtu42h2uhtg"
+                        "io234ujt3uy934y28ryut;435[[][[fewg[ep[riopjifh3j21b4hjvhj4kq78g90a789gyanjkfnewnfijfngdhipah"
+                        "o*i192  bidi*oqgokiq19obnki*r3nip*2ty92324*85r9*iknci19oqnokg*id19njqpkooog*r19jrnjwipnrgiw19nijg"
+                        "jkiqrjkjo*9w4*y82378y458y23785y754ojk19wndjkknijnij19wpkoonjinrgoi*ori19wpgor*i19wogi*woigo*iwg"
+                        "jdkoqipro3*iyr5*972958943265yojkkdokgdk'akq]rkkop[dksop[32krtop[jtopjgkijnijbqrporkgmoqjipg"
+                        "jiko19qo*okiwodi*koriqo19kojkdoio**y89759225y7864't2k4[ppo3p[oopjkdkqoooj324oj5lrtjljdjaoigojro"
+                        "kdkw19oqjr*i3*45947986239ojkkdojkgbkniosod*iko8734tyrodjkaok94yto*ro19*ty84*oryr*i19wot*42o2*otg"
+                        "io234*jt3*y934y28ry*t;435[[][[k19wg[19p[riopjiko3j21b4ojvoj4kq78g92a789gyanjkkn19wnkijkngdoipao";
+    char    tab_char1[] = "rewoipjnpigfeniu6453346'[3756'73564322t23459fekowmnofnw54n34i6t234654";
+    double  tab_db[] = {12.97, 42.92, 105.17, 18.150, -42.14, -51.10};
+    double  tab_db1[] = {11.1, 14.3, 72.1, 38.9, 447.7, 901.1, -23.4, 42.1, 981.2, 901.4, 56.5, 78.1, 12.9, 15.6, 67.81,
+                        89.19, 31.7, -2345,3, 12,3, 54.1};
+    std::string str("string1");
+    std::string str1("string2");
+    std::string str2("abracadabra");
+    std::string str3("oulaoup");
+    std::string str4("yes challenge");
+    std::string str5("a toi de jouer");
+    std::string str6("c'est l'heure du du dud du duel");
+    std::string str7("oupqlinda");
+    std::string str8("-------X");
+    std::string str9("...");
+    std::string str10("");
+    std::string str11("YOP");
+    std::string tab_str[] = {str, str1, str2, str3, str4, str5, str6, str7, str8, str8, str10, str11};
 
-    std::vector<int> vec1(x1, -47);
-    std::vector<char> vec2(x2, 'c');
-    std::vector<std::string> vec3(x3, "yup");
-    std::vector<char *> vec4(beg4, end4);
+    test_all(tab_int, 28, 42, 23);
+    test_all(tab_char, 1395, 'R', 17);
+    test_all(tab_db, 6, 99.9, 6);
+    test_all(tab_str, 12, str5, 9);
 
-    //int //insert(it pos, val)
-    print(vec1, 6, 18);
-    print(vec1, 1, 9);
-    print(vec1, 50, 21);
-    print(vec1, 21, 3);
-    print(vec1, 0, 67);
-    print(vec1, 0, -891);
-    vec1.resize(32);
-    print(vec1, 0, -32);
-    vec1.resize(32);
-    print(vec1, 32, 80812);
-    vec1.resize(58);
-    print(vec1, 21, 781246);
+    test_all(tab_int, 28, 42, 12, 2);
+    test_all(tab_char, 1395, 'R', 809, 12);
+    test_all(tab_db, 6, 99.9, 3, 52);
+    test_all(tab_str, 12, str5, 6, 31);
 
-    //char //insert(it pos, val)
-    print(vec2, 80, 'X');
-    print(vec2, 121, '6');
-    print(vec2, 50, 'l');
-    print(vec2, 0, '0');
-    vec2.resize(420);
-    print(vec2, 0, '3');
-    vec2.resize(420);
-    print(vec2, 420, '8');
-    vec2.resize(128);
-    print(vec2, 114, '-');
+    test_all(tab_int, 28, tab_int1, 39, 21);
+    test_all(tab_char, 1395, tab_char1, 10, 801);
+    test_all(tab_db, 6, tab_db1, 22, 3);
+    test_all(tab_str, 12, tab_str, 12, 1);
 
-    //string //insert(it pos, val)
-    print(vec3, 3006, static_cast<std::string>("oupssssssssssssS"));
-    print(vec3, 4001, static_cast<std::string>("sale"));
-    print(vec3, 808, static_cast<std::string>("ouip"));
-    print(vec3, 0, static_cast<std::string>("omega"));
-    vec3.resize(4200);
-    print(vec3, 4200, static_cast<std::string>("j'en ai marre!!!! c'est long -_-"));
-    vec3.resize(4200);
-    print(vec3, 0, static_cast<std::string>("OP"));
-    vec3.resize(3608);
-    print(vec3, 2095, static_cast<std::string>("--------------A"));
-
-    //char * //insert(it pos, val)
-    print(vec4, 2, tab5);
-    print(vec4, 1, tab3);
-    print(vec4, 1, tab6);
-    print(vec4, 0, tab4);
-    vec4.resize(4);
-    print(vec4, 4, tab7);
-    vec4.resize(4);
-    print(vec4, 0, tab3);
-    vec4.resize(5);
-    print(vec4, 4, tab4);
-
-    //int insert (pos, n, val)
-    print(vec1, 59, 0, -32);
-    print(vec1, 59, 1, -32);
-    print(vec1, 60, 20, 58);
-    print(vec1, 0, 0, 10294);
-    print(vec1, 0, 1, 10294);
-    print(vec1, 0, 8, 7);
-    print(vec1, 26, 1, 8);
-    print(vec1, 68, 6, 24);
-    print(vec1, 41, 0, 24);
-    vec1.resize(60);
-    print(vec1, 60, 500, 56); //ici
-    vec1.resize(60);
-    print(vec1, 60, 0, 82);
-    vec1.resize(60);
-    print(vec1, 60, 1, -194);
-    vec1.resize(60);
-    print(vec1, 0, 29, 4402);
-    vec1.resize(60);
-    print(vec1, 0, 0, 44);
-    vec1.resize(60);
-    print(vec1, 0, 98, 44);
-    vec1.resize(60);
-    print(vec1, 27, 311, 8);
-    vec1.resize(60);
-    print(vec1, 27, 18, 2242);
-
-    //char insert (pos, n, val)
-    print(vec2, 129, 0, 'X');
-    print(vec2, 129, 1, 'U');
-    print(vec2, 129, 28, '-');
-    print(vec2, 0, 0, '[');
-    print(vec2, 0, 1, '"');
-    print(vec2, 0, 16, ';');
-    print(vec2, 26, 1, '|');
-    print(vec2, 68, 22, 'A');
-    print(vec2, 41, 0, 'a');
-    vec2.resize(100);
-    print(vec2, 100, 37, '*'); 
-    vec2.resize(100);
-    print(vec2, 100, 0, '?');
-    vec2.resize(100);
-    print(vec2, 100, 1, '\\');
-    vec2.resize(100);
-    print(vec2, 0, 72, '~');
-    vec2.resize(100);
-    print(vec2, 0, 0, '^');
-    vec2.resize(100);
-    print(vec2, 0, 1, 'J');
-    vec2.resize(100);
-    print(vec2, 83, 311, 'L');
-    vec2.resize(100);
-    print(vec2, 9, 18, 'Q');
-
-    //string insert (pos, n, val)
-    print(vec3, 3609, 0, static_cast<std::string>("objs"));
-    print(vec3, 3609, 1, static_cast<std::string>("1234567890"));
-    print(vec3, 3609, 9, static_cast<std::string>("T_T"));
-    print(vec3, 0, 0, static_cast<std::string>("oOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOo"));
-    print(vec3, 0, 1, static_cast<std::string>("O+O"));
-    print(vec3, 0, 236, static_cast<std::string>("[]"));
-    print(vec3, 26, 1, static_cast<std::string>("p"));
-    print(vec3, 68, 98, static_cast<std::string>("********_______++++++++!"));
-    print(vec3, 41, 0, static_cast<std::string>("opa"));
-    vec3.resize(1100);
-    print(vec3, 1100, 1500, static_cast<std::string>("puis")); 
-    vec3.resize(1100);
-    print(vec3, 1100, 0, static_cast<std::string>("allez"));
-    vec3.resize(1100);
-    print(vec3, 1100, 1, static_cast<std::string>("XD"));
-    vec3.resize(1100);
-    print(vec3, 0, 1221, static_cast<std::string>("AAAH"));
-    vec3.resize(1100);
-    print(vec3, 0, 0, static_cast<std::string>("PITCH"));
-    vec3.resize(1100);
-    print(vec3, 0, 1, static_cast<std::string>("()()()"));
-    vec3.resize(1100);
-    print(vec3, 830, 1311, static_cast<std::string>("!+!"));
-    vec3.resize(1100);
-    print(vec3, 750, 50, static_cast<std::string>("^^"));
-
-    //char * insert (pos, n, val)
-    print(vec4, 6, 0, tab2);
-    print(vec4, 6, 1, tab3);
-    print(vec4, 7, 9, tab3);
-    print(vec4, 0, 0, tab4);
-    print(vec4, 0, 1, tab5);
-    print(vec4, 0, 2, tab7);
-    print(vec4, 5, 1, tab3);
-    print(vec4, 6, 3, tab1);
-    print(vec4, 10, 0, tab2);
-    vec4.resize(10);
-    std::cout << "VEC" << vec4.capacity() << "\n";
-    print(vec4, 10, 27, tab4); 
-   /* vec4.resize(10);
-    print(vec4, 10, 0, tab2);
-    vec4.resize(10);
-    print(vec4, 10, 1, tab3);
-    vec4.resize(10);
-    print(vec4, 0, 32, tab1);
-    vec4.resize(10);
-    print(vec4, 0, 0, tab2);
-    vec4.resize(10);
-    print(vec4, 0, 3, tab3);
-    vec4.resize(10);
-    print(vec4, 4, 2, tab5);
-    vec4.resize(10);
-    print(vec4, 6, 20, tab6);*/
-
-
-    
-
-   
-    
-    return (0);
 }
+   

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <list>
+#include <vector>
 #include "list.hpp"
 
 
@@ -38,26 +39,25 @@ int     func()
 
 int main()
 {
-    ft::list<int>    lst(12, 13);
-    ft::list<int>    lst1(11, 14);
-    ft::list<int>::iterator    it(lst.begin());
-    ft::list<int>::iterator     it1(lst1.begin());
-
-    std::cout << *lst1.begin() << "\n";
-    std::cout << *lst.begin() << "\n";
-    std::cout << (it == lst1.begin()) << "\n";
-    std::cout << (it1 == lst.begin()) << "\n\n";
-
-    lst1.swap(lst);
-
-    std::cout << *lst1.begin() << "\n";
-    std::cout << *lst.begin() << "\n";
-
-    std::cout << (it == lst1.begin()) << "\n";
-    std::cout << (it1 == lst.begin()) << "\n";
+    std::vector<int>    lst(12);
+    //std::vector<int>    lst1(4);
+    std::vector<int>::iterator  it(lst.begin());
 
 
-    std::cout << (lst < lst1) << "\n";
+    std::cout << lst.capacity() << " " << lst.size() << "\n";
+    //std::cout << lst1.capacity() << " " << lst1.size() << "\n\n";
+    try
+    {
+        lst.insert(it, 12);
+    }
+    catch(std::exception &e)
+    {
+        std::cerr << e.what();
+    }
+    //lst1 = lst;
+    //lst1.resize(9);
+    std::cout << lst.capacity() << " " << lst.size() << "\n";
+    //std::cout << lst1.capacity() << " " << lst1.size() << "\n";
     
 
     return 0;
