@@ -2,104 +2,15 @@
 # define ITERATOR_HPP
 
 # include <cstddef> //ptrdiff_t
+# include "utils.hpp"
 
 namespace ft
 {
-
-    template <bool Cond, typename Result=void>
-    struct enable_if { };
-
-    template <typename Result>
-    struct enable_if<true, Result>
-    {
-        typedef Result type;
-    };
-
-
     struct input_iterator_tag{};
     struct output_iterator_tag{};
     struct forward_iterator_tag{};
     struct bidirectional_iterator_tag{};
     struct random_access_iterator_tag{};
-
-    template<class Type>
-    struct is_integral
-    {
-        static const bool value = false;
-    };
-    template<>
-    struct is_integral<bool>
-    {
-        static const bool value = true;
-    };
-    template<>
-    struct is_integral<char>
-    {
-        static const bool value = true;
-    };
-    template<>
-    struct is_integral<signed char>
-    {
-        static const bool value = true;
-    };
-    template<>
-    struct is_integral<unsigned char>
-    {
-        static const bool value = true;
-    };
-    template<>
-    struct is_integral<wchar_t>
-    {
-        static const bool value = true;
-    };
-    template<>
-    struct is_integral<short>
-    {
-        static const bool value = true;
-    };
-    template<>
-    struct is_integral<unsigned short>
-    {
-        static const bool value = true;
-    };
-    template<>
-    struct is_integral<int>
-    {
-        static const bool value = true;
-    };
-    template<>
-    struct is_integral<unsigned int>
-    {
-        static const bool value = true;
-    };
-    template<>
-    struct is_integral<long>
-    {
-        static const bool value = true;
-    };
-    template<>
-    struct is_integral<unsigned long>
-    {
-        static const bool value = true;
-    };
-    
-    template<>
-    struct is_integral<float>
-    {
-        static const bool value = false;
-    };
-    template<>
-    struct is_integral<double>
-    {
-        static const bool value = false;
-    };
-    template<>
-    struct is_integral<long double>
-    {
-        static const bool value = false;
-    };
-
-    
 
     template    <class Category,
                 class T,
@@ -165,7 +76,7 @@ namespace ft
             explicit reverse_iterator(const iterator_type &it_to_reverse){ it = it_to_reverse; }
 
             template<class It>
-            reverse_iterator(const reverse_iterator<It> &x){ it = x.it; }
+            reverse_iterator(const reverse_iterator<It> &x){ it = x.base(); }
 
             ~reverse_iterator(){}
 
@@ -184,13 +95,13 @@ namespace ft
             template<class It>
             bool operator!=(const reverse_iterator<It> &x) const { return (it != x.base() ? 1 : 0); } //why ???
             template<class It>
-            bool operator<(const reverse_iterator<It> &x) const { return (it < x.base() ? 0 : 1); }
+            bool operator<(const reverse_iterator<It> &x) const { return (it > x.base() ? 1 : 0); }
             template<class It>
-            bool operator>(const reverse_iterator<It> &x) const { return (it > x.base() ? 0 : 1); }
+            bool operator>(const reverse_iterator<It> &x) const { return (it < x.base() ? 1 : 0); }
             template<class It>
-            bool operator>=(const reverse_iterator<It> &x) const { return (it >= x.base() ? 0 : 1); }
+            bool operator>=(const reverse_iterator<It> &x) const { return (it <= x.base() ? 1 : 0); }
             template<class It>
-            bool operator<=(const reverse_iterator<It> &x) const { return (it <= x.base() ? 0 : 1); }
+            bool operator<=(const reverse_iterator<It> &x) const { return (it >= x.base() ? 1 : 0); }
 
             reverse_iterator &operator+=(int n){ it -= n; return (*this); }
             reverse_iterator &operator-=(int n){ it += n; return (*this); }

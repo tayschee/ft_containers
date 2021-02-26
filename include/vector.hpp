@@ -555,6 +555,58 @@ namespace   ft
                     alloc.destroy(&array[n]);
                 array_size = 0;
             }
+
+            //RELATIONAL OPERATOR
+            bool    operator==(const vector &rhs) const
+            {
+                const_iterator it_this(begin());
+                const_iterator last(end());
+                const_iterator it_rhs(rhs.begin());
+
+                if (this->size() != rhs.size())
+                    return (0);
+                while(it_this < last)
+                {
+                    if (*it_this++ != *it_rhs++)
+                        return(0);
+                }
+                return(1);
+            }
+            bool    operator!=(const vector &rhs) const
+            {
+                
+                return(!(*this == rhs));
+            }
+
+            bool    operator<(const vector &rhs) const
+            {
+                const_iterator it_this(this->begin());
+                const_iterator last(end());
+                const_iterator it_rhs(rhs.begin());
+                const_iterator last_rhs(rhs.end());
+
+                while(it_this != last && it_rhs != last_rhs)
+                {
+                    if (*it_this < *it_rhs)
+                        return (1);
+                    else if (*it_rhs++ < *it_this++)
+                        return (0);
+                }
+                return (this->size() < rhs.size());
+            }
+            bool    operator>(const vector &rhs)
+            {
+                return (rhs < *this);
+            }
+
+            bool    operator<=(const vector &rhs) const
+            {
+                return (!(rhs < *this));
+            }
+            bool    operator>=(const vector &rhs) const
+            {
+                 return (!(*this < rhs));
+            }
     };
     template <class T, class Alloc>
     void swap(vector<T, Alloc> &x, vector<T, Alloc> &y)

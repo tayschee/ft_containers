@@ -1,14 +1,12 @@
 #sed 's/b/a/g' srcs/test/test.cpp
 
 #VECTOR TEST without extension.cpp
+
+#norm to do and don't test max_size on resize and probably other
 VECTOR_DIR = vector/
 VECTOR_EXEC = $(addprefix $(VECTOR_DIR), \
-				)\
-				#constructor reserve resize assign push_pop swap clear insert erase
-				#reserve resize at push_pop assign erase swap_clear
-				#default_construct \
-				char_iterator struct_iterator string_iterator double_iterator \
-				char_construct2 int_construct2 float_construct2 struct_construct2 string_construct2)
+				iterator)\
+				#constructor reserve resize assign push_pop swap clear insert erase operator iterator
 
 #resize or reserve verif with x1 place of x2
 VECTOR_SRCS = $(addsuffix .cpp, $(VECTOR_EXEC))

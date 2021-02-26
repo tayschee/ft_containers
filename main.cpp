@@ -1,64 +1,52 @@
 #include <iostream>
 #include <list>
 #include <vector>
+#include <map>
+#include <utility>
+#include "map.hpp"
 #include "list.hpp"
 
-
-
-template <class T>
-struct is_iterator
+template<typename T>
+struct  qqc
 {
-    static const bool value = true;
+    bool operator() (const T &x, const T &y) const {return x<y;}
+    int a;
+    int a1;
+    int a2;
+    int a3;
+    int a4;
+    int a5;
+    int a6;
+    int a7;
+    int a8;
+    int a9;
+    int a10;
+    int a11;
 };
-
-struct a
-{
-    static const bool test = true;
-    int i = 0;
-};
-
-void    x(size_t size, size_t size2)
-{
-    (void)size;
-    std::cout << "nb\n";
-}
-
-template <class T>
-void x(T size, typename ft::enable_if<T::test, T>::type size2)
-{
-    (void)size;
-    std::cout << "other\n";
-
-}
-
-template <class T>
-int     func()
-{
-    return 1;
-}
 
 int main()
 {
-    std::vector<int>    lst(12);
-    //std::vector<int>    lst1(4);
-    std::vector<int>::iterator  it(lst.begin());
+    size_t                      i = 0;
+    std::pair<int, int>          tab1[] ={{41, 41}, {94, 94}, {18, 18}, {21, 21}, {50, 50}, {19, 19}};
+    std::vector<std::pair<int, int> >::iterator it(tab1);
+    std::vector<std::pair<int, int> >::iterator end(&tab1[6]);
+    std::map<int, int>                          mp;
+    std::map<int, int>::iterator mit(mp.begin());
 
-
-    std::cout << lst.capacity() << " " << lst.size() << "\n";
-    //std::cout << lst1.capacity() << " " << lst1.size() << "\n\n";
-    try
+    /*while(i < 8)
     {
-        lst.insert(it, 12);
+        std::cout << (*mit++).first << " "; 
+        ++i;
     }
-    catch(std::exception &e)
+    std::cout << "\n";*/
+    i =0;
+    /*while(i < 14)
     {
-        std::cerr << e.what();
-    }
-    //lst1 = lst;
-    //lst1.resize(9);
-    std::cout << lst.capacity() << " " << lst.size() << "\n";
-    //std::cout << lst1.capacity() << " " << lst1.size() << "\n";
-    
+        std::cout << (*mit++).first << " "; 
+        ++i;
+    }*/
+    std::cout << (*++mp.begin()).first << " "; 
+    std::cout << (*mp.begin()).second << " "; 
 
     return 0;
 }
