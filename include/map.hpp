@@ -16,11 +16,11 @@ namespace   ft
         private :
             struct btree
             {
-                ft::pair<const Key, T> *pair;
-                Compare                 *cmp;
-                btree                     *greater;
-                btree                     *lower;
-                btree                     *prev;
+                ft::pair<const Key, T>      pair;
+                int                         upper_flag;
+                int                         lower_flag;
+                btree                       *upper;
+                btree                       *lower;
             };
         /*public :
             class const_iterator;
@@ -145,29 +145,42 @@ namespace   ft
             allocator_type          alloc;
             std::allocator<btree>   tree_alloc;
             key_compare             cmp;
+            key_compare             h_cmp;
             btree                   *tree;
             size_type               map_size;
 
         private :
-            btree    *create_elem(const value_type &val)
+            
+            /*btree    *create_elem(const value_type &val)
             {
+                cmp = key_compare();
+                h_cmp = header_cmp();
+
                 btree                   *new_elem;
                 new_elem = tree_alloc.allocate(1);
                 alloc.construct(&new_elem->pair, val);
-                cmp = key_compare();
+                cmp = h_cmp();
                 btree                     *greater;
                 btree                     *lower;
                 btree                     *prev;
 
-            }
+            }*/
 
         public: //FUNCTION
             //CONSTRUCTOR DESTRUCTOR
             explicit map(const key_compare& comp = key_compare(), const allocator_type alloc = allocator_type())
             : alloc(alloc), cmp(comp)
             {
-                //tree_alloc = std::allocator<bst>();
-                map_size = 0;
+                /*tree_alloc = std::allocator<btree>();
+                tree = NULL;
+                tree->pair = alloc.allocate(1);
+                tree->upper = tree; //never change
+                tree->lower = tree;
+                tree->cmp = &cmp();
+                alloc.construct(tree->pair, value_type());
+                tree->prev = NULL;
+
+                map_size = 0;*/
             }
             /*map(InputIterator first, typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last,
             const allocator_type &alloc = allocator_type()) : value_alloc(alloc)
