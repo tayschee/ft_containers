@@ -3,8 +3,8 @@
 #include <vector>
 #include <map>
 #include <utility>
-#include "map.hpp"
-#include "list.hpp"
+/*#include "map.hpp"
+#include "vector.hpp"*/
 
 template<typename T>
 struct  qqc
@@ -27,26 +27,13 @@ struct  qqc
 int main()
 {
     size_t                      i = 0;
-    std::pair<int, int>          tab1[] ={{41, 41}, {94, 94}, {18, 18}, {21, 21}, {50, 50}, {19, 19}};
-    std::vector<std::pair<int, int> >::iterator it(tab1);
-    std::vector<std::pair<int, int> >::iterator end(&tab1[6]);
-    std::map<int, int>                          mp;
-    std::map<int, int>::iterator mit(mp.begin());
+    char                                 tab[] = "drtfyguhjkjhbgvgbh";
+    char                                 tab1[] = "drtfyguhjkjhbgvgbh";
+    std::vector<char>::const_iterator vec(tab);
+    std::vector<char>::const_iterator vec1(tab1);
 
-    /*while(i < 8)
-    {
-        std::cout << (*mit++).first << " "; 
-        ++i;
-    }
-    std::cout << "\n";*/
-    i =0;
-    /*while(i < 14)
-    {
-        std::cout << (*mit++).first << " "; 
-        ++i;
-    }*/
-    std::cout << (*++mp.begin()).first << " "; 
-    std::cout << (*mp.begin()).second << " "; 
+    *vec++;
+    *vec1+= 7;
 
     return 0;
 }

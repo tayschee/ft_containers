@@ -2,6 +2,7 @@
 # define UTILS_HPP
 
 # include <cstddef> //ptrdiff_t
+# include <stdexcept>
 
 namespace ft
 {
@@ -22,22 +23,13 @@ namespace ft
 
         T1      first;
         T2      second;
-        pair()
-        {
-            first = first_type();
-            second = second_type();
-        }
+        
+        pair() : first(first_type()), second(second_type()) {}
+
         template<class U, class V>
-        pair(const pair<U, V>& pr)
-        {
-            first = pr.first;
-            second = pr.second;
-        }
-        pair(const first_type &a, const second_type &b)
-        {
-            first = a;
-            second = b;
-        }
+        pair(const pair<U, V>& pr) : first(pr.first), second(pr.second) {}
+
+        pair(const first_type &a, const second_type &b) : first(a), second(b) {}
 
         pair    &operator=(const pair &pr)
         {
@@ -71,6 +63,16 @@ namespace ft
         {
             return (first >= pr.first);
         }
+    };
+
+    class   exception : public std::exception
+    {
+        private :
+            exception    &operator=(const exception &x) { (void)x; return (*this); }
+        public :
+            exception(){}
+            exception(const exception &x){}
+            virtual ~exception() throw() {}
     };
     
     template<class Type>

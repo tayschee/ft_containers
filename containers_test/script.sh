@@ -9,6 +9,7 @@ FT_BIN='bin/test_ft/'
 
 VEC='vector/'
 LIST='list/'
+MAP='map/'
 
 
 echo -e "TEST VECTOR\n"
@@ -303,3 +304,57 @@ else
 fi
 
 C
+
+
+echo -e "TEST MAP\n"
+
+<<C
+diff <(${FT_BIN}${MAP}constructor) <(${STD_BIN}${MAP}constructor)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}CONSTRUCTOR : OK${W}"
+else
+    echo -e "${R}CONSTRUCTOR : KO${W}"
+fi
+
+diff <(${FT_BIN}${MAP}tab) <(${STD_BIN}${MAP}tab)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}operator[]: OK${W}"
+else
+    echo -e "${R}operator[] : KO${W}"
+fi
+
+diff <(${FT_BIN}${MAP}find) <(${STD_BIN}${MAP}find)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}FIND AND COUNT: OK${W}"
+else
+    echo -e "${R}FIND AND COUNT  : KO${W}"
+fi
+
+diff <(${FT_BIN}${MAP}clear) <(${STD_BIN}${MAP}clear)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}CLEAR : OK${W}"
+else
+    echo -e "${R}CLEAR : KO${W}"
+fi
+
+diff <(${FT_BIN}${MAP}swap) <(${STD_BIN}${MAP}swap)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}SWAP : OK${W}"
+else
+    echo -e "${R}SWAP : KO${W}"
+fi
+
+C
+
+diff <(${FT_BIN}${MAP}value_comp) <(${STD_BIN}${MAP}value_comp)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}VALUE_COMP : OK${W}"
+else
+    echo -e "${R}VALUE_COMP : KO${W}"
+fi
