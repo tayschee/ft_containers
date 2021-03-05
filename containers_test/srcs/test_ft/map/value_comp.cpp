@@ -103,7 +103,8 @@ void    test_all(ft::pair<K, T> *tab1, size_t size1)
 
     while(i < size1 - 1)
     {
-        std::cout << cpy.value_comp()(*it++, *itp1++) << "\n";
+        if (it != cpy.end() && itp1 != cpy.end())
+            std::cout << cpy.value_comp()(*it++, *itp1++) << "\n";
         ++i;
         test(cpy);
     }

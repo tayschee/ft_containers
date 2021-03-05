@@ -308,7 +308,6 @@ C
 
 echo -e "TEST MAP\n"
 
-<<C
 diff <(${FT_BIN}${MAP}constructor) <(${STD_BIN}${MAP}constructor)
 if [ ! $? -ne 0 ];
 then
@@ -324,6 +323,8 @@ then
 else
     echo -e "${R}operator[] : KO${W}"
 fi
+
+<<C
 
 diff <(${FT_BIN}${MAP}find) <(${STD_BIN}${MAP}find)
 if [ ! $? -ne 0 ];
@@ -349,8 +350,6 @@ else
     echo -e "${R}SWAP : KO${W}"
 fi
 
-C
-
 diff <(${FT_BIN}${MAP}value_comp) <(${STD_BIN}${MAP}value_comp)
 if [ ! $? -ne 0 ];
 then
@@ -358,3 +357,30 @@ then
 else
     echo -e "${R}VALUE_COMP : KO${W}"
 fi
+
+diff <(${FT_BIN}${MAP}lower_bound) <(${STD_BIN}${MAP}lower_bound)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}LOWER_BOUND : OK${W}"
+else
+    echo -e "${R}LOWER_BOUND : KO${W}"
+fi
+
+diff <(${FT_BIN}${MAP}upper_bound) <(${STD_BIN}${MAP}upper_bound)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}UPPER_BOUND : OK${W}"
+else
+    echo -e "${R}UPPER_BOUND : KO${W}"
+fi
+
+
+diff <(${FT_BIN}${MAP}equal_range) <(${STD_BIN}${MAP}equal_range)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}EQUAL_RANGE : OK${W}"
+else
+    echo -e "${R}EQUAL_RANGE: KO${W}"
+fi
+
+C

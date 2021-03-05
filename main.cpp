@@ -3,8 +3,8 @@
 #include <vector>
 #include <map>
 #include <utility>
-/*#include "map.hpp"
-#include "vector.hpp"*/
+#include "map.hpp"
+/*#include "vector.hpp"*/
 
 template<typename T>
 struct  qqc
@@ -24,16 +24,23 @@ struct  qqc
     int a11;
 };
 
+void    func(const int &a, const int &b)
+{
+    std::cout << a << b << "\n";
+}
+
 int main()
 {
     size_t                      i = 0;
-    char                                 tab[] = "drtfyguhjkjhbgvgbh";
-    char                                 tab1[] = "drtfyguhjkjhbgvgbh";
-    std::vector<char>::const_iterator vec(tab);
-    std::vector<char>::const_iterator vec1(tab1);
+    /*std::pair<char, char>               pr1('q', 32), pr2('e', 1), pr3('w', 21), pr4('v', 43), pr5('s', 66), pr6('a', 81),
+                                        pr7('p', 19);
+    std::pair<char, char>           tab[] = {pr1, pr2, pr3, pr4, pr5, pr6, pr7};
+    std::map<char, char>            map(tab, tab + 3); 
+    std::map<char, char>::iterator  it(map.end());
 
-    *vec++;
-    *vec1+= 7;
+    std::cout << map.insert(it, pr6)->first << "\n";*/
+
+    func(i, ++i);
 
     return 0;
 }

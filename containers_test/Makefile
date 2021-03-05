@@ -21,9 +21,19 @@
 
 MAP_DIR = map/
 MAP_EXEC = $(addprefix $(MAP_DIR), \
-			value_comp) # constructor find tab clear swap)
+			constructor tab) # constructor find tab clear swap value_comp lower_bound upper_bound equal_range)
 
 MAP_SRCS = $(addsuffix .cpp, $(MAP_EXEC))
+
+#STACK	= stack/
+#STACK_EXEC = $(addprefix $(STACK_DIR), \)
+
+#STACK_SRCS = $(addsuffix .cpp, $(STACK_EXEC))
+
+#QUEUE	= queue/
+#QUEUE_EXEC = $(addprefix $(QUEUE_DIR), \)
+
+#QUEUE_SRCS = $(addsuffix .cpp, $(QUEUE_EXEC))
 
 FT_DIR = test_ft/
 STD_DIR = test_std/
