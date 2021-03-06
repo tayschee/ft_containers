@@ -309,8 +309,8 @@ namespace   ft
                 new_elem->upper = this->header;
                 new_elem->lower = this->header;
 
-                new_elem->upper_flag = 0;
-                new_elem->lower_flag = 0;
+                //new_elem->upper_flag = 0;
+                //new_elem->lower_flag = 0;
  
                 tree = new_elem;
             }
@@ -322,8 +322,8 @@ namespace   ft
                 new_elem->upper = position->upper;
                 new_elem->lower = position;
 
-                new_elem->upper_flag = 0;
-                new_elem->lower_flag = 0;
+                //new_elem->upper_flag = 0;
+                //new_elem->lower_flag = 0;
 
                 position->upper_flag = 1;
                 position->upper = new_elem;
@@ -337,8 +337,8 @@ namespace   ft
                 new_elem->lower = position->lower;
                 new_elem->upper = position;
 
-                new_elem->upper_flag = 0;
-                new_elem->lower_flag = 0;
+                //new_elem->upper_flag = 0;
+                //new_elem->lower_flag = 0;
 
                 position->lower = new_elem;
             };
@@ -366,21 +366,86 @@ namespace   ft
                 catch(const ft::exception& e){ return(end()); }
             }*/
 
-            void    erase_unique()
+            void    delete_alone(btree *child, btree *parent)
             {
-                tree_alloc.deallocate(tree, 1);
-                tree = NULL;
-
-                header->upper = header;
-                header->lower = header;
+                if (parent == NULL)
+                    tree = NULL;
+                else if (child == parent->lower)
+                {
+                    parent->upper_flag = 0;
+                    parent->upper = child->upper;
+                }
+                else
+                {
+                    parent->upper_flag = 0;
+                    parent->upper = child->upper;
+                }
             }
-            void    erasea(btree *tree, btree *pred)
+            void    delete_lower(btree *child, btree *parent)
             {
-                tree_alloc.deallocate(tree, 1);
-                tree = NULL;
+                if (parent == NULL)
+                    tree = child->lower;
+                parent->lower = child->lower;
+                parent->lower_flag = child->lower_flag;
 
-                header->upper = header;
-                header->lower = header;
+                //func
+                child = child->lower;
+                while (child->upper_flag)
+                {
+                    child = child->upper;
+                }
+                child->upper = parent;
+            }
+            void    delete_upper(btree *child, btree *parent)
+            {
+                if (parent == NULL)
+                    tree = child->upper;
+                parent->upper = child->upper;
+                parent->upper_flag = child->upper_flag;
+
+                //func
+                child = child->upper;
+                while (child->lower_flag)
+                {
+                    child = child->lower;
+                }
+                child->lower = parent;
+            }
+            void    delete_2(btree *child, btree *parent)
+            {
+                iterator    position;
+
+                delete_upper(child, parent); //pas sur sur
+                /*if (parent == NULL)
+                    tree = child->upper;
+                parent->upper = child->upper;
+                parent->upper_flag = child->upper_flag;
+
+                //func
+                child = child->upper;
+                while (child->lower_flag)
+                {
+                    child = child->lower;
+                }
+                child->lower = parent;*?
+
+                position = find_place(iterator(parent->upper), child->lower->pair.key)->first;
+                if (cmp(position->pair.first, val.first))
+                    add_upper(position, parent->upper);
+                else
+                    add_lower(position, parent->upper);*/
+            }
+            void    delete_elem(btree *child, btree *parent)
+            {
+                if (child->upper_flag && child->lower_flag)
+                    delete_2(child, parent);
+                else if(child->upper_flag)
+                    delete_upper(child, parent);
+                else if (child->lower_flag)
+                    delete_lower(child, parent);
+                else
+                    delete_alone(child, parent);
+                tree_allocate.deallocate(child);
             }
                
             /*cree le header*/
@@ -535,6 +600,9 @@ namespace   ft
                     return (position);
                 new_elem = tree_alloc.allocate(1);
                 alloc.construct(&new_elem->pair, val);
+                new_elem->upper_flag = 0;//new
+                new_elem->lower_flag = 0;//new
+
                 if (position.first == end())
                     first_add(new_elem);
                 else if (cmp(position.first->first, val.first))
@@ -555,6 +623,9 @@ namespace   ft
                     return (position.first);
                 new_elem = tree_alloc.allocate(1);
                 alloc.construct(&new_elem->pair, val);
+                new_elem->upper_flag = 0;//new
+                new_elem->lower_flag = 0;//new
+
                 if (position.first == end())
                     first_add(new_elem);
                 else if (cmp(position.first->first, val.first))
@@ -580,54 +651,65 @@ namespace   ft
 
                 if (actual->lower_flag && actual->upper_flag)
                 {
+                    bool flag;
 
-                }
-                if (actual->lower_flag ^ actual->upper_flag) //seems ok si il n'y a qu'un flag
-                {
-                    //before = reinterpret_cast<btree *>(++p1);
-                    //after = reinterpret_cast<btree *>(--position);
-                    before->lower
-                    while(before->lower_flag)
-                    before->lower = after; //before while position != 0
-                    after->upper = actual->upper;
+                        flag = array_pointer->upper_flag;
+                        array_pointer = array_pointer->upper;
 
-                    tree_alloc.deallocate(actual, 1);
+                        while (flag == 1 && array_pointer->lower_flag)
+                        {
+                            array_pointer = array_pointer->lower;
+                        }
+
+                        return (*this);
                 }
-                else if (!actual->lower_flag && !actual->upper_flag)
+                if (actual->lower_flag) //seems ok si il n'y a qu'un flag
                 {
-                    before->upper = after;
+                    before->upper= after;
                     after->lower = before;
 
                     tree_alloc.deallocate(actual, 1);
+                }
+                else if (actual->upper_flag)
+                {
                     
+                }
+                else
+                {
+                    before->upper = after;
+                    after->lower = actual->upper;
+                    if (actual == tree)
+                        tree = NULL;
+
+                    tree_alloc.deallocate(actual, 1);
                 }
 
 
             }
             size_type   erase(const key_type &k)
             {
-                btree *tmp = tree;
-                btree *tmp2 = NULL;
+                btree *child = tree;
+                btree *parent = NULL;
 
-                while (tmp)
+                while (child)
                 {
-                    if (cmp(tmp->pair.first, k))
+                    if (cmp(child->pair.first, k))
                     {
-                        if (!tmp->upper_flag)
+                        if (!child->upper_flag)
                             return(0);
-                        tmp2 = tree;
-                        tmp = tmp->upper;
+                        parent = tree;
+                        child = child->upper;
                     }
-                    else if (cmp(k, tmp->pair.first))
+                    else if (cmp(k, child->pair.first))
                     {
-                        if(!tmp->lower_flag)
+                        if(!child->lower_flag)
                             return(0);
-                        tmp2 = tree;
-                        tmp = tmp->lower;  
+                        parent = tree;
+                        child = child->lower;  
                     }
                     else
                     {
-                        delete_elem(tmp, tmp2);
+                        delete_elem(child, parent);
                     }
                 }
                 return(0);
