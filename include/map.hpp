@@ -580,12 +580,14 @@ namespace   ft
 
                 if (actual->lower_flag && actual->upper_flag)
                 {
-                    
+
                 }
                 if (actual->lower_flag ^ actual->upper_flag) //seems ok si il n'y a qu'un flag
                 {
                     //before = reinterpret_cast<btree *>(++p1);
                     //after = reinterpret_cast<btree *>(--position);
+                    before->lower
+                    while(before->lower_flag)
                     before->lower = after; //before while position != 0
                     after->upper = actual->upper;
 

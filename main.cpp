@@ -3,8 +3,9 @@
 #include <vector>
 #include <map>
 #include <utility>
-#include "map.hpp"
+//#include "map.hpp"
 /*#include "vector.hpp"*/
+#include <stack>
 
 template<typename T>
 struct  qqc
@@ -31,16 +32,9 @@ void    func(const int &a, const int &b)
 
 int main()
 {
-    size_t                      i = 0;
-    /*std::pair<char, char>               pr1('q', 32), pr2('e', 1), pr3('w', 21), pr4('v', 43), pr5('s', 66), pr6('a', 81),
-                                        pr7('p', 19);
-    std::pair<char, char>           tab[] = {pr1, pr2, pr3, pr4, pr5, pr6, pr7};
-    std::map<char, char>            map(tab, tab + 3); 
-    std::map<char, char>::iterator  it(map.end());
+    std::stack<int, std::map<int, int> >     stk;
 
-    std::cout << map.insert(it, pr6)->first << "\n";*/
-
-    func(i, ++i);
+    std::cout << (stk == stk) << "\n";
 
     return 0;
 }
