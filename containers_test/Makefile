@@ -21,7 +21,7 @@
 
 MAP_DIR = map/
 MAP_EXEC = $(addprefix $(MAP_DIR), \
-			constructor tab) # constructor find tab clear swap value_comp lower_bound upper_bound equal_range)
+			erase) # constructor find tab clear swap value_comp lower_bound upper_bound equal_range insert)
 
 MAP_SRCS = $(addsuffix .cpp, $(MAP_EXEC))
 

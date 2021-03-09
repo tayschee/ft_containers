@@ -308,6 +308,8 @@ C
 
 echo -e "TEST MAP\n"
 
+<<C
+
 diff <(${FT_BIN}${MAP}constructor) <(${STD_BIN}${MAP}constructor)
 if [ ! $? -ne 0 ];
 then
@@ -323,8 +325,6 @@ then
 else
     echo -e "${R}operator[] : KO${W}"
 fi
-
-<<C
 
 diff <(${FT_BIN}${MAP}find) <(${STD_BIN}${MAP}find)
 if [ ! $? -ne 0 ];
@@ -383,4 +383,20 @@ else
     echo -e "${R}EQUAL_RANGE: KO${W}"
 fi
 
+diff <(${FT_BIN}${MAP}insert) <(${STD_BIN}${MAP}insert)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}INSERT : OK${W}";
+else
+    echo -e "${R}INSERT : KO${W}";
+fi
+
 C
+
+diff <(${FT_BIN}${MAP}erase) <(${STD_BIN}${MAP}erase)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}ERASE : OK${W}";
+else
+    echo -e "${R}ERASE : KO${W}";
+fi
