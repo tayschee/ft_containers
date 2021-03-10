@@ -2,7 +2,7 @@
 
 #VECTOR TEST without extension.cpp
 
-#leaks to do and don't test max_size on resize and probably other
+
 VECTOR_DIR = vector/
 VECTOR_EXEC = $(addprefix $(VECTOR_DIR), \
 				constructor resize reserve assign push_pop swap clear insert erase operator iterator)
@@ -65,8 +65,9 @@ $(EXEC) : $(OBJS)
 	$(subst $(EXEC_DIR),$(SRCS_DIR),$@).cpp
 
 clean :
-	rm -f $(EXEC)
+	rm -f $(OBJS)
 
 fclean : clean
+	rm -f $(EXEC)
 
 re : fclean all
