@@ -111,6 +111,8 @@ void    test_all(ft::pair<K, T> *tab1, size_t size1, ft::pair<K, T> *tab2, size_
         while (j < 4)
         {
             tab[i].swap(tab[j]);
+            ft::swap(tab[i], tab[j]);
+            tab[j].swap(tab[i]);
             test(tab[i]);
             test(tab[j]);
             ++j;

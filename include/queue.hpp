@@ -9,29 +9,25 @@
 
 namespace   ft
 {   
-    template <typename T, class Containers = ft::list<T> >
+    template <typename T, class Container = ft::list<T> >
     class   queue
     {
         public : //TYPEDEF
             typedef T value_type;
-            typedef container_type Container;
+            typedef Container container_type;
             typedef size_t size_type;
         
-        public: //PRIVATE VALUE
-            allocator_type          value_alloc;
-            std::allocator<node>    node_alloc;
-            node                    *dummy_node;
-            size_type               node_size;
-
         private :
             container_type  container;
         public: //FUNCTION
             //CONSTRUCTOR DESTRUCTOR
-            explicit queue(const container_type &ctnr) : container(cntr)
+            explicit queue(const container_type &ctnr = container_type()) : container(ctnr)
             {
 
             }
             ~queue() {}
+
+            //FUNCTION
             size_type   size() const
             {
                 return (container.size());

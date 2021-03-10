@@ -107,34 +107,6 @@ void    func(ft::vector<T> lst, size_t i)
 }
 
 template <typename T>
-void    func(ft::vector<T> &lst, size_t i)
-{
-    size_t  old_c = lst.capacity();
-    typename ft::vector<T>::iterator beg(lst.begin());
-    typename ft::vector<T>::iterator end(lst.end());
-
-    try
-    {
-        lst.reserve(i);
-        if (old_c == lst.capacity())
-        {
-            while (beg != end)
-            {
-                std::cout << *beg++ << " ";
-            }
-            std::cout << "\n";
-        }
-    }
-    catch(const std::exception& e)
-    {
-        std::cout << e.what() << '\n';
-    }
-
-    test(lst);
-
-}
-
-template <typename T>
 void    test_all(T val, size_t size, size_t x)
 {
     size_t i = 0;

@@ -275,16 +275,35 @@ namespace   ft
 
                 if (!tree)
                     return (ft::pair<iterator, bool>(iterator(header), true));
-                if (start == this->end())
-                    tmp = tree;
-                else
-                    tmp = reinterpret_cast<btree *>(&*start);
+                tmp = reinterpret_cast<btree *>(&*start);
                 while (1)
                 {
+                    if (tmp == header)
+                        tmp = tmp->upper;
                     if (cmp(tmp->pair.first, k) && tmp->upper_flag == 0) // plus grand et rien apres
-                        return (ft::pair<iterator, bool>(iterator(tmp), true));
+                    {
+                        if (cmp(k, tmp->upper->pair.first) || tmp->upper == header)
+                            return (ft::pair<iterator, bool>(iterator(tmp), true));
+                        else if (cmp(tmp->upper->pair.first, k))
+                        {
+                            tmp = tmp->upper;
+                            tmp = tmp == header ? tmp->upper : tmp;
+                        }
+                        else
+                            return(ft::pair<iterator, bool>(iterator(tmp->upper), false));    
+                    }
                     else if (cmp(k, tmp->pair.first) && tmp->lower_flag == 0) // plus petit et rien apres
-                        return (ft::pair<iterator, bool>(iterator(tmp), true));
+                    {
+                        if (cmp(tmp->lower->pair.first, k) || tmp->lower == header)
+                            return (ft::pair<iterator, bool>(iterator(tmp), true));
+                        else if (cmp(k, tmp->lower->pair.first))
+                        {
+                            tmp = tmp->lower;
+                            tmp = tmp == header ? tmp->lower : tmp;
+                        }
+                        else
+                            return(ft::pair<iterator, bool>(iterator(tmp->lower), false));
+                    }
                     else if (cmp(tmp->pair.first, k) && tmp->upper_flag == 1) // plus grand + inc si tmp == header
                     {
                         tmp = tmp->upper;
@@ -300,17 +319,53 @@ namespace   ft
                 }
             }
 
+            btree    *new_position(iterator start, const key_type &k) const
+            {
+                btree   *tmp;
+
+                if (!tree)
+                    return (header);
+                tmp = reinterpret_cast<btree *>(&*start);
+                while (1)
+                {
+                    if (tmp == header)
+                        tmp = tmp->upper;
+                    if (cmp(tmp->pair.first, k) && tmp->upper_flag == 0) // plus grand et rien apres
+                    {
+                        return (tmp);
+                    }
+                    else if (cmp(k, tmp->pair.first) && tmp->lower_flag == 0) // plus petit et rien apres
+                    {
+                        return (tmp);
+                    }
+                    else if (cmp(tmp->pair.first, k) && tmp->upper_flag == 1) // plus grand + inc si tmp == header
+                    {
+                        tmp = tmp->upper;
+                        tmp = tmp == header ? tmp->upper : tmp;
+                    }
+                    else if (cmp(k, tmp->pair.first) && tmp->lower_flag == 1) //plus petit + inc si tmp == header
+                    {
+                        tmp = tmp->lower;
+                        tmp = tmp == header ? tmp->lower : tmp;
+                    }
+                    else
+                        return (tmp); // if (elem are equal)
+                }
+            }
+
             /*tree function call by insert to create a new_element*/
             void first_add(btree *new_elem)
             {
                 header->upper = new_elem; 
                 header->lower = new_elem;
+                header->upper_flag = 1;
+                header->lower_flag = 1;
 
                 new_elem->upper = this->header;
                 new_elem->lower = this->header;
 
-                //new_elem->upper_flag = 0;
-                //new_elem->lower_flag = 0;
+                new_elem->upper_flag = 0;
+                new_elem->lower_flag = 0;
  
                 tree = new_elem;
             }
@@ -322,11 +377,22 @@ namespace   ft
                 new_elem->upper = position->upper;
                 new_elem->lower = position;
 
-                //new_elem->upper_flag = 0;
-                //new_elem->lower_flag = 0;
+                new_elem->upper_flag = 0;
+                new_elem->lower_flag = 0;
 
                 position->upper_flag = 1;
                 position->upper = new_elem;
+            }
+            void add_upper(btree *position, btree *child, btree *parent)
+            {
+                find_upper(child->lower)->upper = position;
+
+                position->lower_flag = 1;
+                position->lower = child->lower;
+                ///if (parent->upper == child)
+                //parent->upper = child->upper;
+                /*else
+                parent->lower = child->upper;*/
             }
             void add_lower(btree *position, btree *new_elem)
             {
@@ -337,10 +403,24 @@ namespace   ft
                 new_elem->lower = position->lower;
                 new_elem->upper = position;
 
-                //new_elem->upper_flag = 0;
-                //new_elem->lower_flag = 0;
+                new_elem->upper_flag = 0;
+                new_elem->lower_flag = 0;
 
                 position->lower = new_elem;
+            };
+            void add_lower(btree *position, btree *child, btree *parent)
+            {
+                 //if (position == find_lower())
+                 //   header->upper = new_elem;
+
+                find_upper(child->lower)->upper = position;
+
+                position->lower_flag = 1;
+                position->lower = child->lower;
+                //if (parent->upper == child)
+                parent->upper = child->upper;
+                //else
+                //parent->lower = child->upper;
             };
 
             /*function to add element inside tree*/
@@ -365,78 +445,117 @@ namespace   ft
                 }
                 catch(const ft::exception& e){ return(end()); }
             }*/
+            btree   *in_pred(btree *pos)
+            {
+                if (!pos->lower_flag)
+                    return (pos->lower);
+                pos = pos->lower;
+                while (pos->upper_flag && pos != header)
+                {
+                    pos = pos->upper;
+                }
+                return (pos);
+            }
+            btree   *in_succ(btree *pos)
+            {
+                if (!pos->upper_flag)
+                    return (pos->upper);
+                pos = pos->upper;
+                while (pos->lower_flag && pos != header)
+                {
+                    pos = pos->lower;
+                }
+                return (pos);
+            }
 
             void    delete_alone(btree *child, btree *parent)
             {
-                if (parent == NULL)
+                //std::cout << "delete_alone\n";
+                if (parent == NULL) //work
+                {
                     tree = NULL;
+                    header->lower_flag = 0;
+                    header->upper_flag = 0;
+                    header->lower = header;
+                    header->upper = header;
+                }
                 else if (child == parent->lower)
                 {
-                    parent->upper_flag = 0;
-                    parent->upper = child->upper;
+                    parent->lower_flag = 0;
+                    parent->lower = child->lower;
+                    if (child->lower == header)
+                        header->upper = parent;
                 }
                 else
                 {
                     parent->upper_flag = 0;
                     parent->upper = child->upper;
+                    if (child->upper == header)
+                        header->lower = parent;
                 }
             }
             void    delete_lower(btree *child, btree *parent)
             {
+                //std::cout << "delete_lower\n";
                 if (parent == NULL)
-                    tree = child->lower;
-                parent->lower = child->lower;
-                parent->lower_flag = child->lower_flag;
-
-                //func
-                child = child->lower;
-                while (child->upper_flag)
                 {
-                    child = child->upper;
+                    tree = child->lower;
+                    header->lower = find_upper(tree);
+                    find_upper(tree)->upper = header;
+                    return ;
                 }
-                child->upper = parent;
+                if (parent->upper == child)
+                    parent->upper = child->lower;
+                else
+                    parent->lower = child->lower;               
+
+                in_pred(child)->upper = in_succ(child);
+                if (in_succ(child) == header)
+                    header->lower = in_pred(child);
             }
             void    delete_upper(btree *child, btree *parent)
             {
+                //std::cout << "delete_upper\n";
                 if (parent == NULL)
-                    tree = child->upper;
-                parent->upper = child->upper;
-                parent->upper_flag = child->upper_flag;
-
-                //func
-                child = child->upper;
-                while (child->lower_flag)
                 {
-                    child = child->lower;
+                    tree = child->upper;
+                    header->upper = find_lower(tree);
+                    find_lower(tree)->lower = header;
+                    return ;
                 }
-                child->lower = parent;
+                if (parent->upper == child)
+                    parent->upper = child->upper;
+                else
+                    parent->lower = child->upper;               
+
+                in_succ(child)->lower = in_pred(child);
+                if (in_pred(child) == header)
+                    header->upper = in_succ(child);
+
             }
             void    delete_2(btree *child, btree *parent)
             {
-                iterator    position;
+                //std::cout << "delete2\n";
+                btree    *position;
+                btree    *low;
 
-                delete_upper(child, parent); //pas sur sur
-                /*if (parent == NULL)
-                    tree = child->upper;
-                parent->upper = child->upper;
-                parent->upper_flag = child->upper_flag;
+                child->lower_flag = 0;
+                position = in_succ(child);
+                position->lower = child->lower;
 
-                //func
-                child = child->upper;
-                while (child->lower_flag)
-                {
-                    child = child->lower;
-                }
-                child->lower = parent;*?
-
-                position = find_place(iterator(parent->upper), child->lower->pair.key)->first;
-                if (cmp(position->pair.first, val.first))
-                    add_upper(position, parent->upper);
-                else
-                    add_lower(position, parent->upper);*/
+                low = child->lower;
+                child->lower = find_lower(child->lower)->lower;
+                if (child->lower == header)
+                    header->upper = child;
+                
+                find_lower(low)->lower = child;
+                find_upper(low)->upper = position;
+                position->lower_flag = 1;
+                delete_upper(child, parent);
             }
             void    delete_elem(btree *child, btree *parent)
             {
+                //std::cout << "oh\n";
                 if (child->upper_flag && child->lower_flag)
                     delete_2(child, parent);
                 else if(child->upper_flag)
@@ -445,7 +564,9 @@ namespace   ft
                     delete_lower(child, parent);
                 else
                     delete_alone(child, parent);
-                tree_allocate.deallocate(child);
+                tree_alloc.deallocate(child, 1);
+                --map_size;
+
             }
                
             /*cree le header*/
@@ -600,8 +721,6 @@ namespace   ft
                     return (position);
                 new_elem = tree_alloc.allocate(1);
                 alloc.construct(&new_elem->pair, val);
-                new_elem->upper_flag = 0;//new
-                new_elem->lower_flag = 0;//new
 
                 if (position.first == end())
                     first_add(new_elem);
@@ -620,11 +739,12 @@ namespace   ft
 
                 position = find_place(start, val.first);
                 if (position.second == false)
+                {
+                    //std::cout << "ok\n";
                     return (position.first);
+                }
                 new_elem = tree_alloc.allocate(1);
                 alloc.construct(&new_elem->pair, val);
-                new_elem->upper_flag = 0;//new
-                new_elem->lower_flag = 0;//new
 
                 if (position.first == end())
                     first_add(new_elem);
@@ -644,47 +764,7 @@ namespace   ft
             }
             void        erase(iterator position)
             {
-                iterator p1(position);
-                btree   *after = reinterpret_cast<btree *>(&*++position);
-                btree   *actual = reinterpret_cast<btree *>(&*--position);
-                btree   *before = reinterpret_cast<btree *>(&*--position);
-
-                if (actual->lower_flag && actual->upper_flag)
-                {
-                    bool flag;
-
-                        flag = array_pointer->upper_flag;
-                        array_pointer = array_pointer->upper;
-
-                        while (flag == 1 && array_pointer->lower_flag)
-                        {
-                            array_pointer = array_pointer->lower;
-                        }
-
-                        return (*this);
-                }
-                if (actual->lower_flag) //seems ok si il n'y a qu'un flag
-                {
-                    before->upper= after;
-                    after->lower = before;
-
-                    tree_alloc.deallocate(actual, 1);
-                }
-                else if (actual->upper_flag)
-                {
-                    
-                }
-                else
-                {
-                    before->upper = after;
-                    after->lower = actual->upper;
-                    if (actual == tree)
-                        tree = NULL;
-
-                    tree_alloc.deallocate(actual, 1);
-                }
-
-
+                erase(position->first);
             }
             size_type   erase(const key_type &k)
             {
@@ -697,27 +777,34 @@ namespace   ft
                     {
                         if (!child->upper_flag)
                             return(0);
-                        parent = tree;
+                        parent = child;
                         child = child->upper;
                     }
                     else if (cmp(k, child->pair.first))
                     {
                         if(!child->lower_flag)
                             return(0);
-                        parent = tree;
+                        parent = child;
                         child = child->lower;  
                     }
                     else
                     {
                         delete_elem(child, parent);
+                        return(1);
                     }
                 }
                 return(0);
             }
             void    erase(iterator first, iterator last)
             {
+                iterator save = first;
+
                 while (first != last)
-                    erase(first++);
+                {
+                    ++first;
+                    erase(save);
+                    save = first;
+                }
             }
             void        swap(map &x)
             {
@@ -746,6 +833,8 @@ namespace   ft
                 }
                 header->upper = header;
                 header->lower = header;
+                header->upper_flag = 0;
+                header->lower_flag = 0;
                 tree = NULL;
             }
             //OBSERVERS
@@ -872,7 +961,65 @@ namespace   ft
                 return (ft::pair<const_iterator, const_iterator>(lower_bound(k), upper_bound(k)));
             }
 
+            //OPERATOR
+            bool operator==(const map &x) const
+            {
+                const_iterator    xit(x.begin());
+                const_iterator    tit(this->begin());
+                const_iterator    last(this->end());
+                if (x.map_size != this->map_size)
+                    return (0);
+                while (tit != last)
+                {
+                    if (*tit != *xit)
+                        return 0;
+                    ++tit;
+                    ++xit;
+                }
+                return (1);
+            }
+            bool operator!=(const map &x) const
+            {
+                return (!(*this == x));
+            }
+
+            bool operator<(const map &x) const
+            {
+                const_iterator    xit(x.begin());
+                const_iterator    xlast(x.end());
+                const_iterator    tit(this->begin());
+                const_iterator    tlast(this->end());
+                
+                while (tit != tlast)
+                {
+                    if (xit == xlast || *xit < *tit)
+                        return 0;
+                    if (*tit < *xit)
+                        return 1;
+                    ++tit;
+                    ++xit;
+                }
+                return (xit != xlast);
+            }
+            bool operator>(const map &x) const
+            {
+                return (x < *this);
+            }
+            bool operator>=(const map &x) const
+            {
+                return (!(*this < x));
+            }
+            bool operator<=(const map &x) const
+            {
+                return (!(x < *this));
+            }
+
     };
+    template<class Key, class T, class Compare, class Alloc>
+    void    swap(map<Key, T, Compare, Alloc> &x, map<Key, T, Compare, Alloc> &y)
+    {
+        x.swap(y);
+    }
 };
 
 #endif

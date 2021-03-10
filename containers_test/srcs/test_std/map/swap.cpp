@@ -111,6 +111,8 @@ void    test_all(std::pair<K, T> *tab1, size_t size1, std::pair<K, T> *tab2, siz
         while (j < 4)
         {
             tab[i].swap(tab[j]);
+            std::swap(tab[i], tab[j]);
+            tab[j].swap(tab[i]);
             test(tab[i]);
             test(tab[j]);
             ++j;

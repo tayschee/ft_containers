@@ -10,11 +10,12 @@ FT_BIN='bin/test_ft/'
 VEC='vector/'
 LIST='list/'
 MAP='map/'
+STACK='stack/'
+QUEUE='queue/'
 
 
-echo -e "TEST VECTOR\n"
+echo -e "TEST VECTOR"
 
-<<C
 diff <(${FT_BIN}${VEC}constructor) <(${STD_BIN}${VEC}constructor)
 if [ ! $? -ne 0 ];
 then
@@ -112,14 +113,11 @@ else
     echo -e "${R}ITERATOR : KO${W}"
 fi
 
-C
 
 
-<<C
 
-echo -e "TEST LIST\n"
+echo -e "\nTEST LIST"
 
-<<C
 
 diff <(${FT_BIN}${LIST}default_constructor) <(${STD_BIN}${LIST}default_constructor)
 if [ ! $? -ne 0 ];
@@ -278,14 +276,6 @@ else
     echo -e "${R}SORT : KO${W}"
 fi
 
-diff <(${FT_BIN}${LIST}sort) <(${STD_BIN}${LIST}sort)
-if [ ! $? -ne 0 ];
-then
-    echo -e "${G}SORT : OK${W}"
-else
-    echo -e "${R}SORT : KO${W}"
-fi
-
 
 diff <(${FT_BIN}${LIST}reverse) <(${STD_BIN}${LIST}reverse)
 if [ ! $? -ne 0 ];
@@ -303,12 +293,8 @@ else
     echo -e "${R}OPERATOR : KO${W}"
 fi
 
-C
 
-
-echo -e "TEST MAP\n"
-
-<<C
+echo -e "\nTEST MAP"
 
 diff <(${FT_BIN}${MAP}constructor) <(${STD_BIN}${MAP}constructor)
 if [ ! $? -ne 0 ];
@@ -391,12 +377,38 @@ else
     echo -e "${R}INSERT : KO${W}";
 fi
 
-C
-
 diff <(${FT_BIN}${MAP}erase) <(${STD_BIN}${MAP}erase)
 if [ ! $? -ne 0 ];
 then
     echo -e "${G}ERASE : OK${W}";
 else
     echo -e "${R}ERASE : KO${W}";
+fi
+
+diff <(${FT_BIN}${MAP}operator) <(${STD_BIN}${MAP}operator)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}OPERATOR : OK${W}";
+else
+    echo -e "${R}OPERATOR : KO${W}";
+fi
+
+echo -e "\nTEST STACK"
+
+diff <(${FT_BIN}${STACK}test) <(${STD_BIN}${STACK}test)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}STACK : OK${W}";
+else
+    echo -e "${R}STACK : KO${W}";
+fi
+
+echo -e "\nTEST QUEUE"
+
+diff <(${FT_BIN}${QUEUE}test) <(${STD_BIN}${QUEUE}test)
+if [ ! $? -ne 0 ];
+then
+    echo -e "${G}QUEUE : OK${W}";
+else
+    echo -e "${R}QUEUE : KO${W}";
 fi

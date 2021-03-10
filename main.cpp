@@ -4,7 +4,7 @@
 #include <map>
 #include <utility>
 //#include "map.hpp"
-/*#include "vector.hpp"*/
+#include "vector.hpp"
 #include <stack>
 
 template<typename T>
@@ -32,9 +32,16 @@ void    func(const int &a, const int &b)
 
 int main()
 {
-    std::stack<int, std::map<int, int> >     stk;
+    size_t                  i = 0;
+    char                 tab[] = "jkdlwnjrwnjkkfwjfv";
+    ft::vector<char>     vec;
 
-    std::cout << (stk == stk) << "\n";
+    vec.insert(vec.begin(), tab, tab + 2);
 
+    while (i < vec.size())
+    {
+        std::cout << vec[i++];
+    }
+    std::cout << "\n";
     return 0;
 }

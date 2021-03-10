@@ -100,21 +100,78 @@ std::map<K, T, C>    create(std::pair<K, T> *tab, size_t size)
 }
 
 template <typename K, typename T, typename C >
-void    test_all(std::pair<K, T> *tab1, size_t size1, T key)
+void    test_all(std::pair<K, T> *tab1, size_t size1)
 {
     size_t i = 0;
     std::map<K, T, C> cpy(tab1, tab1 + size1);
     std::map<K, T, C> empty;
+    typename std::map<K, T, C>::iterator it;
 
-    //std::cout << (++cpy.begin())->first << "\n";
-    std::cout << cpy.erase(key) << "\n";
-    test(cpy);
-   /* while (i < size1)
+    while (i < size1)
     {
-        std::cout << cpy.erase(tab1[i].first) << "\n";
+        if (cpy.begin() != cpy.end())
+            cpy.erase(cpy.begin());
         test(cpy);
         ++i;
-    }*/
+    }
+    cpy.insert(tab1, tab1 + size1);
+
+    i = 0;
+    while (i < size1)
+    {
+        if (cpy.begin() != cpy.end())
+            cpy.erase(--cpy.end());
+        test(cpy);
+        ++i;
+    }
+}
+
+template <typename K, typename T, typename C >
+void    test_all(std::pair<K, T> *tab1, size_t size1, size_t a)
+{
+    size_t i = 0;
+    std::map<K, T, C> cpy(tab1, tab1 + size1);
+    std::map<K, T, C> empty;
+    typename std::map<K, T, C>::iterator it;
+
+    while (i < size1)
+    {
+        if (!(a < size1))
+            a = 0;
+        std::cout << cpy.erase(tab1[a].first) << "\n";
+        test(cpy);
+
+        std::cout << cpy.erase(tab1[a].first) << "\n";
+        test(cpy);
+        ++i;
+        ++a;
+    }
+}
+
+template <typename K, typename T, typename C >
+void    test_all(std::pair<K, T> *tab1, size_t size1, size_t a, size_t b)
+{
+    size_t i = 0;
+    std::map<K, T, C> cpy(tab1, tab1 + size1);
+    std::map<K, T, C> empty;
+    typename std::map<K, T, C>::iterator it(cpy.begin());
+    typename std::map<K, T, C>::iterator it1(cpy.begin());
+
+    while (i < a && it != cpy.end())
+    {
+        it++;// = it1;
+        //++it1;
+        ++i;
+        //cpy.erase(it);
+    }
+    i = 0;
+    while (i < b && it1 != cpy.end())
+    {
+        ++i;
+        ++it1;
+    }
+    cpy.erase(it, it1);
+    test(cpy);
 }
 
 int main()
@@ -167,10 +224,10 @@ int main()
         ++i;
     }
 
-    std::pair<int, int>    i1(200, 0), i2(100, -3), i3(50, -2), i4(20, -1), i5(150, -1), i6(120, 3), i7(110, 4), i8(24, 5), i9(-4, 5), i10(-2, 1), i11(-1, 1), i12(18, 1), i13(20, 20);
+    std::pair<int, int>    i1(200, 0), i2(100, -3), i3(300, -2), i4(350, -1), i5(250, -1), i6(120, 3), i7(110, 4), i8(24, 5), i9(-4, 5), i10(-2, 1), i11(-1, 1), i12(18, 1), i13(20, 20);
     std::pair<int, int>    tab[] = {i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13};
-    test_all<int, int, std::less<int> >(tab, 6, 200);
-    /*test_all<int, int, std::less<int> >(tabii1, 1025);
+    //test_all<int, int, std::less<int> >(tab, 3, 200);
+    test_all<int, int, std::less<int> >(tabii1, 1025);
     test_all<int, int, std::less<int> >(tabii2, 1025);
     test_all<double, unsigned int, std::less<unsigned int> >(tabdu1, 101);
     test_all<double, unsigned int, std::less<unsigned int> >(tabdu2, 101);
@@ -204,8 +261,82 @@ int main()
     test_all<std::string, char, useless<std::string> >(tabsc1, 11);
     test_all<std::string, char, useless<std::string> >(tabsc2, 11);
     test_all<char, double, useless<char> >(tabcd1, 3);
-    test_all<char, double, useless<char> >(tabcd2, 3);*/
+    test_all<char, double, useless<char> >(tabcd2, 3);
 
-    std::cout << "ok\n";
+    //test2
+    test_all<int, int, std::less<int> >(tabii1, 1025, 250);
+    test_all<int, int, std::less<int> >(tabii2, 1025, 701);
+    test_all<double, unsigned int, std::less<unsigned int> >(tabdu1, 101, 32);
+    test_all<double, unsigned int, std::less<unsigned int> >(tabdu2, 101, 41);
+    test_all<std::string, char, std::less<std::string> >(tabsc1, 11, 3);
+    test_all<std::string, char, std::less<std::string> >(tabsc2, 11, 4);
+    test_all<char, double, std::less<char> >(tabcd1, 3, 2);
+    test_all<char, double, std::less<char> >(tabcd2, 3, 1);
+
+    test_all<int, int, more<int> >(tabii1, 1025, 25);
+    test_all<int, int, more<int> >(tabii2, 1025, 31);
+    test_all<double, unsigned int, more<unsigned int> >(tabdu1, 101, 100);
+    test_all<double, unsigned int, more<unsigned int> >(tabdu2, 101, 100);
+    test_all<std::string, char, more<std::string> >(tabsc1, 11, 8);
+    test_all<std::string, char, more<std::string> >(tabsc2, 11, 5);
+    test_all<char, double, more<char> >(tabcd1, 3, 2);
+    test_all<char, double, more<char> >(tabcd2, 3, 1);
+
+    test_all<int, int, to_int<int> >(tabii1, 1025, 1020);
+    test_all<int, int, to_int<int> >(tabii2, 1025, 853);
+    test_all<double, unsigned int, to_int<unsigned int> >(tabdu1, 101, 82);
+    test_all<double, unsigned int, to_int<unsigned int> >(tabdu2, 101, 37);
+    test_all<std::string, char, string_size >(tabsc1, 11, 5);
+    test_all<std::string, char, string_size >(tabsc2, 11, 6);
+    test_all<char, double, to_int<char> >(tabcd1, 3, 2);
+    test_all<char, double, to_int<char> >(tabcd2, 3, 1);
+
+    test_all<int, int, useless<int> >(tabii1, 1025, 451);
+    test_all<int, int, useless<int> >(tabii2, 1025, 709);
+    test_all<double, unsigned int, useless<unsigned int> >(tabdu1, 101, 82);
+    test_all<double, unsigned int, useless<unsigned int> >(tabdu2, 101, 37);
+    test_all<std::string, char, useless<std::string> >(tabsc1, 11, 4);
+    test_all<std::string, char, useless<std::string> >(tabsc2, 11, 6);
+    test_all<char, double, useless<char> >(tabcd1, 3, 2);
+    test_all<char, double, useless<char> >(tabcd2, 3, 1);
+
+    //test3
+    test_all<int, int, std::less<int> >(tabii1, 1025, 0, 1025);
+    test_all<int, int, std::less<int> >(tabii2, 1025, 701, 1000);
+    test_all<double, unsigned int, std::less<unsigned int> >(tabdu1, 101, 0, 101);
+    test_all<double, unsigned int, std::less<unsigned int> >(tabdu2, 101, 0, 52);
+    test_all<std::string, char, std::less<std::string> >(tabsc1, 11, 1, 10);
+    test_all<std::string, char, std::less<std::string> >(tabsc2, 11, 0, 7);
+    test_all<char, double, std::less<char> >(tabcd1, 3, 0, 3);
+    test_all<char, double, std::less<char> >(tabcd2, 3, 0, 2);
+
+    test_all<int, int, more<int> >(tabii1, 1025, 401, 783);
+    test_all<int, int, more<int> >(tabii2, 1025, 31, 1000);
+    test_all<double, unsigned int, more<unsigned int> >(tabdu1, 101, 100, 101);
+    test_all<double, unsigned int, more<unsigned int> >(tabdu2, 101, 32, 100);
+    test_all<std::string, char, more<std::string> >(tabsc1, 11, 8, 11);
+    test_all<std::string, char, more<std::string> >(tabsc2, 11, 5, 8);
+    test_all<char, double, more<char> >(tabcd1, 3, 1, 2);
+    test_all<char, double, more<char> >(tabcd2, 3, 2, 3);
+
+    test_all<int, int, to_int<int> >(tabii1, 1025, 1020, 1020);
+    test_all<int, int, to_int<int> >(tabii2, 1025, 840, 902);
+    test_all<double, unsigned int, to_int<unsigned int> >(tabdu1, 101, 81, 81);
+    test_all<double, unsigned int, to_int<unsigned int> >(tabdu2, 101, 37, 101);
+    test_all<std::string, char, string_size >(tabsc1, 11, 5, 5);
+    test_all<std::string, char, string_size >(tabsc2, 11, 6, 10);
+    test_all<char, double, to_int<char> >(tabcd1, 3, 2, 2);
+    test_all<char, double, to_int<char> >(tabcd2, 3, 1, 2);
+
+    test_all<int, int, useless<int> >(tabii1, 1025, 451, 602);
+    test_all<int, int, useless<int> >(tabii2, 1025, 709, 804);
+    test_all<double, unsigned int, useless<unsigned int> >(tabdu1, 101, 82, 83);
+    test_all<double, unsigned int, useless<unsigned int> >(tabdu2, 101, 37, 39);
+    test_all<std::string, char, useless<std::string> >(tabsc1, 11, 4, 9);
+    test_all<std::string, char, useless<std::string> >(tabsc2, 11, 6, 9);
+    test_all<char, double, useless<char> >(tabcd1, 3, 2, 2);
+    test_all<char, double, useless<char> >(tabcd2, 3, 1, 2);
+
+
     return (0);
 }

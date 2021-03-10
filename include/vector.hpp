@@ -496,7 +496,7 @@ namespace   ft
                 position = begin() + pos;
                 while(first < last)
                 {
-                    insert(position, *first++);
+                    insert(position++, *first++);
                 }
             }
 
@@ -594,7 +594,7 @@ namespace   ft
                 }
                 return (this->size() < rhs.size());
             }
-            bool    operator>(const vector &rhs)
+            bool    operator>(const vector &rhs) const
             {
                 return (rhs < *this);
             }

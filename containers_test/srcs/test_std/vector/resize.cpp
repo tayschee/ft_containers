@@ -99,7 +99,6 @@ void    func(std::vector<T> lst, size_t i, T val)
     }
     catch(const std::exception& e)
     {
-        std::cout << e.what() << '\n';
     }
 
     test(lst);
@@ -127,7 +126,6 @@ void    func(std::vector<T> lst, size_t i)
     }
     catch(const std::exception& e)
     {
-        std::cout << e.what() << '\n';
     }
 
     test(lst);
@@ -140,16 +138,16 @@ void    test_all(T val, size_t size, size_t x)
     size_t i = 0;
     std::vector<T> vec(size, val);
 
-    func(vec, x);
-    func(vec, vec.max_size() + 1, val);
-    func(vec, vec.max_size());
-    func(vec, vec.max_size() - 1, val);
+    func<T>(vec, x);
+    func<T>(vec, vec.max_size() + 1, val);
+    func<T>(vec, vec.max_size());
+    func<T>(vec, vec.max_size() - 1, val);
     while (i < x)
     {
-        func(create<T>(), i);
-        func(create(0, val), i, val);
-        func(create(size, val), i);
-        func(vec, i, val);
+        func<T>(create<T>(), i);
+        func<T>(create(0, val), i, val);
+        func<T>(create(size, val), i);
+        func<T>(vec, i, val);
         ++i;
     }
 }

@@ -104,7 +104,6 @@ void    func(ft::vector<T> &lst, size_t pos, T val)
     }
     catch(const std::exception& e)
     {
-        std::cout << e.what() << '\n';
     }
 
     test(lst);
@@ -139,7 +138,6 @@ void    func(ft::vector<T> &lst, size_t pos, size_t end_nb, T *tab)
     }
     catch(const std::exception& e)
     {
-        std::cout << e.what() << '\n';
     }
 
     test(lst);
@@ -171,7 +169,6 @@ void    func(ft::vector<T> &lst, size_t pos, size_t j, T val)
     }
     catch(const std::exception& e)
     {
-        std::cout << e.what() << '\n';
     }
 
     test(lst);
@@ -239,7 +236,7 @@ void    test_all(T *tab, size_t size, T* tab2, size_t size2, size_t n)
     func(lst, lst.size(), 0, tab2);
     func(lst, lst.size(), 1, tab2);
     func(lst, lst.size(), size2, tab2);
-    while(i <= size2)
+    while(i < size2)
     {
         func(lst, n, i, tab2);
         func(lst, 0, i, tab2);

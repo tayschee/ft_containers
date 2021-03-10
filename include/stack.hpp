@@ -9,29 +9,22 @@
 
 namespace   ft
 {   
-    template <typename T, class Containers = ft::list<T> >
+    template <typename T, class Container = ft::list<T> >
     class   stack
     {
         public : //TYPEDEF
             typedef T value_type;
-            typedef container_type Container;
+            typedef Container container_type;
             typedef size_t size_type;
-        
-        public: //PRIVATE VALUE
-            allocator_type          value_alloc;
-            std::allocator<node>    node_alloc;
-            node                    *dummy_node;
-            size_type               node_size;
 
         private :
             container_type  container;
         public: //FUNCTION
             //CONSTRUCTOR DESTRUCTOR
-            explicit stack(const container_type &ctnr) : container(cntr)
-            {
-
-            }
+            explicit stack(const container_type &ctnr = container_type()) : container(ctnr){}
             ~stack() {}
+
+            //FUNCTION
             size_type   size() const
             {
                 return (container.size());

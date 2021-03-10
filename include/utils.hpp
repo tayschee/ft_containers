@@ -39,40 +39,30 @@ namespace ft
             return (*this);
         }
 
-        bool operator==(const pair &pr)
+        bool operator==(const pair &pr) const
         {
-            return (first == pr.first);
+            return (first == pr.first && second == pr.second);
         }
-        bool operator!=(const pair &pr)
+        bool operator!=(const pair &pr) const
         {
-            return (first != pr.first);
+            return (!(*this == pr));
         }
-        bool operator<(const pair &pr)
+        bool operator<(const pair &pr) const
         {
-            return (first < pr.first);
+            return (first < pr.first || (!(pr.first < first) && second < pr.second));
         }
-        bool operator>(const pair &pr)
+        bool operator>(const pair &pr) const
         {
-            return (first > pr.first);
+            return (pr < *this);
         }
-         bool operator<=(const pair &pr)
+         bool operator<=(const pair &pr) const
         {
-            return (first <= pr.first);
+            return !(pr < *this);
         }
-        bool operator>=(const pair &pr)
+        bool operator>=(const pair &pr) const
         {
-            return (first >= pr.first);
+            return !(*this < pr);
         }
-    };
-
-    class   exception : public std::exception
-    {
-        private :
-            exception    &operator=(const exception &x) { (void)x; return (*this); }
-        public :
-            exception(){}
-            exception(const exception &x){}
-            virtual ~exception() throw() {}
     };
     
     template<class Type>
