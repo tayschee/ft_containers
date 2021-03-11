@@ -104,7 +104,7 @@ void    test_all(T val, size_t size1, T val1, size_t size2, T val2, size_t size3
     test(create(create(size3, tab)));
 }
 
-int main(int argc, char **argv)
+int main()
 {
     int tab_int[] = {12, 24, 96, -18, -124, 36, 152, -17, 99, 41, 27, 46, 96, 205, 211, -27, 4, 3, 6, 9, 98, 99,
                     100, -266, 1052, -99, -206, -8};

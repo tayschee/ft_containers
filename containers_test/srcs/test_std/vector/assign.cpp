@@ -81,10 +81,6 @@ std::vector<T>     create()
 template <typename T>
 void    func(std::vector<T> &lst, size_t i, T val)
 {
-    size_t  old_c = lst.capacity();
-    typename std::vector<T>::iterator beg(lst.begin());
-    typename std::vector<T>::iterator end(lst.end());
-
     try
     {
         lst.assign(i, val);
@@ -101,9 +97,6 @@ void    func(std::vector<T> &lst, size_t i, T val)
 template <typename T>
 void    func(std::vector<T> &lst, T *tab, size_t size)
 {
-    typename std::vector<T>::iterator beg(lst.begin());
-    typename std::vector<T>::iterator end(lst.end());
-
     typename std::vector<T>::iterator first(tab);
     typename std::vector<T>::iterator last(tab+size);
 
@@ -128,6 +121,7 @@ void    test_all(T val, size_t size, size_t x, T *tab, size_t size1, T val2)
     std::vector<T> vec1(size, val);
     std::vector<T> tmp(size, val);
 
+    (void)val2;
     func(vec, x, val);
     tmp = create<T>();
     func(tmp, x, val);
@@ -149,7 +143,7 @@ void    test_all(T val, size_t size, size_t x, T *tab, size_t size1, T val2)
     }
 }
 
-int main(int argc, char **argv)
+int main()
 {
     int tab_int[] = {12, 24, 96, -18, -124, 36, 152, -17, 99, 41, 27, 46, 96, 205, 211, -27, 4, 3, 6, 9, 98, 99,
                     100, -266, 1052, -99, -206, -8};
@@ -183,16 +177,9 @@ int main(int argc, char **argv)
     std::string str11("c");
     std::string tab_str[] = {str, str1, str2, str3, str4, str5, str6, str7, str8, str8, str10, str11};
 
-    /*test_all(12, 500, 750, tab_int, 28, 42);
+    test_all(12, 500, 750, tab_int, 28, 42);
     test_all('c', 250, 600, tab_char, 1395, 'S');
-    test_all(12.94, 40, 60, tab_db, 6, 90.18);*/
+    test_all(12.94, 40, 60, tab_db, 6, 90.18);
     test_all(str1, 20, 51, tab_str, 12, str5);
-
-    /*std::vector<int>   vec(12, 3);
-    std::vector<int>   cop;
-    cop = vec;
-    cop.assign(15, 16);
-    cop = cop;
-    cop.assign(1, 16);*/
 }
    

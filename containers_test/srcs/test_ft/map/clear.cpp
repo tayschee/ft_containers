@@ -96,7 +96,6 @@ ft::map<K, T, C>    create(ft::pair<K, T> *tab, size_t size)
 template <typename K, typename T, typename C >
 void    test_all(ft::pair<K, T> *tab1, size_t size1)
 {
-    size_t i = 0;
     ft::map<K, T, C> cpy;
     ft::map<K, T, C> empty;
 

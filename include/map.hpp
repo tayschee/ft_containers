@@ -383,17 +383,6 @@ namespace   ft
                 position->upper_flag = 1;
                 position->upper = new_elem;
             }
-            void add_upper(btree *position, btree *child, btree *parent)
-            {
-                find_upper(child->lower)->upper = position;
-
-                position->lower_flag = 1;
-                position->lower = child->lower;
-                ///if (parent->upper == child)
-                //parent->upper = child->upper;
-                /*else
-                parent->lower = child->upper;*/
-            }
             void add_lower(btree *position, btree *new_elem)
             {
                  if (position == find_lower())
@@ -408,43 +397,7 @@ namespace   ft
 
                 position->lower = new_elem;
             };
-            void add_lower(btree *position, btree *child, btree *parent)
-            {
-                 //if (position == find_lower())
-                 //   header->upper = new_elem;
 
-                find_upper(child->lower)->upper = position;
-
-                position->lower_flag = 1;
-                position->lower = child->lower;
-                //if (parent->upper == child)
-                parent->upper = child->upper;
-                //else
-                //parent->lower = child->upper;
-            };
-
-            /*function to add element inside tree*/
-            /*iterator add_elem(const value_type &val) //peut etre necessaire d'en faire une version const
-            {
-                btree *new_elem;
-                btree *position;
-
-                try
-                {
-                    position = find_place(val.first);
-                    new_elem = tree_alloc.allocate(1);
-                    alloc.construct(&new_elem->pair, val);
-                    if (position == NULL)
-                        first_add(new_elem);
-                    else if (cmp(position->pair.first, val.first))
-                        add_upper(position, new_elem);
-                    else
-                        add_lower(position, new_elem);
-                    ++map_size;
-                    return(iterator(new_elem));
-                }
-                catch(const ft::exception& e){ return(end()); }
-            }*/
             btree   *in_pred(btree *pos)
             {
                 if (!pos->lower_flag)
@@ -470,8 +423,7 @@ namespace   ft
 
             void    delete_alone(btree *child, btree *parent)
             {
-                //std::cout << "delete_alone\n";
-                if (parent == NULL) //work
+                if (parent == NULL)
                 {
                     tree = NULL;
                     header->lower_flag = 0;
@@ -496,7 +448,6 @@ namespace   ft
             }
             void    delete_lower(btree *child, btree *parent)
             {
-                //std::cout << "delete_lower\n";
                 if (parent == NULL)
                 {
                     tree = child->lower;
@@ -515,7 +466,6 @@ namespace   ft
             }
             void    delete_upper(btree *child, btree *parent)
             {
-                //std::cout << "delete_upper\n";
                 if (parent == NULL)
                 {
                     tree = child->upper;
@@ -535,7 +485,6 @@ namespace   ft
             }
             void    delete_2(btree *child, btree *parent)
             {
-                //std::cout << "delete2\n";
                 btree    *position;
                 btree    *low;
 
@@ -555,7 +504,6 @@ namespace   ft
             }
             void    delete_elem(btree *child, btree *parent)
             {
-                //std::cout << "oh\n";
                 if (child->upper_flag && child->lower_flag)
                     delete_2(child, parent);
                 else if(child->upper_flag)
@@ -564,6 +512,7 @@ namespace   ft
                     delete_lower(child, parent);
                 else
                     delete_alone(child, parent);
+                alloc.destroy(&child->pair);
                 tree_alloc.deallocate(child, 1);
                 --map_size;
 
@@ -585,7 +534,6 @@ namespace   ft
             void cpy_tree(btree *cpy, iterator hint)
             {
                 iterator    it;
-                btree *tmp;
 
                 it = insert(hint, cpy->pair);
                 if (cpy->lower_flag)
@@ -640,6 +588,7 @@ namespace   ft
             ~map()
             {
                 clear();
+                alloc.destroy(&header->pair);
                 tree_alloc.deallocate(header, 1);
             }
             //ITERATORS
@@ -702,11 +651,7 @@ namespace   ft
             {
                 iterator it;
 
-                /*it = find(k);
-                if (it == end())
-                {*/
                 it = insert(value_type(k, mapped_type())).first; //a verifier
-                //}
                 return (it->second);
 
             }
@@ -740,7 +685,6 @@ namespace   ft
                 position = find_place(start, val.first);
                 if (position.second == false)
                 {
-                    //std::cout << "ok\n";
                     return (position.first);
                 }
                 new_elem = tree_alloc.allocate(1);
@@ -899,7 +843,7 @@ namespace   ft
             }
 
             iterator    lower_bound(const key_type &k)
-            {
+              {
                 iterator    it(begin());
                 iterator    last(end());
 

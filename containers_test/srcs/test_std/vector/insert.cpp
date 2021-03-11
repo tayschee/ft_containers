@@ -178,7 +178,6 @@ template <typename T>
 void    test_all(T *tab, size_t size, T val, size_t n)
 {
     size_t i = n;
-    size_t j = 0;
     std::vector<T>   lst(create(size, tab));
     std::vector<T>   lst1;
 

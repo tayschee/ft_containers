@@ -224,9 +224,6 @@ int main()
         ++i;
     }
 
-    ft::pair<int, int>    i1(200, 0), i2(100, -3), i3(300, -2), i4(350, -1), i5(250, -1), i6(120, 3), i7(110, 4), i8(24, 5), i9(-4, 5), i10(-2, 1), i11(-1, 1), i12(18, 1), i13(20, 20);
-    ft::pair<int, int>    tab[] = {i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13};
-    //test_all<int, int, std::less<int> >(tab, 3, 200);
     test_all<int, int, std::less<int> >(tabii1, 1025);
     test_all<int, int, std::less<int> >(tabii2, 1025);
     test_all<double, unsigned int, std::less<unsigned int> >(tabdu1, 101);

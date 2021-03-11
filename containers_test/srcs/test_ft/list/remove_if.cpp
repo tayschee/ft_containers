@@ -239,7 +239,7 @@ int main()
     char             tab_char[] = "abcedfghijklmnopqrstuvwxyzon omatopee yataa tatakae tatakae tourte";
     char             tab_char1[] = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXxXXXXXXXXXXXXXXXXXXXXXXXX";
 
-    //std::cout << "a\n";
+    std::cout << "a\n";
     test_all(tab_int, 20 , -7, 12, 25, 99);
     test_all(tab_char, 55, ' ', 4001, '"', 890);
     test_all(tab_char1, 54, 'X', 20, 'x', 12);

@@ -56,7 +56,7 @@ EXEC  = $(addprefix $(EXEC_DIR), $(FT_EXEC) $(STD_EXEC))
 #POUR LA COMPILATION IMPLICITE DES .CPP
 CXX = clang++ -std=c++98
 INCLUDE = -I ../include
-CPPFLAGS = $(INCLUDE) #-Wall -Wextra -Werror
+CPPFLAGS = $(INCLUDE) -Wall -Wextra -Werror
 
 all : $(EXEC)
 

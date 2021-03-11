@@ -96,7 +96,6 @@ std::map<K, T, C>    create(std::pair<K, T> *tab, size_t size)
 template <typename K, typename T, typename C >
 void    test_all(std::pair<K, T> *tab1, size_t size1)
 {
-    size_t i = 0;
     std::map<K, T, C> cpy;
     std::map<K, T, C> empty;
 

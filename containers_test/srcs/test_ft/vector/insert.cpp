@@ -178,7 +178,6 @@ template <typename T>
 void    test_all(T *tab, size_t size, T val, size_t n)
 {
     size_t i = n;
-    size_t j = 0;
     ft::vector<T>   lst(create(size, tab));
     ft::vector<T>   lst1;
 

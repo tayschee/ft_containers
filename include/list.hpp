@@ -146,6 +146,7 @@ namespace   ft
             //CONSTRUCTOR DESTRUCTOR
             explicit list(const allocator_type alloc = allocator_type()) : value_alloc(alloc)
             {
+                node_alloc = std::allocator<node>();
                 dummy_node = node_alloc.allocate(1);
                 value_alloc.construct(&dummy_node->value, value_type());
                 dummy_node->next = dummy_node;
@@ -156,6 +157,7 @@ namespace   ft
             explicit list(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type())
             : value_alloc(alloc)
             {
+                node_alloc = std::allocator<node>();
                 dummy_node = node_alloc.allocate(1);
                 value_alloc.construct(&dummy_node->value, value_type());
                 dummy_node->next = dummy_node;
@@ -164,10 +166,11 @@ namespace   ft
 
                 assign(n, val);
             }
-            template <class InputIterator>/*, class = typename InputIterator::value_type*/
+            template <class InputIterator>
             list(InputIterator first, typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last,
             const allocator_type &alloc = allocator_type()) : value_alloc(alloc)
             {
+                node_alloc = std::allocator<node>();
                 dummy_node = node_alloc.allocate(1);
                 value_alloc.construct(&dummy_node->value, value_type());
                 dummy_node->next = dummy_node;
@@ -178,6 +181,7 @@ namespace   ft
             }
             list(const list &x) : value_alloc(x.value_alloc)
             {
+                node_alloc = std::allocator<node>();
                 dummy_node = node_alloc.allocate(1);
                 value_alloc.construct(&dummy_node->value, value_type());
                 dummy_node->next = dummy_node;
@@ -188,6 +192,7 @@ namespace   ft
             }
             list    &operator=(const list &x)
             {
+                clear();
                 assign(x.begin(), x.end());
                 this->value_alloc = x.value_alloc;
                 this->node_alloc = x.node_alloc;
@@ -196,6 +201,7 @@ namespace   ft
             ~list()
             {
                 clear();
+                value_alloc.destroy(&dummy_node->value);
                 node_alloc.deallocate(dummy_node, 1);
             }
             // LIST ITERATORS
@@ -332,6 +338,7 @@ namespace   ft
                 node    *node_to_join;
 
                 node_to_join = dummy_node->prev->prev;
+                value_alloc.destroy(&dummy_node->prev->value);
                 node_alloc.deallocate(dummy_node->prev, 1);
                 node_to_join->next = dummy_node;
                 dummy_node->prev = node_to_join;
@@ -357,6 +364,7 @@ namespace   ft
                 node    *node_to_join;
 
                 node_to_join = dummy_node->next->next;
+                value_alloc.destroy(&dummy_node->next->value);
                 node_alloc.deallocate(dummy_node->next, 1);
                 node_to_join->prev = dummy_node;
                 dummy_node->next = node_to_join;
@@ -403,6 +411,7 @@ namespace   ft
                 ++position;
                 erase_elem->prev->next = erase_elem->next;
                 erase_elem->next->prev = erase_elem->prev;
+                value_alloc.destroy(&erase_elem->value);
                 node_alloc.deallocate(erase_elem, 1);
                 --node_size;
 
@@ -416,6 +425,7 @@ namespace   ft
                 elem_to_connect_1 = elem_to_connect_1->prev;
                 while (first != last)
                 {
+                    value_alloc.destroy(&*first);
                     node_alloc.deallocate(reinterpret_cast<node *>(&*first++), 1);
                     --node_size;
                 }
@@ -503,8 +513,9 @@ namespace   ft
                 while (it != last)
                 {
                     if (*it == val)
-                        erase(it);
-                    ++it;
+                        erase(it++);
+                    else
+                        ++it;
                 }
             }
 
@@ -517,8 +528,11 @@ namespace   ft
                 while (it != last)
                 {
                     if (pred(*it))
-                        erase(it);
-                    ++it;
+                    {
+                        erase(it++);
+                    }
+                    else
+                        ++it;
                 }
             }
 
@@ -570,6 +584,8 @@ namespace   ft
                 iterator    beg_x(x.begin());
                 iterator    last(this->end());
 
+                if (&x == this)
+                    return ;
                 while (it != last)
                 {
                     if (x.size() && *beg_x < *it)
@@ -590,6 +606,8 @@ namespace   ft
                 iterator    beg_x(x.begin());
                 iterator    last(end());
 
+                if (&x == this)
+                    return ;
                 while (it != last)
                 {
                     if (x.size() && comp(*beg_x, *it))
