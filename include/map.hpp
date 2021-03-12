@@ -14,14 +14,23 @@ namespace   ft
     class   map
     {
         private :
+            struct test //maybe same than multi-map
+            {
+                typename Alloc::value_type   pair;
+                test                       *equal;
+                test                       *upper;
+                test                      *lower;
+                test                        *prev;
+
+            };
+
             struct btree
             {
-                ft::pair<const Key, T>       pair;
-                bool                         upper_flag;
-                bool                         lower_flag;
+                typename Alloc::value_type   pair;
+                int                         upper_flag;
+                int                         lower_flag;
                 btree                       *upper;
                 btree                       *lower;
-                bool                        red_black; //useless
             };
 
         public :
@@ -29,16 +38,16 @@ namespace   ft
             class iterator
             {
                 public : //iterator TYPEDEF
-                    typedef typename ft::iterator_traits<ft::pair<const Key, T> *>::iterator_category iterator_category; //a changer probablement
-                    typedef typename ft::iterator_traits<ft::pair<const Key, T> *>::value_type value_type;
-                    typedef typename ft::iterator_traits<ft::pair<const Key, T> *>::difference_type difference_type;
-                    typedef typename ft::iterator_traits<ft::pair<const Key, T> *>::pointer pointer;
-                    typedef typename ft::iterator_traits<ft::pair<const Key, T> *>::reference reference;
+                    typedef typename ft::iterator_traits<typename Alloc::value_type *>::iterator_category iterator_category; //a changer probablement
+                    typedef typename ft::iterator_traits<typename Alloc::value_type *>::value_type value_type;
+                    typedef typename ft::iterator_traits<typename Alloc::value_type *>::difference_type difference_type;
+                    typedef typename ft::iterator_traits<typename Alloc::value_type *>::pointer pointer;
+                    typedef typename ft::iterator_traits<typename Alloc::value_type *>::reference reference;
                 private :
                     btree    *array_pointer;
                 public :
                     //iterator CONSTRUCTOR
-                    explicit iterator() : array_pointer(NULL) {} //peut etre pas NULL
+                    explicit iterator() : array_pointer(NULL) {}
                     explicit iterator(btree *array_pointer) : array_pointer(array_pointer) {}
                     iterator(const iterator &x): array_pointer(x.array_pointer){}
                     //iterator DESTRUCTOR
@@ -47,7 +56,7 @@ namespace   ft
                     iterator &operator=(const iterator &x){ array_pointer = x.array_pointer; return (*this); }
 
                     reference   operator*() const { return (array_pointer->pair); }
-                    pointer     operator->() const { return (&array_pointer->pair); } //a verifer
+                    pointer     operator->() const { return (&array_pointer->pair); }
                     
                     //it cmp
                     bool operator==(const iterator &x) const { return (array_pointer == x.array_pointer ? 1 : 0); }
@@ -123,7 +132,7 @@ namespace   ft
                     const_iterator &operator=(const iterator &x){ array_pointer = reinterpret_cast<btree *>(&*x); return (*this); }
 
                     reference   operator*() const { return (array_pointer->pair); }
-                    pointer     operator->() const { return (&array_pointer->pair); } //a verifer
+                    pointer     operator->() const { return (&array_pointer->pair); }
                     
                     //it cmp
                     bool operator==(const const_iterator &x) const { return (array_pointer == x.array_pointer ? 1 : 0); }
@@ -177,7 +186,7 @@ namespace   ft
         public : //TYPEDEF
             typedef Key key_type;
             typedef T mapped_type;
-            typedef ft::pair<const key_type, mapped_type> value_type;
+            typedef typename Alloc::value_type value_type;
             typedef Compare key_compare;
             //typedef value_comp value_compare
             typedef Alloc allocator_type;
@@ -193,7 +202,7 @@ namespace   ft
             typedef size_t size_type;
 
         public : //VALUE_COMPARE
-            class value_compare //probably some change to do
+            class value_compare
             {
                 protected : //variable
                     Compare cmp;
@@ -644,14 +653,15 @@ namespace   ft
 
             size_type   max_size() const
             {
-                return (tree_alloc.max_size());
+                //return (tree_alloc.max_size());
+                return std::allocator<test>().max_size();
             }
             //ELEMENT ACCESS
             mapped_type     &operator[](const key_type & k)
             {
                 iterator it;
 
-                it = insert(value_type(k, mapped_type())).first; //a verifier
+                it = insert(value_type(k, mapped_type())).first;
                 return (it->second);
 
             }
@@ -786,7 +796,7 @@ namespace   ft
             {
                 return (cmp);
             }
-            value_compare     value_comp() const //dont know
+            value_compare     value_comp() const
             {
                 return (value_compare());
             }

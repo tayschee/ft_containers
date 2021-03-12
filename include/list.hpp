@@ -24,7 +24,7 @@ namespace   ft
             class iterator
             {
                 public : //iterator TYPEDEF
-                    typedef typename ft::iterator_traits<T *>::iterator_category iterator_category; //a changer probablement
+                    typedef typename ft::iterator_traits<T *>::iterator_category iterator_category;
                     typedef typename ft::iterator_traits<T *>::value_type value_type;
                     typedef typename ft::iterator_traits<T *>::difference_type difference_type;
                     typedef typename ft::iterator_traits<T *>::pointer pointer;
@@ -33,7 +33,7 @@ namespace   ft
                     node    *array_pointer;
                 public :
                     //iterator CONSTRUCTOR
-                    explicit iterator(){ array_pointer = NULL; } //peut etre pas NULL
+                    explicit iterator(){ array_pointer = NULL; }
                     explicit iterator(node *array_pointer) : array_pointer(array_pointer){}
                     iterator(const iterator &x){ array_pointer = x.array_pointer; }
                     //iterator DESTRUCTOR
@@ -42,7 +42,7 @@ namespace   ft
                     iterator &operator=(const iterator &x){ array_pointer = x.array_pointer; return (*this); }
 
                     reference   operator*() const { return (array_pointer->value); }
-                    pointer     operator->() const { return (&array_pointer->value); } //a verifer
+                    pointer     operator->() const { return (&array_pointer->value); }
                     
                     //it cmp
                     bool operator==(const iterator &x) const { return (array_pointer == x.array_pointer ? 1 : 0); }
@@ -73,7 +73,7 @@ namespace   ft
             class const_iterator
             {
                 public : //iterator TYPEDEF
-                    typedef typename ft::iterator_traits<const T *>::iterator_category iterator_category; //a changer probablement
+                    typedef typename ft::iterator_traits<const T *>::iterator_category iterator_category;
                     typedef typename ft::iterator_traits<const T *>::value_type value_type;
                     typedef typename ft::iterator_traits<const T *>::difference_type difference_type;
                     typedef typename ft::iterator_traits<const T *>::pointer pointer;
@@ -288,7 +288,9 @@ namespace   ft
                 for(i = 0; first != last && i < node_size; i++)
                 {
                     change_node = change_node->next;
+                    value_alloc.destroy(&change_node->value);
                     value_alloc.construct(&change_node->value, *first++);
+                    //change_node->value = *first++;
                 }
                 while (i < node_size)
                     pop_back();
@@ -306,7 +308,7 @@ namespace   ft
                 for(i = 0; i < n && i < node_size; i++)
                 {
                     change_node = change_node->next;
-                    change_node->value = val; //alloc dont needed
+                    change_node->value = val;
                 }
                 while (i < node_size)
                     pop_back();
@@ -419,14 +421,18 @@ namespace   ft
             }
             iterator    erase(iterator first, iterator last)
             {
+                iterator save;
                 node        *elem_to_connect_1 = reinterpret_cast<node *>(&*(first));
                 node        *elem_to_connect_2 = reinterpret_cast<node *>(&*last);
 
                 elem_to_connect_1 = elem_to_connect_1->prev;
                 while (first != last)
                 {
+                    save = first;
+                    ++save;
                     value_alloc.destroy(&*first);
-                    node_alloc.deallocate(reinterpret_cast<node *>(&*first++), 1);
+                    node_alloc.deallocate(reinterpret_cast<node *>(&*first), 1);
+                    first = save;
                     --node_size;
                 }
                 elem_to_connect_1->next = elem_to_connect_2;
@@ -547,7 +553,8 @@ namespace   ft
                     if (*it == *itp1)
                     {
                         erase(itp1);
-                        itp1++ = it;
+                        itp1 = it;
+                        ++itp1;
                     }
                     else
                     {
@@ -565,10 +572,11 @@ namespace   ft
 
                 while (itp1 != last)
                 {
-                    if (binary_pred(*itp1, *it))
+                    if (binary_pred(*it, *itp1))
                     {
                         erase(itp1);
-                        itp1++ = it;
+                        itp1 = it;
+                        ++itp1;
                     }
                     else
                     {
@@ -600,7 +608,7 @@ namespace   ft
                     this->splice(it, x, beg_x, x.end());
             }
             template <class Compare>
-            void merge (list& x, Compare comp)//je comprend pas
+            void merge (list& x, Compare comp)
             {
                 iterator    it(begin());
                 iterator    beg_x(x.begin());

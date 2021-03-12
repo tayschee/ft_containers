@@ -3,6 +3,7 @@
 
 # include <cstddef> //ptrdiff_t
 # include "utils.hpp"
+# include <iostream>
 
 namespace ft
 {
@@ -86,14 +87,14 @@ namespace ft
             template<class It>
             reverse_iterator &operator=(const reverse_iterator<It> &x){ it = x.base(); return (*this); }
 
-            reference   operator[](difference_type n) const { return ( it[-n - 1]); }
+            reference   operator[](difference_type n) const { return (it[-n - 1]); }
             reference   operator*() const { return (*--base()); }
             pointer     operator->() const { return (&(*--base())); }
 
             template<class It>
-            bool operator==(const reverse_iterator<It> &x) const { return (it == x.base() ? 1 : 0); } //why ???
+            bool operator==(const reverse_iterator<It> &x) const { return (it == x.base() ? 1 : 0); }
             template<class It>
-            bool operator!=(const reverse_iterator<It> &x) const { return (it != x.base() ? 1 : 0); } //why ???
+            bool operator!=(const reverse_iterator<It> &x) const { return (it != x.base() ? 1 : 0); }
             template<class It>
             bool operator<(const reverse_iterator<It> &x) const { return (it > x.base() ? 1 : 0); }
             template<class It>
@@ -124,17 +125,28 @@ namespace ft
 
             reverse_iterator operator+(int n) const
             {
-                reverse_iterator    x(*this);
+                reverse_iterator    x(base() - n);
 
-                x.it -= n;
                 return(x);
             }
             reverse_iterator operator-(int n) const
             {
-                reverse_iterator    x(*this);
+                reverse_iterator    x(base() + n);
 
-                x.it += n;
                 return(x);
+            }
+            friend reverse_iterator operator+(int n, const reverse_iterator &t)
+            {
+                return(t + n);
+            }
+            friend reverse_iterator operator-(int n, const reverse_iterator &t)
+            {
+                return(t - n);
+            }
+            template <class It>
+            int operator-(const reverse_iterator<It> &rhs)
+            {
+                return(-(base() - rhs.base()));
             }
     };
 

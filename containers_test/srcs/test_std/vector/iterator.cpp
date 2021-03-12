@@ -181,10 +181,14 @@ void    func(std::vector<T> &lst1)
 {
     size_t i = 0;
     typename std::vector<T>::iterator it(lst1.begin());
-    typename std::vector<T>::iterator const_it(it);
+    typename std::vector<T>::const_iterator const_it(it);
     typename std::vector<T>::iterator beg(lst1.begin());
     typename std::vector<T>::iterator end(lst1.end());
 
+    while (it + i < end)
+    {
+        std::cout << it[i++] << "\n";
+    }
     while (it < end)
     {
         std::cout << *it++ << " ";
@@ -253,11 +257,15 @@ template <typename T>
 void    rev_func(std::vector<T> &lst1)
 {
     size_t i = 0;
-    typename std::vector<T>::reverse_iterator it(lst1.begin());
+    typename std::vector<T>::reverse_iterator it(lst1.rend());
     typename std::vector<T>::const_reverse_iterator const_it(it);
-    typename std::vector<T>::reverse_iterator beg(lst1.begin());
-    typename std::vector<T>::reverse_iterator end(lst1.end());
+    typename std::vector<T>::reverse_iterator beg(lst1.rend());
+    typename std::vector<T>::reverse_iterator end(lst1.rbegin());
 
+    while (it + i < end)
+    {
+        std::cout << it[++i] << "\n";
+    }
     while (it < end)
     {
         std::cout << *it-- << " ";
@@ -296,27 +304,27 @@ void    rev_func(std::vector<T> &lst1)
     }
     std::cout << "\n";
 
-    while(it - i < end)
+    while(it + i < end)
     {
-        std::cout << *(it - i) << " ";
-        std::cout << *(const_it - i--) << " ";
+        std::cout << *(it + i) << " ";
+        std::cout << *(const_it + i--) << " ";
     }
     i = 0;
-    while(it + i > beg)
+    while(it - i > beg)
     {
         if (it != end)
         {
-            std::cout << *(it + i) << " ";
-            std::cout << *(const_it + i++) << " ";
+            std::cout << *(it - i) << " ";
+            std::cout << *(const_it - i++) << " ";
         }
     }
 
     i = 0;
-    while(it - i < end)
+    while(it + i < end)
     {
-        it -= i;
-        std::cout << *it << " ";
         it += i;
+        std::cout << *it << " ";
+        it -= i;
         std::cout << *it << " ";
         --i;
     }
@@ -339,6 +347,7 @@ void    test_all(T val, size_t size, T *tab, size_t size1, T val2, size_t size2)
     {
         j = 0;
         rev_func(tab_lst[i]);
+        func(tab_lst[i]);
         while(j < 5)
         {
             cmp<T>(tab_lst[i].begin(), tab_lst[i].begin() + 1);
@@ -388,6 +397,8 @@ int main()
     std::string str11("c");
     std::string tab_str[] = {str, str1, str2, str3, str4, str5, str6, str7, str8, str8, str10, str11};
 
+    //std::vector<int>     abc(tab_int, tab_int + 5);
+    //func(abc);
     test_all(12, 431, tab_int, 28, 42, 801);
     test_all('c', 231, tab_char, 1395, 'S', 1);
     test_all(12.94, 40, tab_db, 6, 90.18, 331);

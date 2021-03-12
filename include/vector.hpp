@@ -26,7 +26,7 @@ namespace   ft
                     pointer array_pointer;
                 public :
                     //iterator CONSTRUCTOR
-                    explicit iterator(){ array_pointer = NULL; } //peut etre pas NULL
+                    explicit iterator(){ array_pointer = NULL; }
                     explicit iterator(pointer array_pointer) : array_pointer(array_pointer){}
                     iterator(const iterator &x){ array_pointer = x.array_pointer; }
                     //iterator DESTRUCTOR
@@ -34,7 +34,7 @@ namespace   ft
                     //iterator OPERATOR
                     iterator &operator=(const iterator &x){ array_pointer = x.array_pointer; return (*this); }
 
-                    reference   operator[](unsigned int n) const { return (array_pointer[n]); }
+                    reference   operator[](difference_type n) const { return (array_pointer[n]); }
                     reference   operator*() const { return (*array_pointer); }
                     pointer     operator->() const { return (array_pointer); }
                     
@@ -75,21 +75,35 @@ namespace   ft
                         return (copy);
                     }
 
-                    iterator operator+(int n) const
+                    iterator operator+(int a) const
                     {
-                        iterator x(*this);
+                        iterator cpy(array_pointer + a);
 
-                        x.array_pointer += n;
-                        return (x);
+                        return (cpy);
                     }
-                    iterator operator-(int n) const
+                    iterator operator-(int a) const
                     {
-                        iterator x(*this);
+                        iterator cpy(array_pointer - a);
 
-                        x.array_pointer -= n;
-                        return (x);
+                        return (cpy);
+                    }
+                    friend iterator operator+(int a, const iterator &x)
+                    {
+                        return (x + a);
+                    }
+                    friend iterator operator-(int a, const iterator &x)
+                    {
+                        return (x - a);
                     }
 
+                    int operator-(const iterator n) const
+                    {
+                        return (array_pointer - n.array_pointer);
+                    }
+                    int operator-(const const_iterator n) const
+                    {
+                        return (array_pointer - &*n);
+                    }
             };
 
         public :
@@ -107,17 +121,17 @@ namespace   ft
 
                 public :
                     //const_iterator CONSTRUCTOR
-                    explicit const_iterator(){ array_pointer = NULL; }
+                    explicit const_iterator(): array_pointer(NULL){}
                     explicit const_iterator(pointer array_pointer) : array_pointer(array_pointer){}
-                    const_iterator(const const_iterator &x){ array_pointer = x.array_pointer; }
-                    const_iterator(const iterator &x){ array_pointer = &*x; }
+                    const_iterator(const const_iterator &x): array_pointer(x.array_pointer){}
+                    const_iterator(const iterator &x): array_pointer(&*x){}
                     //const_iterator DESTRUCTOR
                     ~const_iterator(){}
                     //const_iterator OPERATOR
                     const_iterator &operator=(const const_iterator &x){ array_pointer = x.array_pointer; return (*this); }
                     const_iterator &operator=(const iterator &x){ array_pointer = &*x; return (*this); }
 
-                    reference   operator[](unsigned int n) const { return (array_pointer[n]); }
+                    reference   operator[](difference_type n) const { return (array_pointer[n]); }
                     reference   operator*() const { return (*array_pointer); }
                     pointer     operator->() const { return (array_pointer); }
                     
@@ -150,20 +164,33 @@ namespace   ft
                         --array_pointer;
                         return (copy);
                     }
-
-                    const_iterator operator+(int n) const
+                    const_iterator operator+(int a) const
                     {
-                        const_iterator x(*this);
+                        const_iterator cpy(array_pointer + a);
 
-                        x.array_pointer += n;
-                        return (x);
+                        return (cpy);
                     }
-                    const_iterator operator-(int n) const
+                    const_iterator operator-(int a) const
                     {
-                        const_iterator x(*this);
+                        const_iterator cpy(array_pointer - a);
 
-                        x.array_pointer -= n;
-                        return (x);
+                        return (cpy);
+                    }
+                    friend const_iterator operator+(int a, const const_iterator &x)
+                    {
+                        return (x + a);
+                    }
+                    friend const_iterator operator-(int a, const const_iterator &x)
+                    {
+                        return (x - a);
+                    }
+                    int operator-(const const_iterator &n) const
+                    {
+                        return (array_pointer - n.array_pointer);
+                    }
+                    int operator-(const iterator &n) const
+                    {
+                        return (array_pointer - &*n);
                     }
             };
 
@@ -175,7 +202,7 @@ namespace   ft
             typedef typename allocator_type::pointer pointer;
             typedef typename allocator_type::const_pointer const_pointer;
             //typedef typename ft::vector<value_type, allocator_type>::iterator iterator;
-            //typedef typename ft::vector<value_type, allocator_type>::const_iterator const_iterator;
+            //typedef typename ft::vector<const value_type, allocator_type>::iterator const_iterator;
             typedef typename ft::reverse_iterator<iterator> reverse_iterator;
             typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
             typedef typename iterator::difference_type difference_type;
@@ -201,9 +228,9 @@ namespace   ft
 
                 new_array = alloc.allocate(static_cast<size_type>(n));
                 for (i = 0; i < array_size; i++)
-                    alloc.construct(&new_array[i], array[i]); // = seem not good
+                    alloc.construct(new_array + i, array[i]);
                 for (i = 0; i < array_size; i++)
-                    alloc.destroy(&array[i]);
+                    alloc.destroy(array + i);
                 alloc.deallocate(array, array_capacity);
                 array_capacity = n;
                 array = new_array;
@@ -248,10 +275,10 @@ namespace   ft
 
                 this->array_capacity = x.array_size;
                 this->alloc = allocator_type();
-                this->array_size = x.array_size;
-                this->array = (this->alloc).allocate(static_cast<size_type>(array_capacity));
-                for (i = 0; i < array_size; i++)
-                    (this->alloc).construct(&array[i], x.array[i]);
+                this->array_size = 0;
+                this->array = (this->alloc).allocate(static_cast<size_type>(this->array_capacity));
+                for (i = 0; i < x.array_size; i++)
+                    this->push_back(x.array[i]);
             }
             //DESTRUCTOR
             ~vector(void)
@@ -260,7 +287,7 @@ namespace   ft
                 alloc.deallocate(array, array_capacity);
             }
             //OPERATOR
-            vector &operator=(const vector &x) // SUREMENT PAS BON MUST PRESERVE ALLOCATION
+            vector &operator=(const vector &x)
             {
                 size_type i;
 
@@ -321,7 +348,7 @@ namespace   ft
             {
                 return (alloc.max_size());
             }
-            void    resize(size_type n, value_type val = value_type()) //VERIFY ABSOLUTLY
+            void    resize(size_type n, value_type val = value_type())
             {
                 if (n > array_capacity)
                 {
@@ -352,7 +379,7 @@ namespace   ft
                 {
                     throw std::length_error("vector::reserve");
                 }
-                if (n > array_capacity) //assign ?
+                if (n > array_capacity)
                 {
                     reallocate(n);
                 }
@@ -371,7 +398,6 @@ namespace   ft
                     ss << "vector::_M_range_check: __n (which is " << n << ") >= this->size() (which is "
                     << array_size << ")";
                     throw std::out_of_range(ss.str());
-                    //vector::_M_range_check: __n (which is 0) >= this->size() (which is 0)
                 }
                 return (array[n]);
             }
@@ -379,8 +405,10 @@ namespace   ft
             {
                 if (n >= array_size)
                 {
-                    throw std::out_of_range("std::vector"); //texte a verifier
-                    //vector::_M_range_check: __n (which is 0) >= this->size() (which is 0)
+                    std::stringstream ss;
+                    ss << "vector::_M_range_check: __n (which is " << n << ") >= this->size() (which is "
+                    << array_size << ")";
+                    throw std::out_of_range(ss.str());
                 }
                 return (array[n]);
             }
@@ -404,7 +432,7 @@ namespace   ft
             }
 
             //ARRAY MODIFIERS
-            void    assign(size_type n, const value_type &val) //a refaire
+            void    assign(size_type n, const value_type &val)
             {
                 if (n > array_capacity)
                     reallocate(n);
@@ -416,20 +444,26 @@ namespace   ft
                 }
             }
             template <class InputIterator>
-            void    assign(InputIterator first, typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last) //a refaire
+            void    assign(InputIterator first, typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
             {
-                size_t          range_it = &*last - &*first;
+                size_t          range_it = 0;
+                InputIterator   cp_first = first;
 
+                while (cp_first != last)
+                {
+                    ++range_it;
+                    ++cp_first;
+                }
                 clear();
                 if (range_it > array_capacity)
                     reallocate(range_it);
-                while (first < last)
+                while (first != last)
                 {
                     push_back(*first++);
                 }
             }
 
-            void    push_back(const value_type &val) //that seems ok
+            void    push_back(const value_type &val)
             {
                 size_type i; 
                 size_type n;
@@ -440,7 +474,7 @@ namespace   ft
                     n = more_capacity(array_capacity + 1);
                     new_array = alloc.allocate(static_cast<size_type>(n));
                     for (i = 0; i < array_size; i++)
-                        alloc.construct(&new_array[i], array[i]); //seems better than equal
+                        alloc.construct(&new_array[i], array[i]);
                     for (i = 0; i < array_size; i++)
                         (this->alloc).destroy(&array[i]);
                     (this->alloc).deallocate(array, array_capacity);
@@ -466,13 +500,14 @@ namespace   ft
                 while(end > pos)
                 {
                     alloc.construct(&array[end], array[end - 1]);
+                    alloc.destroy(&array[end - 1]);
                     --end;
                 }
                 alloc.construct(&array[end], val);
                 ++array_size;
                 return (begin() + pos);  
             }
-            void    insert(iterator position, size_type n, const value_type &val) //verif = to replace alloc.construct
+            void    insert(iterator position, size_type n, const value_type &val)
             {
                 size_t    pos = &*position - &*begin();
 
@@ -482,25 +517,31 @@ namespace   ft
                 while(n)
                 {
                     --n;
-                    insert(position, val);
+                    insert(position++, val);
                 }
             }
             template <class InputIterator>
             void    insert(iterator position, InputIterator first, typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
             {
-                size_type       it_diff = &*last - &*first;
+                size_type       it_diff = 0;
+                InputIterator   cp_first = first;
                 size_type       pos = &*position - &*begin();
 
+                while (cp_first != last)
+                {
+                    ++it_diff;
+                    ++cp_first;
+                }
                 if (array_size + it_diff > array_capacity)
                     reallocate(more_capacity(array_size + it_diff));
                 position = begin() + pos;
-                while(first < last)
+                while(first != last)
                 {
                     insert(position++, *first++);
                 }
             }
 
-            iterator   erase(iterator position) //possible segfault
+            iterator   erase(iterator position)
             {
                 iterator replace(position);
                 iterator end(this->end());
@@ -511,7 +552,7 @@ namespace   ft
                 --array_size;
                 return (replace);
             }
-            iterator   erase(iterator first, iterator last) //dont know how they didn't seg
+            iterator   erase(iterator first, iterator last)
             {
                 iterator return_it(first);
                 iterator end(this->end());

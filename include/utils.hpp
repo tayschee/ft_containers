@@ -6,6 +6,10 @@
 
 namespace ft
 {
+    /*template<class Iterator>
+    struct const_it { };
+    template<class Iterator>
+    struct const_it { };*/
     template <bool Cond, typename Result=void>
     struct enable_if { };
 
